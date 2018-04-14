@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Learning Application</string>
+    <string name="no_text_message">Please enter text in search field!</string>
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Already have account? <b><u>Sign in here.</u></b></string>
+    <string name="dont_have_account">Don\'t have an account? <b><u>Create one.</u></b></string>
+    <string name="continue_as_guest">Don\'t want an account? <b><u>Continue as guest.</u></b></string>
+    <string name="have_a_google_account">Have a Google account? <b><u>Sign in with Google</u></b></string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="search">Search</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="events">Events</string>
+    <string name="settings">Settings</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+</resources>

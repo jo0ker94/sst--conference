@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffffffff</color>
+    <color name="grey_87">#dddddd</color>
+    <color name="grey_80">#cccccc</color>
+    <color name="gray_pressed">#b5b5b5</color>
+    <color name="select_comment_header_color">#959595</color>
+    <color name="divider_grey">#979797</color>
+    <color name="algorithm_gray">#545454</color>
+
+    <color name="material_blue_disabled">#79d0f3</color>
+    <color name="material_blue">#0690ED</color>
+    <color name="button_blue">#00adf2</color>
+
+</resources>

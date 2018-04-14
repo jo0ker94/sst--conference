@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "115416166714",
+    "firebase_url": "https://learning-a7cfa.firebaseio.com",
+    "project_id": "learning-a7cfa",
+    "storage_bucket": "learning-a7cfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115416166714:android:7aa5780d49bfdfdd",
+        "android_client_info": {
+          "package_name": "com.example.karlo.learningapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "115416166714-jd4arbs1da8her8t6uuf00nfmc6qqm2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.karlo.learningapplication",
+            "certificate_hash": "8dc03ecde4f5ad7732f5ca2bc23fb6149bef2e2e"
+          }
+        },
+        {
+          "client_id": "115416166714-lte5apse7sveisvjqr04195bj58v4jp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZn8584dM9fQo3mcQ7Mgj-1sy6umRpKWE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "115416166714-lte5apse7sveisvjqr04195bj58v4jp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
