@@ -37,18 +37,18 @@ public class SearchPresenter extends MvpBasePresenter<SearchView> implements Mvp
                 .getResults(query, CUSTOM_SEARCH_ID, API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(results -> {
-                            if (getView() != null) {
-                                getView().showResult(results);
-                                getView().loadingData(false);
-                            }
-                        },
-                        throwable -> {
-                            if (getView() != null) {
-                                getView().showError(throwable);
-                                getView().loadingData(false);
-                                getView().showNoResult();
-                            }
-                        });
+                .subscribe(results ->
+                        ifViewAttached(view -> {
+                            view.showResult(results);
+                            view.loadingData(false);
+
+                        }),
+                        throwable ->
+                            ifViewAttached(view -> {
+                                view.showError(throwable);
+                                view.loadingData(false);
+                                view.showNoResult();
+
+                            }));
     }
 }

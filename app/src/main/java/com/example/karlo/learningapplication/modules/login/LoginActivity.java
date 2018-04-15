@@ -1,6 +1,5 @@
 package com.example.karlo.learningapplication.modules.login;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.LoginRequest;
 import com.example.karlo.learningapplication.models.User;
@@ -21,7 +21,6 @@ import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.List;
@@ -40,37 +39,31 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.pager)
+    ViewPager mPager;
 
-    private FirebaseAuth mAuth;
-
-    private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
-
-    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ftue_fragment);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-
         ButterKnife.bind(this);
-        mAuth = FirebaseAuth.getInstance();
 
+        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        setUpGoogleClient();
+        checkIfLogged();
+    }
+
+    private void setUpGoogleClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        checkIfLogged();
-        //setUpListeners();
     }
 
     private void goToHome() {
@@ -100,13 +93,13 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
 
     @Override
     public void onLoggedIn() {
-        Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show();
         checkIfLogged();
     }
 
     @Override
     public void onSignUp(LoginRequest loginRequest) {
-        presenter.login(mAuth, loginRequest);
+        presenter.login(loginRequest);
     }
 
     @Override
@@ -120,26 +113,26 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     }
 
     private void signInGoogle() {
-        @SuppressLint("RestrictedApi") Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            presenter.signUpWithGoogle(mAuth, data);
+        if (requestCode == Constants.RC_SIGN_IN) {
+            presenter.signUpWithGoogle(data);
         }
     }
 
     @Override
     public void onLogin(String email, String password) {
-        presenter.login(mAuth, new LoginRequest(email, password));
+        presenter.login(new LoginRequest(email, password));
     }
 
     @Override
-    public void onRegister(String email, String password, String name) {
-        presenter.signup(mAuth, new LoginRequest(email, password, name));
+    public void onRegister(LoginRequest loginRequest) {
+        presenter.signup(loginRequest);
     }
 
     @Override
@@ -157,8 +150,17 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
         mPager.setCurrentItem(1);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
+    }
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        private ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -170,15 +172,6 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
         @Override
         public int getCount() {
             return 2;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        } else {
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
 }

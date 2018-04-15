@@ -17,4 +17,14 @@
     <string name="settings">Settings</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="success">Success!</string>
+    <string name="enter_all_fields">You need to enter all fields!</string>
+    <string name="conference_program">Conference program</string>
+    <string name="venue">Venue</string>
+    <string name="committee">Committee</string>
+    <string name="keynote_speakers">Keynote speakers</string>
+    <string name="conference_chairs">Conference chairs</string>
+    <string name="steering_committee">Steering committee</string>
+    <string name="program_committee">Program committee</string>
+    <string name="organizing_committee">Organizing committee</string>
 </resources>

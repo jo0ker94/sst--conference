@@ -9,6 +9,7 @@ import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -17,9 +18,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomePresenter extends MvpBasePresenter<HomeView> implements MvpPresenter<HomeView> {
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     public void fetchData() {
         ifViewAttached(view -> view.loadingData(true));
-        RetrofitUtil
+        compositeDisposable.add(RetrofitUtil
                 .getRetrofit(Constants.FIREBASE_BASE_URL)
                 .create(Api.class)
                 .getStrings()
@@ -35,7 +38,7 @@ public class HomePresenter extends MvpBasePresenter<HomeView> implements MvpPres
                                     view.showError(throwable);
                                     view.loadingData(false);
                                 }
-                        ));
+                        )));
     }
 
     public void fetchUser() {
@@ -51,5 +54,11 @@ public class HomePresenter extends MvpBasePresenter<HomeView> implements MvpPres
             DatabaseHelper.deleteUser(profile.getUserId());
             ifViewAttached(HomeView::logOut);
         }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        compositeDisposable.clear();
     }
 }

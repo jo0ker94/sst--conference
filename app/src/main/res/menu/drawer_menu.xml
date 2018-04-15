@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/group1"
+        android:checkableBehavior="single">
+
         <item android:id="@+id/search"
             android:icon="@drawable/ic_search"
             android:title="@string/search"/>
+    </group>
+
+    <group android:id="@+id/group2"
+        android:checkableBehavior="single">
+
+        <item android:id="@+id/committee"
+            android:icon="@drawable/ic_user"
+            android:title="@string/committee"/>
+
+        <item android:id="@+id/speakers"
+            android:icon="@drawable/ic_user"
+            android:title="@string/keynote_speakers"/>
 
         <item android:id="@+id/events"
             android:icon="@drawable/ic_event"
-            android:title="@string/events"/>
+            android:title="@string/conference_program"/>
+
+        <item android:id="@+id/venue"
+            android:icon="@drawable/ic_event"
+            android:title="@string/venue"/>
+    </group>
+
+    <group android:id="@+id/group3"
+        android:checkableBehavior="single">
 
         <item android:id="@+id/settings"
             android:icon="@drawable/ic_settings"
@@ -21,6 +43,5 @@
         <item android:id="@+id/logout"
             android:icon="@drawable/ic_exit"
             android:title="@string/logout"/>
-
     </group>
 </menu>

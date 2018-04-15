@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.models.LoginRequest;
 import com.google.android.gms.common.SignInButton;
 
 import butterknife.BindView;
@@ -36,15 +37,14 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
     @BindView(R.id.login_text)
     TextView mLoginPage;
 
-    private Unbinder unbinder;
-
     interface RegisterInterface {
-        void onRegister(String email, String password, String name);
+        void onRegister(LoginRequest loginRequest);
         void signInWithGoogle();
         void goToLogin();
     }
 
     private RegisterInterface mListener;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
@@ -77,7 +77,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
     }
 
     private void setUpListeners() {
-        mSignUpButton.setOnClickListener(view -> mListener.onRegister(mEmail.getText().toString(), mPassword.getText().toString(), mName.getText().toString()));
+        mSignUpButton.setOnClickListener(view -> mListener.onRegister(new LoginRequest(mEmail.getText().toString(), mPassword.getText().toString(), mName.getText().toString())));
         mSigninGoogleButton.setOnClickListener(view -> mListener.signInWithGoogle());
         mLoginPage.setOnClickListener(view -> mListener.goToLogin());
         TextView textView = (TextView) mSigninGoogleButton.getChildAt(0);

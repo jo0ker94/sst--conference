@@ -65,9 +65,6 @@ public class SearchActivity extends MvpActivity<SearchView, SearchPresenter> imp
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (s.length() > 2) {
-                    presenter.searchWiki(s);
-                }
                 return false;
             }
         });

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/conference_chairs"
+            android:title="@string/conference_chairs"/>
+
+        <item android:id="@+id/steering_committee"
+            android:title="@string/steering_committee"/>
+
+        <item android:id="@+id/program_committee"
+            android:title="@string/program_committee"/>
+
+        <item android:id="@+id/organizing_committee"
+            android:title="@string/organizing_committee"/>
+    </group>
+</menu>
