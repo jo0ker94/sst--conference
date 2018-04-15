@@ -3,6 +3,7 @@ package com.example.karlo.learningapplication.modules.home;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,8 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.adapters.ConferenceChairsAdapter;
+import com.example.karlo.learningapplication.adapters.WikiResultRecyclerAdapter;
+import com.example.karlo.learningapplication.models.ConferenceChair;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
@@ -39,8 +45,8 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implements HomeView, NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.list_view)
-    ListView mListView;
+    @BindView(R.id.committeeRecyclerView)
+    RecyclerView mRecyclerView;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
@@ -50,9 +56,9 @@ public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implement
     @BindView(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
-    ImageView mUserImage;
-    TextView mUserName;
-    TextView mUserEmail;
+    private ImageView mUserImage;
+    private TextView mUserName;
+    private TextView mUserEmail;
 
     private ActionBarDrawerToggle mToggle;
 
@@ -132,9 +138,13 @@ public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implement
     public void onBackPressed() { }
 
     @Override
-    public void showData(List<String> data) {
-        ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
-        mListView.setAdapter(aa);
+    public void showData(List<ConferenceChair> chairs) {
+        ConferenceChairsAdapter adapter = new ConferenceChairsAdapter(chairs, (view, position) ->
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(chairs.get(position).getImageUrl())))
+        );
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

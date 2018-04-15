@@ -25,12 +25,12 @@ public class HomePresenter extends MvpBasePresenter<HomeView> implements MvpPres
         compositeDisposable.add(RetrofitUtil
                 .getRetrofit(Constants.FIREBASE_BASE_URL)
                 .create(Api.class)
-                .getStrings()
+                .getChairs()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(strings ->
+                .subscribe(chairs ->
                                 ifViewAttached(view ->  {
-                                    view.showData(strings);
+                                    view.showData(chairs);
                                     view.loadingData(false);
                                 })
                         ,
