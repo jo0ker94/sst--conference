@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.WikiResultRecyclerAdapter;
+import com.example.karlo.learningapplication.commons.BaseActivity;
 import com.example.karlo.learningapplication.models.wiki.WikiResult;
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by Karlo on 31.3.2018..
  */
 
-public class SearchActivity extends MvpActivity<SearchView, SearchPresenter> implements SearchView {
+public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> implements SearchView {
 
     @BindView(R.id.searchListView)
     RecyclerView mRecyclerView;
@@ -36,7 +36,7 @@ public class SearchActivity extends MvpActivity<SearchView, SearchPresenter> imp
     ProgressBar mProgressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
@@ -126,7 +126,7 @@ public class SearchActivity extends MvpActivity<SearchView, SearchPresenter> imp
     @NonNull
     @Override
     public SearchPresenter createPresenter() {
-        return new SearchPresenter();
+        return new SearchPresenter(this);
     }
 
 }

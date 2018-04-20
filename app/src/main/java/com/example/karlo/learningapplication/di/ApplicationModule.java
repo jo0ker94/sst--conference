@@ -3,6 +3,8 @@ package com.example.karlo.learningapplication.di;
 import android.content.Context;
 
 import com.example.karlo.learningapplication.App;
+import com.example.karlo.learningapplication.modules.login.LoginPresenter;
+import com.example.karlo.learningapplication.modules.login.LoginView;
 
 import javax.inject.Singleton;
 
@@ -24,4 +26,9 @@ public class ApplicationModule {
         return application;
     }
 
+    @Provides
+    @Singleton
+    public LoginPresenter provideLoginPresenter(LoginView view) {
+        return new LoginPresenter(view);
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.BasePresenter;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
 import com.example.karlo.learningapplication.servertasks.interfaces.WikiApi;
@@ -17,10 +18,14 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Karlo on 31.3.2018..
  */
 
-public class SearchPresenter extends MvpBasePresenter<SearchView> implements MvpPresenter<SearchView> {
+public class SearchPresenter extends BasePresenter<SearchView> {
 
     private static final String CUSTOM_SEARCH_ID = "004785902684984064423:npuxlr36ea0";
     private static final String API_KEY = "AIzaSyBCvwdTitSfeF53hy-uvM_RR-klHk_OB2k";
+
+    public SearchPresenter(SearchView view) {
+        super(view);
+    }
 
     public void searchWiki(String query) {
         if (TextUtils.isEmpty(query)) {

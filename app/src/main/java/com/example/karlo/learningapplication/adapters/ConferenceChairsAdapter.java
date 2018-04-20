@@ -1,5 +1,6 @@
 package com.example.karlo.learningapplication.adapters;
 
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class ConferenceChairsAdapter extends RecyclerView.Adapter<ConferenceChai
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void openMailDialog(String mail);
     }
 
     public ConferenceChairsAdapter(List<ConferenceChair> items, OnItemClickListener listener) {
@@ -39,6 +41,8 @@ public class ConferenceChairsAdapter extends RecyclerView.Adapter<ConferenceChai
         holder.tvTitle.setText(chair.getChairTitle());
         holder.tvName.setText(chair.getName());
         holder.tvEmail.setText(chair.getEmail());
+        holder.tvEmail.setPaintFlags(holder.tvEmail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        holder.tvEmail.setOnClickListener(view -> mListener.openMailDialog(chair.getEmail()));
         Picasso.get()
                 .load(chair.getImageUrl())
                 .resize(100, 100)

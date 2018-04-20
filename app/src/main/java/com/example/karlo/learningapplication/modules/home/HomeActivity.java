@@ -2,6 +2,7 @@ package com.example.karlo.learningapplication.modules.home;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,26 +12,24 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.ConferenceChairsAdapter;
-import com.example.karlo.learningapplication.adapters.WikiResultRecyclerAdapter;
+import com.example.karlo.learningapplication.commons.BaseActivity;
 import com.example.karlo.learningapplication.models.ConferenceChair;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +42,10 @@ import butterknife.ButterKnife;
  * Created by Karlo on 26.3.2018..
  */
 
-public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implements HomeView, NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
+        implements HomeView,
+        NavigationView.OnNavigationItemSelectedListener,
+        ConferenceChairsAdapter.OnItemClickListener {
 
     @BindView(R.id.committeeRecyclerView)
     RecyclerView mRecyclerView;
@@ -62,8 +64,10 @@ public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implement
 
     private ActionBarDrawerToggle mToggle;
 
+    private ConferenceChairsAdapter mAdapter;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -139,12 +143,10 @@ public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implement
 
     @Override
     public void showData(List<ConferenceChair> chairs) {
-        ConferenceChairsAdapter adapter = new ConferenceChairsAdapter(chairs, (view, position) ->
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(chairs.get(position).getImageUrl())))
-        );
+        mAdapter = new ConferenceChairsAdapter(chairs, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -187,7 +189,57 @@ public class HomeActivity extends MvpActivity<HomeView, HomePresenter> implement
     @NonNull
     @Override
     public HomePresenter createPresenter() {
-        return new HomePresenter();
+        return new HomePresenter(this);
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        showChairDetails(mAdapter.getItem(position));
+    }
+
+    @Override
+    public void openMailDialog(String mail) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "SST 2017");
+        intent.setData(Uri.parse("mailto:" + mail));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void openDialDialog(String phoneNumber) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + phoneNumber));
+        startActivity(intent);
+    }
+
+    private void showChairDetails(ConferenceChair chair) {
+        View view = getLayoutInflater().inflate(R.layout.conference_chair_details, null);
+        ImageView chairImage = view.findViewById(R.id.chairImageView);
+        TextView chairTitle = view.findViewById(R.id.tvTitle);
+        TextView chairName = view.findViewById(R.id.tvName);
+        TextView chairEmail = view.findViewById(R.id.tvEmail);
+        TextView chairPhone = view.findViewById(R.id.tvPhone);
+        TextView chairFacility = view.findViewById(R.id.tvFacility);
+        Picasso.get()
+                .load(chair.getImageUrl())
+                .resize(250, 350)
+                .centerCrop()
+                .placeholder(R.drawable.no_img)
+                .into(chairImage);
+        chairTitle.setText(chair.getChairTitle());
+        chairName.setText(chair.getName());
+        chairEmail.setText(chair.getEmail());
+        chairPhone.setText(chair.getPhoneNumber());
+        chairFacility.setText(chair.getFacility());
+
+        chairEmail.setPaintFlags(chairEmail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        chairPhone.setPaintFlags(chairPhone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        chairEmail.setOnClickListener(emailView -> openMailDialog(chair.getEmail()));
+        chairPhone.setOnClickListener(phoneView -> openDialDialog(chair.getPhoneNumber()));
+
+        new AlertDialog.Builder(this)
+                .setView(view)
+                .show();
+    }
 }

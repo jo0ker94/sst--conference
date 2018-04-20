@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.BaseActivity;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.LoginRequest;
@@ -21,7 +22,6 @@ import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
  * Created by Karlo on 25.3.2018..
  */
 
-public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements
+public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements
         LoginView,
         LoginFragment.LoginInterface,
         RegisterFragment.RegisterInterface {
@@ -45,7 +45,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ftue_fragment);
 
@@ -88,7 +88,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     @NonNull
     @Override
     public LoginPresenter createPresenter() {
-        return new LoginPresenter();
+        return new LoginPresenter(this);
     }
 
     @Override

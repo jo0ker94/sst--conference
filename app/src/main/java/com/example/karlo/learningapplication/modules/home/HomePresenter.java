@@ -1,12 +1,11 @@
 package com.example.karlo.learningapplication.modules.home;
 
+import com.example.karlo.learningapplication.commons.BasePresenter;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
 import com.example.karlo.learningapplication.servertasks.interfaces.Api;
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpPresenter;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -16,9 +15,13 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Karlo on 26.3.2018..
  */
 
-public class HomePresenter extends MvpBasePresenter<HomeView> implements MvpPresenter<HomeView> {
+public class HomePresenter extends BasePresenter<HomeView> {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    public HomePresenter(HomeView view) {
+        super(view);
+    }
 
     public void fetchData() {
         ifViewAttached(view -> view.loadingData(true));
