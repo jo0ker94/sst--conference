@@ -189,7 +189,12 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
     @NonNull
     @Override
     public HomePresenter createPresenter() {
-        return new HomePresenter(this);
+        return new HomePresenter();
+    }
+
+    @Override
+    public void attachView() {
+        presenter.attachView(this);
     }
 
     @Override

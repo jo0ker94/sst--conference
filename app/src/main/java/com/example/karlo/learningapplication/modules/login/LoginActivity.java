@@ -57,6 +57,11 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         checkIfLogged();
     }
 
+    @Override
+    public void attachView() {
+        presenter.attachView(this);
+    }
+
     private void setUpGoogleClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -88,7 +93,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @NonNull
     @Override
     public LoginPresenter createPresenter() {
-        return new LoginPresenter(this);
+        return new LoginPresenter();
     }
 
     @Override

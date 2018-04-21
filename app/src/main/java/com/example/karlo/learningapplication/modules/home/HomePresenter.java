@@ -19,10 +19,6 @@ public class HomePresenter extends BasePresenter<HomeView> {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public HomePresenter(HomeView view) {
-        super(view);
-    }
-
     public void fetchData() {
         ifViewAttached(view -> view.loadingData(true));
         compositeDisposable.add(RetrofitUtil

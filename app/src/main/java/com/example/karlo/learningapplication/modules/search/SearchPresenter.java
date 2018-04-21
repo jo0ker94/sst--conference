@@ -23,10 +23,6 @@ public class SearchPresenter extends BasePresenter<SearchView> {
     private static final String CUSTOM_SEARCH_ID = "004785902684984064423:npuxlr36ea0";
     private static final String API_KEY = "AIzaSyBCvwdTitSfeF53hy-uvM_RR-klHk_OB2k";
 
-    public SearchPresenter(SearchView view) {
-        super(view);
-    }
-
     public void searchWiki(String query) {
         if (TextUtils.isEmpty(query)) {
             ifViewAttached(view -> {

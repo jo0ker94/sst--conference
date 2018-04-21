@@ -126,7 +126,11 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
     @NonNull
     @Override
     public SearchPresenter createPresenter() {
-        return new SearchPresenter(this);
+        return new SearchPresenter();
     }
 
+    @Override
+    public void attachView() {
+        presenter.attachView(this);
+    }
 }

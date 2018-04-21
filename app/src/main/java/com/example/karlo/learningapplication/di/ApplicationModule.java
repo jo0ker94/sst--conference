@@ -28,7 +28,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public LoginPresenter provideLoginPresenter(LoginView view) {
-        return new LoginPresenter(view);
+    public LoginPresenter provideLoginPresenter() {
+        return new LoginPresenter();
     }
 }

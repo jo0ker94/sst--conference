@@ -12,11 +12,11 @@ public abstract class BasePresenter<V extends BaseView> {
 
     private WeakReference<V> viewRef;
 
-    public BasePresenter(V view) {
-        attachView(view);
-    }
+    //public BasePresenter(V view) {
+    //    attachView(view);
+    //}
 
-    protected void attachView(V view) {
+    public void attachView(V view) {
         viewRef = new WeakReference<>(view);
     }
 

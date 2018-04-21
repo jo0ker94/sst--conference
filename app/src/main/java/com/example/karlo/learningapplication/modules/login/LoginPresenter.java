@@ -35,10 +35,6 @@ public class LoginPresenter extends BasePresenter<LoginView> {
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public LoginPresenter(LoginView view) {
-        super(view);
-    }
-
     public void login(final LoginRequest request) {
         if(request.getEmail().isEmpty() && request.getPassword().isEmpty()) {
             ifViewAttached(view -> getView().showError(new Throwable(((LoginActivity) getView()).getString(R.string.enter_all_fields))));

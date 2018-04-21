@@ -14,7 +14,10 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = createPresenter();
+        attachView();
     }
+
+    public abstract void attachView();
 
     @NonNull
     public abstract P createPresenter();
