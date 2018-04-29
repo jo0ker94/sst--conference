@@ -1,0 +1,63 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="57dp"
+    android:gravity="center"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/search_icon_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_search"/>
+
+    <ImageView
+        android:id="@+id/search_back_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_action_arrow_back"/>
+
+    <ImageView
+        android:id="@+id/search_clear_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="invisible"
+        android:src="@drawable/search_close_icon"/>
+
+    <EditText
+        android:id="@+id/search_edit_text"
+        android:imeOptions="actionSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/white"
+        android:hint="@string/search"
+        android:ellipsize="end"
+        android:inputType="text"
+        android:maxLines="1"
+        style="@style/EditTextStyle"
+        android:theme="@style/EditTextTheme"
+        android:textColorHint="@color/divider_grey"
+        android:layout_toRightOf="@id/search_icon_image"
+        android:layout_toLeftOf="@id/search_clear_image"
+        android:gravity="center_vertical"/>
+
+    <View android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_grey"/>
+
+</RelativeLayout>
