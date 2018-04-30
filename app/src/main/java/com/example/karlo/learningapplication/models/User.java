@@ -1,10 +1,12 @@
 package com.example.karlo.learningapplication.models;
 
+import android.arch.persistence.room.Entity;
 import android.net.Uri;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.reactivex.annotations.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,12 +14,13 @@ import io.realm.annotations.PrimaryKey;
  * Created by Karlo on 25.3.2018..
  */
 
+@Entity
 public class User extends RealmObject {
 
     @PrimaryKey
     @SerializedName("user_id")
     @Expose
-    private String userId;
+    @android.arch.persistence.room.PrimaryKey @android.support.annotation.NonNull private String userId;
 
     @SerializedName("mail")
     @Expose
@@ -56,5 +59,21 @@ public class User extends RealmObject {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

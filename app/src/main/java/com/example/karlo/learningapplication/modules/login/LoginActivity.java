@@ -1,38 +1,36 @@
 package com.example.karlo.learningapplication.modules.login;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.commons.BaseActivity;
 import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.helpers.DatabaseHelper;
+import com.example.karlo.learningapplication.database.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.UserDao;
+import com.example.karlo.learningapplication.database.UserDatabase;
 import com.example.karlo.learningapplication.models.LoginRequest;
-import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by Karlo on 25.3.2018..
- */
-
-public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements
+public class LoginActivity extends AppCompatActivity implements
         LoginView,
         LoginFragment.LoginInterface,
         RegisterFragment.RegisterInterface {
@@ -42,6 +40,8 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @BindView(R.id.pager)
     ViewPager mPager;
 
+    private CompositeDisposable mDisposable = new CompositeDisposable();
+    private LoginViewModel mViewModel;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -51,15 +51,33 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
         ButterKnife.bind(this);
 
+        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        UserDao userDao = UserDatabase.getDatabase(this).userModel();
+        mViewModel.setDataSource(new LocalUserDataSource(userDao));
+
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
         checkIfLogged();
-    }
 
-    @Override
-    public void attachView() {
-        presenter.attachView(this);
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case SIGNUP:
+                    onSignUp(status.getLoginRequest());
+                    break;
+                case LOGIN:
+                    goToHome();
+                    break;
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+                case SUCCESS:
+                    break;
+            }
+        });
     }
 
     private void setUpGoogleClient() {
@@ -78,10 +96,14 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     private void checkIfLogged() {
-        List<User> profiles = DatabaseHelper.getAllObjects(User.class);
-        if (profiles != null && profiles.size() > 0) {
-            goToHome();
-        }
+        mDisposable.add(mViewModel.getUser()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(user -> {
+                    if (user != null) {
+                        goToHome();
+                    }
+                }));
     }
 
     @Override
@@ -90,10 +112,10 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         checkIfLogged();
     }
 
-    @NonNull
     @Override
-    public LoginPresenter createPresenter() {
-        return new LoginPresenter();
+    protected void onDestroy() {
+        super.onDestroy();
+        mDisposable.clear();
     }
 
     @Override
@@ -104,7 +126,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
     @Override
     public void onSignUp(LoginRequest loginRequest) {
-        presenter.login(loginRequest);
+        mViewModel.login(loginRequest);
     }
 
     @Override
@@ -126,18 +148,18 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.RC_SIGN_IN) {
-            presenter.signUpWithGoogle(data);
+            mViewModel.signUpWithGoogle(data);
         }
     }
 
     @Override
     public void onLogin(String email, String password) {
-        presenter.login(new LoginRequest(email, password));
+        mViewModel.login(new LoginRequest(email, password));
     }
 
     @Override
     public void onRegister(LoginRequest loginRequest) {
-        presenter.signup(loginRequest);
+        mViewModel.signup(loginRequest);
     }
 
     @Override

@@ -1,11 +1,18 @@
 package com.example.karlo.learningapplication.modules.login;
 
+import android.app.Activity;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.commons.BasePresenter;
 import com.example.karlo.learningapplication.commons.Constants;
+import com.example.karlo.learningapplication.commons.Status;
+import com.example.karlo.learningapplication.database.UserDataSource;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.LoginRequest;
 import com.example.karlo.learningapplication.models.User;
@@ -20,60 +27,84 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by Karlo on 25.3.2018..
- */
+public class LoginViewModel extends AndroidViewModel {
 
-public class LoginPresenter extends BasePresenter<LoginView> {
+    private static final String TAG = "LoginViewModel";
+    private final MutableLiveData<Status> status = new MutableLiveData<>();
 
-    private static final String TAG = "LoginActivity";
-
-    public FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private UserDataSource mDataSource;
+
+    public LoginViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    public void setDataSource(UserDataSource userDataSource) {
+        mDataSource = userDataSource;
+    }
+
+    public LiveData<Status> getStatus() {
+        return status;
+    }
+
+    public Flowable<User> getUser() {
+        return mDataSource.getUser();
+    }
+
+    public Completable deleteUser(User user) {
+        return Completable.fromAction(() -> mDataSource.deleteUser(user));
+    }
+
+    public Completable insertUser(User user) {
+        return Completable.fromAction(() -> mDataSource.insertOrUpdateUser(user));
+    }
 
     public void login(final LoginRequest request) {
         if(request.getEmail().isEmpty() && request.getPassword().isEmpty()) {
-            ifViewAttached(view -> getView().showError(new Throwable(((LoginActivity) getView()).getString(R.string.enter_all_fields))));
+            status.setValue(Status.error(getApplication().getApplicationContext().getString(R.string.enter_all_fields)));
         } else {
-            ifViewAttached(view -> getView().loadingData(true));
+            status.setValue(Status.loading(true));
             mAuth.signInWithEmailAndPassword(request.getEmail(), request.getPassword())
-                    .addOnCompleteListener(((LoginActivity) getView()), task -> {
+                    .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             getDisplayNameAndSaveUser(mAuth.getCurrentUser());
                         } else {
-                            ifViewAttached(view -> getView().showError(new Throwable(task.getException().getMessage())));
+                            status.setValue(Status.error(task.getException().getMessage()));
                         }
-                        ifViewAttached(view -> getView().loadingData(false));
+                        status.setValue(Status.loading(false));
                     });
         }
     }
 
     public void signup(final LoginRequest request) {
         if (request.getEmail().isEmpty() && request.getPassword().isEmpty() && request.getDisplayName().isEmpty()) {
-            ifViewAttached(view -> getView().showError(new Throwable(((LoginActivity) getView()).getString(R.string.enter_all_fields))));
+            status.setValue(Status.error(getApplication().getApplicationContext().getString(R.string.enter_all_fields)));
         } else {
-            ifViewAttached(view -> getView().loadingData(true));
+            status.setValue(Status.loading(true));
             mAuth.createUserWithEmailAndPassword(request.getEmail(), request.getPassword())
-                    .addOnCompleteListener(((LoginActivity) getView()), task -> {
+                    .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             saveDisplayNameOnServer(firebaseUser, request.getDisplayName());
                             request.setDisplayName(null);
-                            ifViewAttached(view -> getView().onSignUp(request));
+                            status.setValue(Status.onSignUp(request));
                         } else {
-                            ifViewAttached(view -> getView().showError(new Throwable(task.getException().getMessage())));
+                            status.setValue(Status.error(task.getException().getMessage()));
                         }
-                        ifViewAttached(view -> getView().loadingData(false));
+                        status.setValue(Status.loading(false));
                     });
         }
     }
 
     public void signUpWithGoogle(Intent data) {
-        ifViewAttached(view -> getView().loadingData(true));
+        status.setValue(Status.loading(true));
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         handleSignInResult(task);
     }
@@ -88,15 +119,15 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             saveUserToDatabase(firebaseUser, null);
                             saveDisplayNameOnServer(firebaseUser, null);
-                            ifViewAttached(view -> getView().onLoggedIn());
+                            status.setValue(new Status(Status.Response.LOGIN, true));
                         } else {
-                            ifViewAttached(view -> getView().showError(new Throwable(task.getException().getMessage())));
+                            status.setValue(Status.error(task.getException().getMessage()));
                         }
-                        ifViewAttached(view -> getView().loadingData(false));
+                        status.setValue(Status.loading(false));
                     });
         } catch (ApiException e) {
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            ifViewAttached(view -> getView().showError(new Throwable(e.getMessage())));
+            status.setValue(Status.error(e.getMessage()));
         }
     }
 
@@ -109,13 +140,15 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(name -> {
                     saveUserToDatabase(firebaseUser, name);
-                    ifViewAttached(view -> getView().onLoggedIn());
                 }));
     }
 
     private void saveUserToDatabase(FirebaseUser firebaseUser, String displayName) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), displayName != null ? displayName : firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl());
-        DatabaseHelper.saveRealmObject(user);
+        compositeDisposable.add(insertUser(user)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> status.setValue(Status.login(user))));
     }
 
     private void saveDisplayNameOnServer(FirebaseUser firebaseUser, String displayName) {
@@ -126,11 +159,5 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         firebaseUser.getEmail(),
                         displayName != null ? displayName : firebaseUser.getDisplayName(),
                         firebaseUser.getPhotoUrl()));
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        compositeDisposable.clear();
     }
 }

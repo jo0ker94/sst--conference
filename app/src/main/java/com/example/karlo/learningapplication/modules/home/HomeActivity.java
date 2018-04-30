@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.ConferenceChairsAdapter;
 import com.example.karlo.learningapplication.commons.BaseActivity;
+import com.example.karlo.learningapplication.database.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.UserDao;
+import com.example.karlo.learningapplication.database.UserDatabase;
 import com.example.karlo.learningapplication.models.ConferenceChair;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
@@ -72,6 +75,8 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setUpNavigation();
+        UserDao userDao = UserDatabase.getDatabase(this).userModel();
+        presenter.setDataSource(new LocalUserDataSource(userDao));
         presenter.fetchData();
         presenter.fetchUser();
     }
