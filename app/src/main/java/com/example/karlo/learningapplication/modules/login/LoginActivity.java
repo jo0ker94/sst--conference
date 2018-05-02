@@ -1,5 +1,6 @@
 package com.example.karlo.learningapplication.modules.login;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +16,12 @@ import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
+import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.database.LocalUserDataSource;
 import com.example.karlo.learningapplication.database.UserDao;
 import com.example.karlo.learningapplication.database.UserDatabase;
 import com.example.karlo.learningapplication.models.LoginRequest;
+import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,11 +57,17 @@ public class LoginActivity extends AppCompatActivity implements
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         UserDao userDao = UserDatabase.getDatabase(this).userModel();
         mViewModel.setDataSource(new LocalUserDataSource(userDao));
+        mViewModel.checkIfLoggedIn();
 
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
-        checkIfLogged();
+
+        mViewModel.getUser().observe(this, user -> {
+            if (user != null) {
+                goToHome();
+            }
+        });
 
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {
@@ -66,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements
                     onSignUp(status.getLoginRequest());
                     break;
                 case LOGIN:
-                    goToHome();
+                    onLoggedIn();
                     break;
                 case LOADING:
                     loadingData(status.getState());
@@ -95,23 +104,6 @@ public class LoginActivity extends AppCompatActivity implements
         finish();
     }
 
-    private void checkIfLogged() {
-        mDisposable.add(mViewModel.getUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(user -> {
-                    if (user != null) {
-                        goToHome();
-                    }
-                }));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        checkIfLogged();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -121,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onLoggedIn() {
         Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show();
-        checkIfLogged();
+        goToHome();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.karlo.learningapplication.modules.login;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
@@ -28,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -37,6 +35,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     private static final String TAG = "LoginViewModel";
     private final MutableLiveData<Status> status = new MutableLiveData<>();
+    private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -50,12 +49,19 @@ public class LoginViewModel extends AndroidViewModel {
         mDataSource = userDataSource;
     }
 
+    public void checkIfLoggedIn() {
+        compositeDisposable.add(mDataSource.getUser()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mUser::setValue));
+    }
+
     public LiveData<Status> getStatus() {
         return status;
     }
 
-    public Flowable<User> getUser() {
-        return mDataSource.getUser();
+    public LiveData<User> getUser() {
+        return mUser;
     }
 
     public Completable deleteUser(User user) {
