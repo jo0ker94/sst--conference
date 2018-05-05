@@ -1,6 +1,5 @@
 package com.example.karlo.learningapplication.modules.login;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +15,10 @@ import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.commons.Status;
-import com.example.karlo.learningapplication.database.LocalUserDataSource;
-import com.example.karlo.learningapplication.database.UserDao;
-import com.example.karlo.learningapplication.database.UserDatabase;
+import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.user.UserDao;
+import com.example.karlo.learningapplication.database.user.UserDatabase;
 import com.example.karlo.learningapplication.models.LoginRequest;
-import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,9 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity implements
         LoginView,
@@ -63,11 +58,7 @@ public class LoginActivity extends AppCompatActivity implements
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
 
-        mViewModel.getUser().observe(this, user -> {
-            if (user != null) {
-                goToHome();
-            }
-        });
+        mViewModel.getUser().observe(this, user -> goToHome());
 
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {

@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.database;
+package com.example.karlo.learningapplication.database.user;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;

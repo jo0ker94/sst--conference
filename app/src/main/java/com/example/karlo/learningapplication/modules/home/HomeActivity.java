@@ -26,11 +26,12 @@ import android.widget.Toast;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.ConferenceChairsAdapter;
 import com.example.karlo.learningapplication.commons.BaseActivity;
-import com.example.karlo.learningapplication.database.LocalUserDataSource;
-import com.example.karlo.learningapplication.database.UserDao;
-import com.example.karlo.learningapplication.database.UserDatabase;
+import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.user.UserDao;
+import com.example.karlo.learningapplication.database.user.UserDatabase;
 import com.example.karlo.learningapplication.models.ConferenceChair;
 import com.example.karlo.learningapplication.models.User;
+import com.example.karlo.learningapplication.modules.gallery.ImageActivity;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
 import com.squareup.picasso.Callback;
@@ -126,6 +127,9 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
             case R.id.logout:
                 presenter.signOut();
                 return true;
+            case R.id.images:
+                startActivity(new Intent(HomeActivity.this, ImageActivity.class));
+                return true;
             default:
                 return false;
         }
@@ -160,7 +164,7 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
         mUserEmail.setText(user.getMail());
         Picasso.get()
                 .load(user.getImageUrl())
-                .resize(100, 100)
+                .fit()
                 .centerCrop()
                 .placeholder(R.drawable.ic_account)
                 .into(mUserImage, new Callback() {
@@ -233,8 +237,8 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
         TextView chairFacility = view.findViewById(R.id.tvFacility);
         Picasso.get()
                 .load(chair.getImageUrl())
-                .resize(250, 350)
-                .centerCrop()
+                .fit()
+                .centerInside()
                 .placeholder(R.drawable.no_img)
                 .into(chairImage);
         chairTitle.setText(chair.getChairTitle());

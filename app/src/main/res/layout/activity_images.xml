@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000">
+
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/imageListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/emptyData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_margin="40dp"
+        android:text="@string/there_are_no_uploaded_images_be_the_first_to_upload"
+        android:visibility="gone"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:layout_centerInParent="true"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="20dp"/>
+
+</RelativeLayout>

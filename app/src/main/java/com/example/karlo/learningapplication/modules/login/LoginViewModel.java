@@ -11,7 +11,7 @@ import android.util.Log;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.commons.Status;
-import com.example.karlo.learningapplication.database.UserDataSource;
+import com.example.karlo.learningapplication.database.user.UserDataSource;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.LoginRequest;
 import com.example.karlo.learningapplication.models.User;

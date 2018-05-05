@@ -22,6 +22,10 @@ public class DatabaseHelper {
         return database.getReference("users");
     }
 
+    public static DatabaseReference getImagesReference() {
+        return database.getReference("2017/images/");
+    }
+
     public static <T extends RealmObject> int generateId(Class<T> classType) {
         Realm realm = Realm.getDefaultInstance();
         Number number = realm.where(classType).max("id");

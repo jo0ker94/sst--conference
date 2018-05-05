@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.karlo.learningapplication.Animations;
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.adapters.WikiResultRecyclerAdapter;
+import com.example.karlo.learningapplication.adapters.WikiResultAdapter;
 import com.example.karlo.learningapplication.commons.BaseActivity;
 import com.example.karlo.learningapplication.models.wiki.WikiResult;
 import com.example.karlo.learningapplication.ui.SearchBarView;
@@ -124,7 +124,7 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
 
     @Override
     public void showResult(WikiResult result) {
-        WikiResultRecyclerAdapter adapter = new WikiResultRecyclerAdapter(result.getItems(), (view, position) ->
+        WikiResultAdapter adapter = new WikiResultAdapter(result.getItems(), (view, position) ->
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result.getItems().get(position).getLink())))
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

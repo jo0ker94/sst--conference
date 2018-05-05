@@ -27,4 +27,21 @@
     <string name="steering_committee">Steering committee</string>
     <string name="program_committee">Program committee</string>
     <string name="organizing_committee">Organizing committee</string>
+    <string name="upload_image">Upload image</string>
+    <string name="image_feed">Image feed</string>
+    <string name="image_upload">Image upload</string>
+    <string name="image_upload_message">Are you sure you want to upload selected image?</string>
+    <string name="upload">Upload</string>
+    <string name="cancel">Cancel</string>
+    <string name="take_image">Take Image</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="image_uri" formatted="false">%s%s%s?alt=media</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="upload_process" formatted="true">Uploaded: %d%%</string>
+    <string name="uploading">Uploading...</string>
+
+    <string name="facebook_app_id">781120082085760</string>
+    <string name="share_image">Share image.</string>
+    <string name="there_are_no_uploaded_images_be_the_first_to_upload">There are no uploaded images, be the first to upload!</string>
 </resources>

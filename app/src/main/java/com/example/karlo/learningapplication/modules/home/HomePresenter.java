@@ -2,7 +2,7 @@ package com.example.karlo.learningapplication.modules.home;
 
 import com.example.karlo.learningapplication.commons.BasePresenter;
 import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.database.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
 import com.example.karlo.learningapplication.servertasks.interfaces.Api;

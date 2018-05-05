@@ -21,4 +21,7 @@ public interface Api {
 
     @GET("2017/conferenceChairs.json")
     io.reactivex.Observable<List<ConferenceChair>> getChairs();
+
+    @GET("2017/images.json")
+    io.reactivex.Observable<List<String>> getImages();
 }

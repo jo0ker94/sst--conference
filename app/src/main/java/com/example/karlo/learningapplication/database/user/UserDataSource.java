@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.database;
+package com.example.karlo.learningapplication.database.user;
 
 import com.example.karlo.learningapplication.models.User;
 

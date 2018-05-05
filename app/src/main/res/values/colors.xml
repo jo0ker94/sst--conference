@@ -13,6 +13,7 @@
 
     <color name="material_blue_disabled">#79d0f3</color>
     <color name="material_blue">#0690ED</color>
+    <color name="black_trans">#35000000</color>
     <color name="button_blue">#00adf2</color>
 
 </resources>

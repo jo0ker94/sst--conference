@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -14,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBarTheme">
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
         <activity
             android:name=".modules.login.LoginActivity"
@@ -36,7 +40,11 @@
             android:name=".modules.search.SearchActivity"
             android:windowSoftInputMode="adjustResize">
         </activity>
-    </application>
+        <activity
+            android:name=".modules.gallery.ImageActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
 
+    </application>
 
 </manifest>
