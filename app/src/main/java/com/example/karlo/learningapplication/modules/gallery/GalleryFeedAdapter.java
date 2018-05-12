@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ImageFeedAdapter extends  RecyclerView.Adapter<ImageFeedAdapter.ViewHolder> {
+public class GalleryFeedAdapter extends  RecyclerView.Adapter<GalleryFeedAdapter.ViewHolder> {
 
     private List<String> mItems;
     private OnItemClickListener mListener;
@@ -20,7 +20,7 @@ public class ImageFeedAdapter extends  RecyclerView.Adapter<ImageFeedAdapter.Vie
         void onItemClick(View view, int position);
     }
 
-    public ImageFeedAdapter(List<String> items, OnItemClickListener listener) {
+    public GalleryFeedAdapter(List<String> items, OnItemClickListener listener) {
         mItems = items;
         mListener = listener;
     }

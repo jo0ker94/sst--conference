@@ -3,8 +3,10 @@ package com.example.karlo.learningapplication.di;
 import android.content.Context;
 
 import com.example.karlo.learningapplication.App;
-import com.example.karlo.learningapplication.modules.login.LoginPresenter;
-import com.example.karlo.learningapplication.modules.login.LoginView;
+import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
+import com.example.karlo.learningapplication.database.user.UserDao;
+import com.example.karlo.learningapplication.database.user.UserDataSource;
+import com.example.karlo.learningapplication.database.user.UserDatabase;
 
 import javax.inject.Singleton;
 
@@ -28,7 +30,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public LoginPresenter provideLoginPresenter() {
-        return new LoginPresenter();
+    public UserDao providesUserDao() {
+        return UserDatabase.getDatabase(application).userModel();
+    }
+
+    @Provides
+    @Singleton
+    public UserDataSource providesLocalUserDataSource(UserDao userDao) {
+        return new LocalUserDataSource(userDao);
     }
 }

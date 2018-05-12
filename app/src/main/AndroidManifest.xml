@@ -16,35 +16,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBarTheme">
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".modules.login.LoginActivity"
-            android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/NoActionBarTheme">
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".modules.home.HomeActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".modules.calendar.CalendarActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".modules.search.SearchActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".modules.gallery.ImageActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-
+            android:name=".modules.gallery.GalleryActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".modules.program.ProgramActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

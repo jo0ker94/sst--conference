@@ -14,12 +14,31 @@
         <include android:id="@+id/toolbar"
             layout="@layout/toolbar"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/toolbar"
-            android:id="@+id/committeeRecyclerView"
+        <android.support.v7.widget.CardView
+            android:id="@+id/program_link"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="150dp"
+            android:layout_below="@+id/toolbar"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/calendar_background"/>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/gallery_link"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/program_link"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gallery_background"/>
+        </android.support.v7.widget.CardView>
 
         <android.support.v4.widget.ContentLoadingProgressBar
             android:id="@+id/progress_bar"

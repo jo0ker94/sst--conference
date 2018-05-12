@@ -1,11 +1,9 @@
 package com.example.karlo.learningapplication.modules.login;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.karlo.learningapplication.R;
@@ -26,12 +24,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import javax.inject.Inject;
+
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginViewModel extends AndroidViewModel {
+public class LoginViewModel extends ViewModel {
 
     private static final String TAG = "LoginViewModel";
     private final MutableLiveData<Status> status = new MutableLiveData<>();
@@ -41,12 +41,10 @@ public class LoginViewModel extends AndroidViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private UserDataSource mDataSource;
 
-    public LoginViewModel(@NonNull Application application) {
-        super(application);
-    }
-
-    public void setDataSource(UserDataSource userDataSource) {
-        mDataSource = userDataSource;
+    @Inject
+    public LoginViewModel(UserDataSource userDataSource) {
+        this.mDataSource = userDataSource;
+        checkIfLoggedIn();
     }
 
     public void checkIfLoggedIn() {
@@ -74,7 +72,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void login(final LoginRequest request) {
         if(request.getEmail().isEmpty() && request.getPassword().isEmpty()) {
-            status.setValue(Status.error(getApplication().getApplicationContext().getString(R.string.enter_all_fields)));
+            status.setValue(Status.error(R.string.enter_all_fields));
         } else {
             status.setValue(Status.loading(true));
             mAuth.signInWithEmailAndPassword(request.getEmail(), request.getPassword())
@@ -91,7 +89,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void signup(final LoginRequest request) {
         if (request.getEmail().isEmpty() && request.getPassword().isEmpty() && request.getDisplayName().isEmpty()) {
-            status.setValue(Status.error(getApplication().getApplicationContext().getString(R.string.enter_all_fields)));
+            status.setValue(Status.error(R.string.enter_all_fields));
         } else {
             status.setValue(Status.loading(true));
             mAuth.createUserWithEmailAndPassword(request.getEmail(), request.getPassword())
@@ -165,5 +163,11 @@ public class LoginViewModel extends AndroidViewModel {
                         firebaseUser.getEmail(),
                         displayName != null ? displayName : firebaseUser.getDisplayName(),
                         firebaseUser.getPhotoUrl()));
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
     }
 }

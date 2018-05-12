@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.pager.CardFragmentPagerAdapter;
@@ -30,11 +31,13 @@ import com.example.karlo.learningapplication.pager.ShadowTransformer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class ImageActivity extends AppCompatActivity implements ImageFeedAdapter.OnItemClickListener {
+public class GalleryActivity extends AppCompatActivity implements GalleryFeedAdapter.OnItemClickListener {
 
     @BindView(R.id.imageListView)
     RecyclerView mRecyclerView;
@@ -47,10 +50,11 @@ public class ImageActivity extends AppCompatActivity implements ImageFeedAdapter
     @BindView(R.id.emptyData)
     TextView mEmptyData;
 
-    private ImagesViewModel mViewModel;
-    private ImageFeedAdapter mAdapter;
+    @Inject
+    GalleryViewModel mViewModel;
+    private GalleryFeedAdapter mAdapter;
     private ProgressDialog mProgressDialog;
-    private ImageActivity mActivity;
+    private GalleryActivity mActivity;
 
     private Uri filePath;
     private List<String> mItems = new ArrayList<>();
@@ -62,15 +66,17 @@ public class ImageActivity extends AppCompatActivity implements ImageFeedAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
         ButterKnife.bind(this);
+        ((App) getApplication()).getComponent().inject(this);
         setUpToolbar();
 
         mActivity = this;
         mProgressDialog = new ProgressDialog(this);
-        mViewModel = ViewModelProviders.of(this).get(ImagesViewModel.class);
-
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);
+        setUpObservers();
+        }
 
+    private void setUpObservers() {
         mViewModel.getImages().observe(this, strings -> {
             mProgressBar.setVisibility(View.GONE);
             if (strings != null && !strings.isEmpty()) {
@@ -98,9 +104,7 @@ public class ImageActivity extends AppCompatActivity implements ImageFeedAdapter
                     break;
             }
         });
-
-        mViewModel.downloadImages();
-        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -112,7 +116,7 @@ public class ImageActivity extends AppCompatActivity implements ImageFeedAdapter
         if (hasData) {
             mAdapter.notifyDataSetChanged();
         } else {
-            mAdapter = new ImageFeedAdapter(mItems, this);
+            mAdapter = new GalleryFeedAdapter(mItems, this);
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(getSpanCount(), StaggeredGridLayoutManager.VERTICAL);
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mAdapter);

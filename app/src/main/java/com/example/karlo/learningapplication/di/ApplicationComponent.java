@@ -1,6 +1,9 @@
 package com.example.karlo.learningapplication.di;
 
 import com.example.karlo.learningapplication.App;
+import com.example.karlo.learningapplication.modules.gallery.GalleryActivity;
+import com.example.karlo.learningapplication.modules.home.HomeActivity;
+import com.example.karlo.learningapplication.modules.login.LoginActivity;
 
 import javax.inject.Singleton;
 
@@ -14,4 +17,7 @@ import dagger.Component;
 })
 public interface ApplicationComponent {
     void inject(App target);
+    void inject(LoginActivity target);
+    void inject(HomeActivity target);
+    void inject(GalleryActivity target);
 }

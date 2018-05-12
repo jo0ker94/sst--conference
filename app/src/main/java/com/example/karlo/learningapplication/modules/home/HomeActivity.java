@@ -2,9 +2,7 @@ package com.example.karlo.learningapplication.modules.home;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,9 +10,8 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,21 +20,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.adapters.ConferenceChairsAdapter;
-import com.example.karlo.learningapplication.commons.BaseActivity;
-import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
-import com.example.karlo.learningapplication.database.user.UserDao;
-import com.example.karlo.learningapplication.database.user.UserDatabase;
-import com.example.karlo.learningapplication.models.ConferenceChair;
 import com.example.karlo.learningapplication.models.User;
-import com.example.karlo.learningapplication.modules.gallery.ImageActivity;
+import com.example.karlo.learningapplication.modules.gallery.GalleryActivity;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
+import com.example.karlo.learningapplication.modules.program.ProgramActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,15 +39,16 @@ import butterknife.ButterKnife;
  * Created by Karlo on 26.3.2018..
  */
 
-public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
-        implements HomeView,
-        NavigationView.OnNavigationItemSelectedListener,
-        ConferenceChairsAdapter.OnItemClickListener {
+public class HomeActivity extends AppCompatActivity
+        implements HomeView ,
+        NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.committeeRecyclerView)
-    RecyclerView mRecyclerView;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.program_link)
+    CardView mLinkToProgram;
+    @BindView(R.id.gallery_link)
+    CardView mLinkToGallery;
 
     //
     // Navigation
@@ -62,24 +56,51 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
     @BindView(R.id.drawer)
     DrawerLayout mDrawerLayout;
 
+    @Inject
+    HomeViewModel mViewModel;
+
     private ImageView mUserImage;
     private TextView mUserName;
     private TextView mUserEmail;
 
     private ActionBarDrawerToggle mToggle;
 
-    private ConferenceChairsAdapter mAdapter;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        ((App) getApplication()).getComponent().inject(this);
         setUpNavigation();
-        UserDao userDao = UserDatabase.getDatabase(this).userModel();
-        presenter.setDataSource(new LocalUserDataSource(userDao));
-        presenter.fetchData();
-        presenter.fetchUser();
+        setUpListeners();
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+        mViewModel.getUser().observe(this, user -> {
+            if (user != null) {
+                bindUser(user);
+            }
+        });
+
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case LOGOUT:
+                    logOut();
+                    break;
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+            }
+        });
+    }
+
+    private void setUpListeners() {
+        mLinkToGallery.setOnClickListener(view -> goToGallery());
+        mLinkToProgram.setOnClickListener(view -> goToProgram());
     }
 
     private void setUpNavigation() {
@@ -125,14 +146,26 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
                 mDrawerLayout.closeDrawers();
                 return true;
             case R.id.logout:
-                presenter.signOut();
+                mViewModel.signOut();
                 return true;
             case R.id.images:
-                startActivity(new Intent(HomeActivity.this, ImageActivity.class));
+                startActivity(new Intent(HomeActivity.this, GalleryActivity.class));
                 return true;
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void goToGallery() {
+        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goToProgram() {
+        Intent intent = new Intent(HomeActivity.this, ProgramActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -149,14 +182,6 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
 
     @Override
     public void onBackPressed() { }
-
-    @Override
-    public void showData(List<ConferenceChair> chairs) {
-        mAdapter = new ConferenceChairsAdapter(chairs, this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-    }
 
     @Override
     public void bindUser(User user) {
@@ -193,67 +218,5 @@ public class HomeActivity extends BaseActivity<HomeView, HomePresenter>
     @Override
     public void loadingData(boolean loading) {
         mProgressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-    }
-
-    @NonNull
-    @Override
-    public HomePresenter createPresenter() {
-        return new HomePresenter();
-    }
-
-    @Override
-    public void attachView() {
-        presenter.attachView(this);
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        showChairDetails(mAdapter.getItem(position));
-    }
-
-    @Override
-    public void openMailDialog(String mail) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "SST 2017");
-        intent.setData(Uri.parse("mailto:" + mail));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    private void openDialDialog(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
-        startActivity(intent);
-    }
-
-    private void showChairDetails(ConferenceChair chair) {
-        View view = getLayoutInflater().inflate(R.layout.conference_chair_details, null);
-        ImageView chairImage = view.findViewById(R.id.chairImageView);
-        TextView chairTitle = view.findViewById(R.id.tvTitle);
-        TextView chairName = view.findViewById(R.id.tvName);
-        TextView chairEmail = view.findViewById(R.id.tvEmail);
-        TextView chairPhone = view.findViewById(R.id.tvPhone);
-        TextView chairFacility = view.findViewById(R.id.tvFacility);
-        Picasso.get()
-                .load(chair.getImageUrl())
-                .fit()
-                .centerInside()
-                .placeholder(R.drawable.no_img)
-                .into(chairImage);
-        chairTitle.setText(chair.getChairTitle());
-        chairName.setText(chair.getName());
-        chairEmail.setText(chair.getEmail());
-        chairPhone.setText(chair.getPhoneNumber());
-        chairFacility.setText(chair.getFacility());
-
-        chairEmail.setPaintFlags(chairEmail.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        chairPhone.setPaintFlags(chairPhone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        chairEmail.setOnClickListener(emailView -> openMailDialog(chair.getEmail()));
-        chairPhone.setOnClickListener(phoneView -> openDialDialog(chair.getPhoneNumber()));
-
-        new AlertDialog.Builder(this)
-                .setView(view)
-                .show();
     }
 }

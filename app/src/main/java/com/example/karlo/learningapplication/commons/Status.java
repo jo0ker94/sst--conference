@@ -61,6 +61,10 @@ public class Status {
         return new Status(Response.ERROR, message);
     }
 
+    public static Status error(int message) {
+        return new Status(Response.ERROR, message);
+    }
+
     public static Status onSignUp(LoginRequest loginRequest) {
         return new Status(Response.SIGNUP, loginRequest);
     }
@@ -77,12 +81,16 @@ public class Status {
         return new Status(Response.LOGIN, user);
     }
 
+    public static Status logout() {
+        return new Status(Response.LOGOUT, true);
+    }
+
     public int getProgress() {
         return mProgress;
     }
 
     public enum Response {
-        LOADING, SUCCESS, ERROR, LOGIN, SIGNUP, MESSAGE, PROGRESS
+        LOADING, SUCCESS, ERROR, LOGIN, LOGOUT, SIGNUP, MESSAGE, PROGRESS
     }
 }
 

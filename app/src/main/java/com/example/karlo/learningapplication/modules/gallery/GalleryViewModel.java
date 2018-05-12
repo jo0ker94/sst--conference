@@ -1,15 +1,12 @@
 package com.example.karlo.learningapplication.modules.gallery;
 
-import android.app.Application;
-import android.app.ProgressDialog;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
@@ -27,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ImagesViewModel extends AndroidViewModel {
+public class GalleryViewModel extends ViewModel {
 
     private MutableLiveData<List<String>> mImageUrl = new MutableLiveData<>();
     private MutableLiveData<Status> mStatus = new MutableLiveData<>();
@@ -42,8 +41,12 @@ public class ImagesViewModel extends AndroidViewModel {
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public ImagesViewModel(@NonNull Application application) {
-        super(application);
+    private Context application;
+
+    @Inject
+    public GalleryViewModel(Context application) {
+        this.application = application;
+        downloadImages();
     }
 
     public void downloadImages() {
@@ -74,7 +77,7 @@ public class ImagesViewModel extends AndroidViewModel {
 
             Bitmap bmp = null;
             try {
-                bmp = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), filePath);
+                bmp = MediaStore.Images.Media.getBitmap(application.getContentResolver(), filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -85,7 +88,7 @@ public class ImagesViewModel extends AndroidViewModel {
             UploadTask uploadTask = ref.putBytes(baos.toByteArray());
             uploadTask
                     .addOnSuccessListener(taskSnapshot -> {
-                        mStatus.setValue(Status.message(getApplication().getResources().getString(R.string.uploaded)));
+                        mStatus.setValue(Status.message(application.getResources().getString(R.string.uploaded)));
                         saveImageToServer(name);
                     })
                     .addOnFailureListener(e -> mStatus.setValue(Status.message(e.getMessage())))
@@ -98,7 +101,7 @@ public class ImagesViewModel extends AndroidViewModel {
     }
 
     private void saveImageToServer(String name) {
-        String path = String.format(getApplication().
+        String path = String.format(application.
                         getResources().getString(R.string.image_uri),
                 Constants.FIREBASE_STORAGE_URL,
                 Constants.IMAGES_ENDPOINT,
@@ -110,5 +113,11 @@ public class ImagesViewModel extends AndroidViewModel {
 
         mImages.add(path);
         mImageUrl.setValue(mImages);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear();
     }
 }

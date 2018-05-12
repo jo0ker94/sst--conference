@@ -1,6 +1,5 @@
 package com.example.karlo.learningapplication.modules.login;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,16 +12,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.database.user.LocalUserDataSource;
-import com.example.karlo.learningapplication.database.user.UserDao;
-import com.example.karlo.learningapplication.database.user.UserDatabase;
 import com.example.karlo.learningapplication.models.LoginRequest;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,27 +38,25 @@ public class LoginActivity extends AppCompatActivity implements
     ViewPager mPager;
 
     private CompositeDisposable mDisposable = new CompositeDisposable();
-    private LoginViewModel mViewModel;
     private GoogleSignInClient mGoogleSignInClient;
+
+    @Inject
+    LoginViewModel mViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ftue_fragment);
-
         ButterKnife.bind(this);
-
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        UserDao userDao = UserDatabase.getDatabase(this).userModel();
-        mViewModel.setDataSource(new LocalUserDataSource(userDao));
-        mViewModel.checkIfLoggedIn();
-
+        ((App) getApplication()).getComponent().inject(this);
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
+        setUpObservers();
+    }
 
+    private void setUpObservers() {
         mViewModel.getUser().observe(this, user -> goToHome());
-
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {
                 case SIGNUP:
@@ -72,7 +69,11 @@ public class LoginActivity extends AppCompatActivity implements
                     loadingData(status.getState());
                     break;
                 case ERROR:
-                    showError(new Throwable(status.getMessage()));
+                    if (status.getMessage() != null) {
+                        showError(new Throwable(status.getMessage()));
+                    } else {
+                        showError(new Throwable(getString(status.getProgress())));
+                    }
                     break;
                 case SUCCESS:
                     break;
