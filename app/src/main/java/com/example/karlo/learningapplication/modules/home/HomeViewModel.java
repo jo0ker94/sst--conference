@@ -48,69 +48,6 @@ public class HomeViewModel extends ViewModel {
         return status;
     }
 
-    public void fetchData() {
-        status.setValue(Status.loading(true));
-        compositeDisposable.add(RetrofitUtil
-                .getRetrofit(Constants.FIREBASE_BASE_URL)
-                .create(Api.class)
-                .getChairs()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(chairs -> {
-                            //view.showData(chairs);
-                            status.setValue(Status.loading(false));
-                        }
-                        ,
-                        throwable -> {
-                            status.setValue(Status.error(throwable.getMessage()));
-                            status.setValue(Status.loading(false));
-                        }
-                ));
-    }
-
-    public void fetchTracks() {
-        status.setValue(Status.loading(true));
-        compositeDisposable.add(RetrofitUtil
-                .getRetrofit(Constants.FIREBASE_BASE_URL)
-                .create(Api.class)
-                .getTracks()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tracks -> {
-                            //view.showTracks(tracks);
-                            status.setValue(Status.loading(false));
-                        }
-                        ,
-                        throwable -> {
-                            status.setValue(Status.error(throwable.getMessage()));
-                            status.setValue(Status.loading(false));
-                        }
-                ));
-    }
-
-    public void fetchTopics(int position) {
-        status.setValue(Status.loading(true));
-        compositeDisposable.add(RetrofitUtil
-                .getRetrofit(Constants.FIREBASE_BASE_URL)
-                .create(Api.class)
-                .getTopics()
-                .flatMap(Observable::fromIterable)
-                .filter(topic -> topic.getParentId() == position)
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(topics -> {
-                            //view.showTopics(topics);
-                            status.setValue(Status.loading(false));
-                        }
-                        ,
-                        throwable -> {
-                            status.setValue(Status.error(throwable.getMessage()));
-                            status.setValue(Status.loading(false));
-                        }
-                ));
-    }
-
     public void fetchUser() {
         compositeDisposable.add(dataSource.getUser()
                 .subscribeOn(Schedulers.io())

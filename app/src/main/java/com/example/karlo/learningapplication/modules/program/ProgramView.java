@@ -1,4 +1,10 @@
 package com.example.karlo.learningapplication.modules.program;
 
-public interface ProgramView {
+import com.example.karlo.learningapplication.commons.BaseView;
+import com.example.karlo.learningapplication.models.program.Track;
+
+import java.util.List;
+
+public interface ProgramView extends BaseView {
+    void showTracks(List<Track> trackList);
 }
