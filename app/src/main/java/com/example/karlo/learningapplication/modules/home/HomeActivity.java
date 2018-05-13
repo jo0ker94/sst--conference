@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Karlo on 26.3.2018..
@@ -63,13 +64,14 @@ public class HomeActivity extends AppCompatActivity
     private TextView mUserName;
     private TextView mUserEmail;
 
+    private Unbinder mUnbinder;
     private ActionBarDrawerToggle mToggle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
         setUpNavigation();
         setUpListeners();
@@ -218,5 +220,11 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void loadingData(boolean loading) {
         mProgressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
     }
 }

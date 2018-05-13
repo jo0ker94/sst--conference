@@ -2,7 +2,6 @@ package com.example.karlo.learningapplication.modules.gallery;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class GalleryActivity extends AppCompatActivity implements GalleryFeedAdapter.OnItemClickListener {
@@ -59,13 +59,14 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     private Uri filePath;
     private List<String> mItems = new ArrayList<>();
 
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    Unbinder mUnbinder;
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
         setUpToolbar();
 
@@ -109,7 +110,8 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear();
+        mCompositeDisposable.clear();
+        mUnbinder.unbind();
     }
 
     private void showImages(boolean hasData) {

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
@@ -30,16 +31,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class GalleryViewModel extends ViewModel {
+public class GalleryViewModel extends BaseViewModel {
 
     private MutableLiveData<List<String>> mImageUrl = new MutableLiveData<>();
-    private MutableLiveData<Status> mStatus = new MutableLiveData<>();
     private List<String> mImages = new ArrayList<>();
 
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private StorageReference mStorageReference = mStorage.getReference();
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private Context application;
 
@@ -60,10 +58,6 @@ public class GalleryViewModel extends ViewModel {
                             mImageUrl.setValue(strings);
                         },
                         throwable -> mStatus.setValue(Status.error(throwable.getMessage()))));
-    }
-
-    public LiveData<Status> getStatus() {
-        return mStatus;
     }
 
     public LiveData<List<String>> getImages() {
@@ -113,11 +107,5 @@ public class GalleryViewModel extends ViewModel {
 
         mImages.add(path);
         mImageUrl.setValue(mImages);
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        mCompositeDisposable.clear();
     }
 }

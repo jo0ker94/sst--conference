@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class LoginActivity extends AppCompatActivity implements
@@ -40,6 +41,8 @@ public class LoginActivity extends AppCompatActivity implements
     private CompositeDisposable mDisposable = new CompositeDisposable();
     private GoogleSignInClient mGoogleSignInClient;
 
+    private Unbinder mUnbinder;
+
     @Inject
     LoginViewModel mViewModel;
 
@@ -47,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ftue_fragment);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -100,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onDestroy() {
         super.onDestroy();
         mDisposable.clear();
+        mUnbinder.unbind();
     }
 
     @Override

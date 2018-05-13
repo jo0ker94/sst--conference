@@ -7,12 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.models.program.Person;
 import com.example.karlo.learningapplication.models.program.Topic;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> {
@@ -31,32 +27,15 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_topic, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Topic topic = this.mItems.get(position);
-        holder.room.setText(getLecturers(topic.getLecturers()));
-        holder.room.setTextSize(14f);
         holder.title.setText(topic.getTitle());
-        holder.time.setVisibility(View.GONE);
-
-        holder.room.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
-    }
-
-    private String getLecturers(List<Person> people) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < people.size(); i++) {
-            stringBuilder.append(people.get(i).getName());
-            if (i < people.size() - 2) {
-                stringBuilder.append(", ");
-            } else if (i < people.size() - 1 || (people.size() == 2 && i != people.size() - 1)) {
-                stringBuilder.append(" and ");
-            }
-        }
-        return stringBuilder.toString();
+        holder.title.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
     }
 
     @Override
@@ -69,13 +48,11 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView time, title, room;
+        public TextView title;
 
         public ViewHolder(View view) {
             super(view);
-            time = (TextView) view.findViewById(R.id.track_time);
-            title = (TextView) view.findViewById(R.id.track_title);
-            room = (TextView) view.findViewById(R.id.track_room);
+            title = (TextView) view.findViewById(R.id.topic_title);
         }
     }
 }

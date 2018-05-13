@@ -34,6 +34,10 @@ public class ProgramCardFragment extends CardFragment {
         void onArrowClick(int position);
     }
 
+    public void setListener(OnArrowClick mListener) {
+        this.mListener = mListener;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,8 +74,8 @@ public class ProgramCardFragment extends CardFragment {
         return view;
     }
 
-    public void showTracks(Context context, List<Track> trackList) {
-        TrackAdapter adapter = new TrackAdapter(trackList, null);
+    public void showTracks(Context context, List<Track> trackList, TrackAdapter.OnItemClickListener listener) {
+        TrackAdapter adapter = new TrackAdapter(trackList, listener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(adapter);
@@ -80,9 +84,9 @@ public class ProgramCardFragment extends CardFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof ProgramActivity) {
-            mListener = (ProgramActivity) getActivity();
-        }
+        //if (getActivity() instanceof ProgramActivity) {
+        //    mListener = (OnArrowClick) getActivity();
+        //}
     }
 
     @Override

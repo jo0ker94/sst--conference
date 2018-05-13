@@ -20,6 +20,7 @@ public class Constants {
 
     public static final String URI = "uri";
     public static final String DATE = "date";
+    public static final String DATA = "data";
     public static final String POSITION = "position";
     public static final String SIZE = "size";
 }

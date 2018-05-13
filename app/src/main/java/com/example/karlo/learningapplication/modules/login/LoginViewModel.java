@@ -2,11 +2,11 @@ package com.example.karlo.learningapplication.modules.login;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 import android.content.Intent;
 import android.util.Log;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
@@ -28,17 +28,14 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginViewModel extends ViewModel {
+public class LoginViewModel extends BaseViewModel {
 
     private static final String TAG = "LoginViewModel";
-    private final MutableLiveData<Status> status = new MutableLiveData<>();
     private final MutableLiveData<User> mUser = new MutableLiveData<>();
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private UserDataSource mDataSource;
 
     @Inject
@@ -48,14 +45,10 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void checkIfLoggedIn() {
-        compositeDisposable.add(mDataSource.getUser()
+        mCompositeDisposable.add(mDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mUser::setValue));
-    }
-
-    public LiveData<Status> getStatus() {
-        return status;
     }
 
     public LiveData<User> getUser() {
@@ -72,43 +65,43 @@ public class LoginViewModel extends ViewModel {
 
     public void login(final LoginRequest request) {
         if(request.getEmail().isEmpty() && request.getPassword().isEmpty()) {
-            status.setValue(Status.error(R.string.enter_all_fields));
+            mStatus.setValue(Status.error(R.string.enter_all_fields));
         } else {
-            status.setValue(Status.loading(true));
+            mStatus.setValue(Status.loading(true));
             mAuth.signInWithEmailAndPassword(request.getEmail(), request.getPassword())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             getDisplayNameAndSaveUser(mAuth.getCurrentUser());
                         } else {
-                            status.setValue(Status.error(task.getException().getMessage()));
+                            mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
-                        status.setValue(Status.loading(false));
+                        mStatus.setValue(Status.loading(false));
                     });
         }
     }
 
     public void signup(final LoginRequest request) {
         if (request.getEmail().isEmpty() && request.getPassword().isEmpty() && request.getDisplayName().isEmpty()) {
-            status.setValue(Status.error(R.string.enter_all_fields));
+            mStatus.setValue(Status.error(R.string.enter_all_fields));
         } else {
-            status.setValue(Status.loading(true));
+            mStatus.setValue(Status.loading(true));
             mAuth.createUserWithEmailAndPassword(request.getEmail(), request.getPassword())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             saveDisplayNameOnServer(firebaseUser, request.getDisplayName());
                             request.setDisplayName(null);
-                            status.setValue(Status.onSignUp(request));
+                            mStatus.setValue(Status.onSignUp(request));
                         } else {
-                            status.setValue(Status.error(task.getException().getMessage()));
+                            mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
-                        status.setValue(Status.loading(false));
+                        mStatus.setValue(Status.loading(false));
                     });
         }
     }
 
     public void signUpWithGoogle(Intent data) {
-        status.setValue(Status.loading(true));
+        mStatus.setValue(Status.loading(true));
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         handleSignInResult(task);
     }
@@ -123,20 +116,20 @@ public class LoginViewModel extends ViewModel {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             saveUserToDatabase(firebaseUser, null);
                             saveDisplayNameOnServer(firebaseUser, null);
-                            status.setValue(new Status(Status.Response.LOGIN, true));
+                            mStatus.setValue(new Status(Status.Response.LOGIN, true));
                         } else {
-                            status.setValue(Status.error(task.getException().getMessage()));
+                            mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
-                        status.setValue(Status.loading(false));
+                        mStatus.setValue(Status.loading(false));
                     });
         } catch (ApiException e) {
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            status.setValue(Status.error(e.getMessage()));
+            mStatus.setValue(Status.error(e.getMessage()));
         }
     }
 
     private void getDisplayNameAndSaveUser(FirebaseUser firebaseUser) {
-        compositeDisposable.add(RetrofitUtil
+        mCompositeDisposable.add(RetrofitUtil
                 .getRetrofit(Constants.FIREBASE_BASE_URL)
                 .create(Api.class)
                 .getDisplayName(firebaseUser.getUid())
@@ -149,10 +142,10 @@ public class LoginViewModel extends ViewModel {
 
     private void saveUserToDatabase(FirebaseUser firebaseUser, String displayName) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), displayName != null ? displayName : firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl());
-        compositeDisposable.add(insertUser(user)
+        mCompositeDisposable.add(insertUser(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> status.setValue(Status.login(user))));
+                .subscribe(() -> mStatus.setValue(Status.login(user))));
     }
 
     private void saveDisplayNameOnServer(FirebaseUser firebaseUser, String displayName) {
@@ -163,11 +156,5 @@ public class LoginViewModel extends ViewModel {
                         firebaseUser.getEmail(),
                         displayName != null ? displayName : firebaseUser.getDisplayName(),
                         firebaseUser.getPhotoUrl()));
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        compositeDisposable.clear();
     }
 }
