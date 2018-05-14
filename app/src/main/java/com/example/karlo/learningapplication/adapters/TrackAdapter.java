@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.models.program.Track;
+import com.example.karlo.learningapplication.utility.DateUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +38,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Track track = this.mItems.get(position);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat format = DateUtility.getIsoFormatter();
         try {
             Date sDate = format.parse(track.getStartDate());
             Date eDate = format.parse(track.getEndDate());

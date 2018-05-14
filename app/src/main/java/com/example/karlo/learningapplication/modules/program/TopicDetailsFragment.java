@@ -2,27 +2,47 @@ package com.example.karlo.learningapplication.modules.program;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.adapters.CommentsAdapter;
 import com.example.karlo.learningapplication.commons.Constants;
+import com.example.karlo.learningapplication.helpers.DatabaseHelper;
+import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Person;
 import com.example.karlo.learningapplication.models.program.Topic;
+import com.example.karlo.learningapplication.utility.DateUtility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TopicDetailsFragment extends BaseProgramFragment {
+public class TopicDetailsFragment extends BaseProgramFragment
+        implements CommentsAdapter.OnItemClickListener {
 
     @BindView(R.id.topic_title)
     TextView mTitle;
     @BindView(R.id.topic_lecturers)
     TextView mLecturers;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.et_comment)
+    EditText mCommentEditText;
+
+    private List<Comment> mComments = new ArrayList<>();
+
+    private Topic mTopic;
+    private CommentsAdapter mAdapter;
 
     @Nullable
     @Override
@@ -36,13 +56,38 @@ public class TopicDetailsFragment extends BaseProgramFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpViews();
+        setUpListeners();
+        setUpObservers();
+    }
+
+    private void setUpListeners() {
+        mCommentEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE){
+                Comment comment = new Comment(
+                        mComments.size(),
+                        mCommentEditText.getText().toString(),
+                        "aJnUHeG5VlXQEQC7ZjmwkV7UJ3s1",
+                        DateUtility.getNowInIsoFormat()
+                );
+                DatabaseHelper.getCommentsReference()
+                        .child(String.valueOf(mTopic.getId()))
+                        .child(String.valueOf(mComments.size()))
+                        .setValue(comment);
+
+                mCommentEditText.setText("");
+                mComments.add(comment);
+                showComments(this);
+            }
+            return false;
+        });
     }
 
     private void setUpViews() {
-        Topic topic = getArguments().getParcelable(Constants.DATA);
-        if (topic != null) {
-            mTitle.setText(topic.getTitle());
-            mLecturers.setText(getLecturers(topic.getLecturers()));
+        mTopic = getArguments().getParcelable(Constants.DATA);
+        if (mTopic != null) {
+            mTitle.setText(mTopic.getTitle());
+            mLecturers.setText(getLecturers(mTopic.getLecturers()));
+            mViewModel.fetchComments(mTopic.getId());
         }
     }
 
@@ -59,10 +104,11 @@ public class TopicDetailsFragment extends BaseProgramFragment {
         return stringBuilder.toString();
     }
 
-    /*private void setUpObservers() {
-        mViewModel.getTopics().observe(this, topics -> {
-            if (topics != null && !topics.isEmpty()) {
-                showTopics(topics, this);
+    private void setUpObservers() {
+        mViewModel.getComments().observe(this, comments -> {
+            if (comments != null && !comments.isEmpty()) {
+                mComments.addAll(comments);
+                showComments(this);
             }
         });
 
@@ -78,11 +124,19 @@ public class TopicDetailsFragment extends BaseProgramFragment {
         });
     }
 
-    public void showTopics(List<Topic> topics, TopicAdapter.OnItemClickListener listener) {
-        mTopics.addAll(topics);
-        TopicAdapter adapter = new TopicAdapter(topics, listener);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
-    }*/
+    public void showComments(CommentsAdapter.OnItemClickListener listener) {
+        if (mAdapter == null) {
+            mAdapter = new CommentsAdapter(mComments, listener);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(getContext(), mComments.get(position).getUserId(), Toast.LENGTH_SHORT).show();
+    }
 }

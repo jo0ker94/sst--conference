@@ -1,6 +1,7 @@
 package com.example.karlo.learningapplication.servertasks.interfaces;
 
 import com.example.karlo.learningapplication.models.ConferenceChair;
+import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.models.program.Track;
 
@@ -32,5 +33,8 @@ public interface Api {
 
     @GET("2017/conferenceProgram/topics.json")
     io.reactivex.Observable<List<Topic>> getTopics();
+
+    @GET("2017/comments/{id}.json")
+    io.reactivex.Observable<List<Comment>> getComments(@Path("id") int id);
 
 }

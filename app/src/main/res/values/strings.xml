@@ -44,6 +44,7 @@
     <string name="facebook_app_id">781120082085760</string>
     <string name="share_image">Share image.</string>
     <string name="there_are_no_uploaded_images_be_the_first_to_upload">There are no uploaded images, be the first to upload!</string>
+    <string name="add_a_new_comment">Add a new comment...</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

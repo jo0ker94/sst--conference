@@ -1,10 +1,10 @@
 package com.example.karlo.learningapplication.modules.program;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 
 import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
+import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.models.program.Track;
 import com.example.karlo.learningapplication.servertasks.interfaces.Api;
@@ -15,7 +15,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProgramViewModel extends BaseViewModel {
@@ -24,6 +23,7 @@ public class ProgramViewModel extends BaseViewModel {
 
     private final MutableLiveData<List<Track>> mTracks = new MutableLiveData<>();
     private final MutableLiveData<List<Topic>> mTopics = new MutableLiveData<>();
+    private final MutableLiveData<List<Comment>> mComments = new MutableLiveData<>();
 
     private Api mApi;
 
@@ -41,14 +41,18 @@ public class ProgramViewModel extends BaseViewModel {
         return mTopics;
     }
 
-    public void fetchData() {
+    public MutableLiveData<List<Comment>> getComments() {
+        return mComments;
+    }
+
+    public void fetchComments(int commentID) {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mApi
-                .getChairs()
+                .getComments(commentID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(chairs -> {
-                            //view.showData(chairs);
+                .subscribe(comments -> {
+                            mComments.setValue(comments);
                             mStatus.setValue(Status.loading(false));
                         }
                         ,

@@ -17,7 +17,9 @@ public class Constants {
     public static final int TAKE_IMAGE_REQUEST = 70;
     public static final int PICK_IMAGE_REQUEST = 71;
 
+    public static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
+    public static final String ID = "id";
     public static final String URI = "uri";
     public static final String DATE = "date";
     public static final String DATA = "data";
