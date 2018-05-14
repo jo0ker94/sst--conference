@@ -62,6 +62,7 @@ public class TopicListFragment extends BaseProgramFragment
     }
 
     public void showTopics(List<Topic> topics, TopicAdapter.OnItemClickListener listener) {
+        mTopics.clear();
         mTopics.addAll(topics);
         TopicAdapter adapter = new TopicAdapter(topics, listener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

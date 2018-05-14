@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.models.program.Topic;
+import com.example.karlo.learningapplication.models.program.Track;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,11 +88,11 @@ public class ProgramActivity extends AppCompatActivity
     }
 
     @Override
-    public void switchFragment(FragmentType fragmentType, int position) {
+    public void switchFragment(FragmentType fragmentType, Track track) {
         Fragment fragment = (fragmentType == FragmentType.TRACK) ? mTrackFragment : mTopicFragment;
         if (fragmentType == FragmentType.TOPIC) {
             Bundle args = new Bundle();
-            args.putInt(Constants.POSITION, position);
+            args.putInt(Constants.POSITION, track.getId());
             mTopicFragment.setArguments(args);
         }
         replaceFragment(fragment);

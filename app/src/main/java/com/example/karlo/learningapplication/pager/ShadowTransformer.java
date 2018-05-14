@@ -63,7 +63,7 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
         }
 
         // Avoid crash on overscroll
-        if (nextPosition > mCardAdapter.getCount() - 1
+        if (nextPosition > mCardAdapter.getCount()
                 || realCurrentPosition > mCardAdapter.getCount() - 1) {
             return;
         }
@@ -81,17 +81,19 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
                     * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (1 - realOffset)));
         }
 
-        CardView nextCard = mCardAdapter.getCardViewAt(nextPosition);
+        if (nextPosition != mCardAdapter.getCount()) {
+            CardView nextCard = mCardAdapter.getCardViewAt(nextPosition);
 
-        // We might be scrolling fast enough so that the next (or previous) card
-        // was already destroyed or a fragment might not have been created yet
-        if (nextCard != null) {
-            if (mScalingEnabled) {
-                nextCard.setScaleX((float) (1 + 0.1 * (realOffset)));
-                nextCard.setScaleY((float) (1 + 0.1 * (realOffset)));
+            // We might be scrolling fast enough so that the next (or previous) card
+            // was already destroyed or a fragment might not have been created yet
+            if (nextCard != null) {
+                if (mScalingEnabled) {
+                    nextCard.setScaleX((float) (1 + 0.1 * (realOffset)));
+                    nextCard.setScaleY((float) (1 + 0.1 * (realOffset)));
+                }
+                nextCard.setCardElevation((baseElevation + baseElevation
+                        * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (realOffset)));
             }
-            nextCard.setCardElevation((baseElevation + baseElevation
-                    * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (realOffset)));
         }
         mLastOffset = positionOffset;
     }

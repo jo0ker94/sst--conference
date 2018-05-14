@@ -33,6 +33,7 @@ public class TrackListFragment extends BaseProgramFragment
     private List<ProgramCardFragment> mCards;
     private CardFragmentPagerAdapter mPagerAdapter;
     private List<Track> mTracks = new ArrayList<>();
+    private List<Track> mFilteredTracks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -95,6 +96,7 @@ public class TrackListFragment extends BaseProgramFragment
     }
 
     public void showTracks(List<Track> tracks) {
+        mTracks.clear();
         mTracks.addAll(tracks);
         mCards.get(mViewPager.getCurrentItem())
                 .showTracks(getContext(), filteredTracks(0), new OnItemClickListener());
@@ -120,9 +122,20 @@ public class TrackListFragment extends BaseProgramFragment
                 filtered.add(track);
             }
         }
+
+        mFilteredTracks.clear();
+        mFilteredTracks.addAll(filtered);
+
         return filtered;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mViewPager != null) {
+            onArrowClick(mViewPager.getCurrentItem());
+        }
+    }
 
     @Override
     public void onArrowClick(int position) {
@@ -135,7 +148,7 @@ public class TrackListFragment extends BaseProgramFragment
 
         @Override
         public void onItemClick(View view, int position) {
-            mListener.switchFragment(ProgramActivity.FragmentType.TOPIC, position);
+            mListener.switchFragment(ProgramActivity.FragmentType.TOPIC, mFilteredTracks.get(position));
         }
     }
 

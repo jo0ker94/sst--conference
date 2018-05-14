@@ -77,8 +77,10 @@ public class ProgramCardFragment extends CardFragment {
     public void showTracks(Context context, List<Track> trackList, TrackAdapter.OnItemClickListener listener) {
         TrackAdapter adapter = new TrackAdapter(trackList, listener);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+        if (mRecyclerView != null) {
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
