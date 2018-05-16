@@ -2,7 +2,7 @@ package com.example.karlo.learningapplication.database.user;
 
 import com.example.karlo.learningapplication.models.User;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 public interface UserDataSource {
     /**
@@ -10,7 +10,7 @@ public interface UserDataSource {
      *
      * @return the user from the data source.
      */
-    Flowable<User> getUser();
+    Maybe<User> getUser();
 
     /**
      * Inserts the user into the data source, or, if this is an existing user, updates it.

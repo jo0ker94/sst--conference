@@ -2,7 +2,7 @@ package com.example.karlo.learningapplication.database.user;
 
 import com.example.karlo.learningapplication.models.User;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 public class LocalUserDataSource implements UserDataSource {
 
@@ -13,7 +13,7 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Flowable<User> getUser() {
+    public Maybe<User> getUser() {
         return mUserDao.getUser();
     }
 

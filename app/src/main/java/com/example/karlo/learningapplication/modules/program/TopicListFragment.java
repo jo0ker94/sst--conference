@@ -46,6 +46,12 @@ public class TopicListFragment extends BaseProgramFragment
         mViewModel.getTopics().observe(this, topics -> {
             if (topics != null && !topics.isEmpty()) {
                 showTopics(topics, this);
+            } else {
+                Topic topic = new Topic(-1,
+                        getArguments().getInt(Constants.POSITION),
+                        getArguments().getString(Constants.NAME),
+                        null);
+                mListener.showTopicDetails(topic, true);
             }
         });
 
@@ -72,6 +78,6 @@ public class TopicListFragment extends BaseProgramFragment
 
     @Override
     public void onItemClick(View view, int position) {
-        mListener.showTopicDetails(mTopics.get(position));
+        mListener.showTopicDetails(mTopics.get(position), false);
     }
 }

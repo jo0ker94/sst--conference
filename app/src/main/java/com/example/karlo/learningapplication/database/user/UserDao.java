@@ -7,7 +7,7 @@ import android.arch.persistence.room.Query;
 
 import com.example.karlo.learningapplication.models.User;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
@@ -15,7 +15,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface UserDao {
 
     @Query("SELECT * FROM User LIMIT 1")
-    Flowable<User> getUser();
+    Maybe<User> getUser();
 
     @Insert(onConflict = REPLACE)
     long insertUser(User user);

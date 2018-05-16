@@ -92,6 +92,7 @@ public class ProgramActivity extends AppCompatActivity
         Fragment fragment = (fragmentType == FragmentType.TRACK) ? mTrackFragment : mTopicFragment;
         if (fragmentType == FragmentType.TOPIC) {
             Bundle args = new Bundle();
+            args.putString(Constants.NAME, track.getTitle());
             args.putInt(Constants.POSITION, track.getId());
             mTopicFragment.setArguments(args);
         }
@@ -99,20 +100,31 @@ public class ProgramActivity extends AppCompatActivity
     }
 
     @Override
-    public void showTopicDetails(Topic topic) {
+    public void showTopicDetails(Topic topic, boolean forward) {
         TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.DATA, topic);
         topicDetailsFragment.setArguments(args);
-        replaceFragment(topicDetailsFragment);
+        replaceFragment(topicDetailsFragment, forward);
+    }
+
+    private void replaceFragment(Fragment fragment, boolean forward) {
+        if (forward) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
+                    .replace(R.id.content, fragment)
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
+                    .replace(R.id.content, fragment)
+                    .addToBackStack(fragment.getTag())
+                    .commit();
+        }
     }
 
     private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
-                .replace(R.id.content, fragment)
-                .addToBackStack(fragment.getTag())
-                .commit();
+        replaceFragment(fragment, false);
     }
 
     @Override

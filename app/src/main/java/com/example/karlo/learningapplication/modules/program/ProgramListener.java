@@ -7,5 +7,5 @@ public interface ProgramListener {
     void loadingData(boolean state);
     void showError(Throwable throwable);
     void switchFragment(ProgramActivity.FragmentType fragmentType, Track track);
-    void showTopicDetails(Topic topic);
+    void showTopicDetails(Topic topic, boolean forward);
 }

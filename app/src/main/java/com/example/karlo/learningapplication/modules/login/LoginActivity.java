@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements
         setContentView(R.layout.ftue_fragment);
         mUnbinder = ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
+        findViewById(android.R.id.content).setVisibility(View.INVISIBLE);
         PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
@@ -59,7 +60,13 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void setUpObservers() {
-        mViewModel.getUser().observe(this, user -> goToHome());
+        mViewModel.getUser().observe(this, user -> {
+            if (user != null) {
+                goToHome();
+            } else {
+                findViewById(android.R.id.content).setVisibility(View.VISIBLE);
+            }
+        });
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {
                 case SIGNUP:

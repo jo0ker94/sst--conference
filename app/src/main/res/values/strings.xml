@@ -1,4 +1,20 @@
 <resources>
+
+    <plurals name="minutes">
+        <item quantity="one" formatted="true">%d minute ago</item>
+        <item quantity="other" formatted="true">%d minutes ago</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one" formatted="true">%d hour ago</item>
+        <item quantity="other" formatted="true">%d hours ago</item>
+    </plurals>
+
+    <plurals name="days">
+        <item quantity="one" formatted="true">%d day ago</item>
+        <item quantity="other" formatted="true">%d days ago</item>
+    </plurals>
+
     <string name="app_name">Learning Application</string>
     <string name="no_text_message">Please enter text in search field!</string>
     <string name="email_address">Email address</string>
@@ -45,6 +61,7 @@
     <string name="share_image">Share image.</string>
     <string name="there_are_no_uploaded_images_be_the_first_to_upload">There are no uploaded images, be the first to upload!</string>
     <string name="add_a_new_comment">Add a new comment...</string>
+    <string name="just_posted">Just posted</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

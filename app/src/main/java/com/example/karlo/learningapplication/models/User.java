@@ -18,7 +18,7 @@ import io.realm.annotations.PrimaryKey;
 public class User extends RealmObject {
 
     @PrimaryKey
-    @SerializedName("user_id")
+    @SerializedName("userId")
     @Expose
     @android.arch.persistence.room.PrimaryKey @android.support.annotation.NonNull private String userId;
 
@@ -26,11 +26,11 @@ public class User extends RealmObject {
     @Expose
     private String mail;
 
-    @SerializedName("display_name")
+    @SerializedName("displayName")
     @Expose
     private String displayName;
 
-    @SerializedName("image_url")
+    @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
 

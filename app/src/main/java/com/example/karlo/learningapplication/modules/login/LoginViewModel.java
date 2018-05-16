@@ -27,7 +27,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class LoginViewModel extends BaseViewModel {
@@ -45,10 +47,30 @@ public class LoginViewModel extends BaseViewModel {
     }
 
     public void checkIfLoggedIn() {
-        mCompositeDisposable.add(mDataSource.getUser()
+        mDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mUser::setValue));
+                .subscribe(new MaybeObserver<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(User user) {
+                        mUser.setValue(user);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mUser.setValue(null);
+                    }
+                });
     }
 
     public LiveData<User> getUser() {

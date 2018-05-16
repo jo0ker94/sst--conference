@@ -1,7 +1,9 @@
 package com.example.karlo.learningapplication.modules.program;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.CommentsAdapter;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
+import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Person;
 import com.example.karlo.learningapplication.models.program.Topic;
@@ -38,9 +41,13 @@ public class TopicDetailsFragment extends BaseProgramFragment
     RecyclerView mRecyclerView;
     @BindView(R.id.et_comment)
     EditText mCommentEditText;
+    @BindView(R.id.comment_container)
+    CardView mCommentContainer;
 
     private List<Comment> mComments = new ArrayList<>();
 
+    private User mUser;
+    private List<User> mUsers;
     private Topic mTopic;
     private CommentsAdapter mAdapter;
 
@@ -66,7 +73,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
                 Comment comment = new Comment(
                         mComments.size(),
                         mCommentEditText.getText().toString(),
-                        "aJnUHeG5VlXQEQC7ZjmwkV7UJ3s1",
+                        mUser.getUserId(),
                         DateUtility.getNowInIsoFormat()
                 );
                 DatabaseHelper.getCommentsReference()
@@ -86,8 +93,15 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mTopic = getArguments().getParcelable(Constants.DATA);
         if (mTopic != null) {
             mTitle.setText(mTopic.getTitle());
-            mLecturers.setText(getLecturers(mTopic.getLecturers()));
-            mViewModel.fetchComments(mTopic.getId());
+            if (mTopic.getLecturers() != null) {
+                mLecturers.setText(getLecturers(mTopic.getLecturers()));
+            }
+            if (mTopic.getId() != -1) {
+                mViewModel.fetchComments(mTopic.getId());
+                mCommentContainer.setVisibility(View.VISIBLE);
+            } else {
+                mCommentContainer.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -105,6 +119,18 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpObservers() {
+        mViewModel.getUser().observe(this, user -> {
+            if (user != null) {
+                mUser = user;
+            }
+        });
+
+        mViewModel.getUsers().observe(this, users -> {
+            if (users != null && !users.isEmpty()) {
+                mUsers = users;
+            }
+        });
+
         mViewModel.getComments().observe(this, comments -> {
             if (comments != null && !comments.isEmpty()) {
                 mComments.addAll(comments);
@@ -126,7 +152,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {
         if (mAdapter == null) {
-            mAdapter = new CommentsAdapter(mComments, listener);
+            mAdapter = new CommentsAdapter(getActivity(), mComments, mUsers, listener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mAdapter);
