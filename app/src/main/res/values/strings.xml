@@ -66,6 +66,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
+    <string name="no_result_found">No result found!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    style="@style/BasicParentLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/action_bar_container"
@@ -29,6 +27,16 @@
         android:id="@+id/searchListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/no_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/divider_grey"
+        android:textSize="20sp"
+        android:text="@string/no_result_found"
+        android:visibility="gone"/>
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progress_bar"

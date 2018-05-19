@@ -3,6 +3,7 @@ package com.example.karlo.learningapplication.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -16,11 +17,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.karlo.learningapplication.Animations;
 import com.example.karlo.learningapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by Karlo on 21.12.2017..
@@ -153,6 +154,28 @@ public class SearchBarView extends LinearLayout {
         }
     }
 
+    public void showSearchBar(Toolbar toolbar) {
+        setEnabled(true);
+        toolbar.setAnimation(Animations.outToLeftAnimation());
+        toolbar.setVisibility(View.GONE);
+        setVisibility(View.VISIBLE);
+        setAnimation(Animations.inFromRightAnimation());
+        if(requestFocus()) {
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
+    }
+
+    public void hideSearchBar(Toolbar toolbar) {
+        setEnabled(false);
+        resetSearchBar();
+        toolbar.setVisibility(View.VISIBLE);
+        toolbar.setAnimation(Animations.inFromLeftAnimation());
+        setAnimation(Animations.outToRightAnimation());
+        setVisibility(View.GONE);
+        hideKeyboard(getFocusedChild());
+    }
+
     public void setOnEditorActionListener(TextView.OnEditorActionListener listener) {
         mSearchEditText.setOnEditorActionListener(listener);
     }
@@ -261,6 +284,10 @@ public class SearchBarView extends LinearLayout {
     //public boolean requestFocus() {
     //    return mSearchEditText.requestFocus();
     //}
+
+    public void setEnabled(boolean enabled) {
+        mSearchEditText.setEnabled(enabled);
+    }
 
     public void setSearchMode(boolean searchMode) {
         mInSearchMode = searchMode;

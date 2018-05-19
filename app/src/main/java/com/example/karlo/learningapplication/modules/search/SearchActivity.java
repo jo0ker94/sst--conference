@@ -1,10 +1,7 @@
 package com.example.karlo.learningapplication.modules.search;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,25 +9,35 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.karlo.learningapplication.Animations;
+import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.adapters.WikiResultAdapter;
-import com.example.karlo.learningapplication.commons.BaseActivity;
-import com.example.karlo.learningapplication.models.wiki.WikiResult;
+import com.example.karlo.learningapplication.adapters.TopicAdapter;
+import com.example.karlo.learningapplication.models.program.Topic;
+import com.example.karlo.learningapplication.models.program.Track;
 import com.example.karlo.learningapplication.ui.SearchBarView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Karlo on 31.3.2018..
  */
 
-public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> implements SearchView, SearchBarView.SearchBarListener {
+public class SearchActivity extends AppCompatActivity
+        implements SearchView,
+        SearchBarView.SearchBarListener,
+        TopicAdapter.OnItemClickListener,
+        SearchBarView.TextChangedListener {
 
     @BindView(R.id.searchListView)
     RecyclerView mRecyclerView;
@@ -40,14 +47,65 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
     Toolbar toolbar;
     @BindView(R.id.search_bar)
     SearchBarView mSearchBar;
+    @BindView(R.id.no_result)
+    TextView mNoResultText;
+
+    @Inject
+    SearchViewModel mViewModel;
+
+    private Unbinder mUnbinder;
+    private TopicAdapter mAdapter;
+
+    private List<Topic> mTopics = new ArrayList<>();
+    private List<Topic> mFilteredTopics = new ArrayList<>();
+    private List<Track> mTracks = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
+        ((App) getApplication()).getComponent().inject(this);
         mSearchBar.setSearchBarListener(this);
+        mSearchBar.setOnTextChangedListener(this);
+        mSearchBar.setEnabled(false);
         setUpToolbar();
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+        mViewModel.getTopics().observe(this, topics -> {
+            if (topics != null && !topics.isEmpty()) {
+                mTopics.clear();
+                mFilteredTopics.clear();
+                mTopics.addAll(topics);
+                mFilteredTopics.addAll(topics);
+                showTopics(this);
+            }
+        });
+
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+            }
+        });
+    }
+
+    public void showTopics(TopicAdapter.OnItemClickListener listener) {
+        mAdapter = new TopicAdapter(mFilteredTopics, listener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        //showTopicDetails(mFilteredTopics.get(position), false);
     }
 
     @Override
@@ -64,38 +122,17 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
                 finish();
                 return true;
             case R.id.searchMenu:
-                showSearchBar();
+                mSearchBar.showSearchBar(toolbar);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showSearchBar() {
-        toolbar.setAnimation(Animations.outToLeftAnimation());
-        toolbar.setVisibility(View.GONE);
-        mSearchBar.setVisibility(View.VISIBLE);
-        mSearchBar.setAnimation(Animations.inFromRightAnimation());
-        if(mSearchBar.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-        }
-    }
-
-    private void hideSearchBar() {
-        mSearchBar.resetSearchBar();
-        toolbar.setVisibility(View.VISIBLE);
-        toolbar.setAnimation(Animations.inFromLeftAnimation());
-        mSearchBar.setAnimation(Animations.outToRightAnimation());
-        mSearchBar.setVisibility(View.GONE);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mSearchBar.getWindowToken(),0);
-    }
-
     @Override
     public void onBackPressed() {
         if (mSearchBar.getVisibility() == View.VISIBLE) {
-            hideSearchBar();
+            mSearchBar.hideSearchBar(toolbar);
         } else {
             super.onBackPressed();
         }
@@ -108,28 +145,9 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert imm != null;
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     @Override
     public void showNoResult() {
-
-    }
-
-    @Override
-    public void showResult(WikiResult result) {
-        WikiResultAdapter adapter = new WikiResultAdapter(result.getItems(), (view, position) ->
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(result.getItems().get(position).getLink())))
-        );
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+        mNoResultText.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -142,19 +160,39 @@ public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> im
         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    @NonNull
-    @Override
-    public SearchPresenter createPresenter() {
-        return new SearchPresenter();
-    }
-
-    @Override
-    public void attachView() {
-        presenter.attachView(this);
-    }
-
     @Override
     public void onSearchButtonPressed() {
-        presenter.searchWiki(mSearchBar.getText());
+        filterTopics(mSearchBar.getText());
+    }
+
+    private void filterTopics(String text) {
+        mFilteredTopics.clear();
+        for (Topic topic : mTopics) {
+            if (topic.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                mFilteredTopics.add(topic);
+            }
+        }
+        if (mFilteredTopics.isEmpty()) {
+            showNoResult();
+        } else {
+            mNoResultText.setVisibility(View.GONE);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
+    }
+
+    @Override
+    public void textChanged(String text) {
+        filterTopics(text);
+    }
+
+    @Override
+    public void afterTextChanged(String text) {
+        filterTopics(text);
     }
 }
