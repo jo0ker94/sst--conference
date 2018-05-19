@@ -15,6 +15,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="NoActionBarTheme.Launcher">
+        <item name="android:windowBackground">@drawable/sst2017_image</item>
+    </style>
+
     <style name="TextInputLayoutStyle" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="hintTextAppearance">@style/TextFloatLabelAppearance</item>
         <item name="android:textColorHint">@color/divider_grey</item>

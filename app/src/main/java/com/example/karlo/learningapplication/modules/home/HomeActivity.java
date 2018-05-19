@@ -10,6 +10,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -183,7 +184,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        showExitDialog();
+    }
 
     @Override
     public void bindUser(User user) {
@@ -226,5 +229,13 @@ public class HomeActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
+    }
+
+    private void showExitDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.sure_you_want_to_quit)
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> finish())
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 }

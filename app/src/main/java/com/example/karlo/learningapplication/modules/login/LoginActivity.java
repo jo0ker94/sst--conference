@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.NoActionBarTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ftue_fragment);
         mUnbinder = ButterKnife.bind(this);

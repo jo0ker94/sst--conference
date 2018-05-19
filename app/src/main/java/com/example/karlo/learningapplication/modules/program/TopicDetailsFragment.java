@@ -1,6 +1,5 @@
 package com.example.karlo.learningapplication.modules.program;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -44,10 +43,10 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @BindView(R.id.comment_container)
     CardView mCommentContainer;
 
+    private List<User> mUsers = new ArrayList<>();
     private List<Comment> mComments = new ArrayList<>();
 
     private User mUser;
-    private List<User> mUsers;
     private Topic mTopic;
     private CommentsAdapter mAdapter;
 
@@ -128,13 +127,18 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mViewModel.getUsers().observe(this, users -> {
             if (users != null && !users.isEmpty()) {
                 mUsers = users;
+                if (!mComments.isEmpty()) {
+                    showComments(this);
+                }
             }
         });
 
         mViewModel.getComments().observe(this, comments -> {
             if (comments != null && !comments.isEmpty()) {
                 mComments.addAll(comments);
-                showComments(this);
+                if (!mUsers.isEmpty()) {
+                    showComments(this);
+                }
             }
         });
 
