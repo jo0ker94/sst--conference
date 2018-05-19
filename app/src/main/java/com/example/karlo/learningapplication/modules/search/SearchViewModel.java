@@ -4,9 +4,9 @@ import android.arch.lifecycle.MutableLiveData;
 
 import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
+import com.example.karlo.learningapplication.database.program.ProgramDataSource;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.models.program.Track;
-import com.example.karlo.learningapplication.servertasks.interfaces.Api;
 
 import java.util.List;
 
@@ -17,29 +17,35 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SearchViewModel extends BaseViewModel {
 
-    private final MutableLiveData<List<Track>> mTracks = new MutableLiveData<>();
-    private final MutableLiveData<List<Topic>> mTopics = new MutableLiveData<>();
+    private MutableLiveData<List<Track>> mTracks;
+    private MutableLiveData<List<Topic>> mTopics;
 
-    private Api mApi;
+    private ProgramDataSource mDataSource;
 
     @Inject
-    public SearchViewModel(Api mApi) {
-        this.mApi = mApi;
-        fetchTopics();
-        fetchTracks();
+    public SearchViewModel(ProgramDataSource topicDataSource) {
+        this.mDataSource = topicDataSource;
     }
 
     public MutableLiveData<List<Track>> getTracks() {
+        if (mTracks == null) {
+            mTracks = new MutableLiveData<>();
+            fetchTracks();
+        }
         return mTracks;
     }
 
     public MutableLiveData<List<Topic>> getTopics() {
+        if (mTopics == null) {
+            mTopics = new MutableLiveData<>();
+            fetchTopics();
+        }
         return mTopics;
     }
 
     public void fetchTracks() {
         mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mDataSource
                 .getTracks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,7 +63,7 @@ public class SearchViewModel extends BaseViewModel {
 
     public void fetchTopics() {
         mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mDataSource
                 .getTopics()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

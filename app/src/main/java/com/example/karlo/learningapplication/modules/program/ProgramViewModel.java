@@ -1,9 +1,12 @@
 package com.example.karlo.learningapplication.modules.program;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 
 import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
+import com.example.karlo.learningapplication.database.LocalDatabase;
+import com.example.karlo.learningapplication.database.program.ProgramDataSource;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.models.program.Comment;
@@ -13,52 +16,72 @@ import com.example.karlo.learningapplication.servertasks.interfaces.Api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProgramViewModel extends BaseViewModel {
 
     private static final String TAG = "ProgramViewModel";
 
-    private final MutableLiveData<User> mUser = new MutableLiveData<>();
-    private final MutableLiveData<List<User>> mUsers = new MutableLiveData<>();
-    private final MutableLiveData<List<Track>> mTracks = new MutableLiveData<>();
-    private final MutableLiveData<List<Topic>> mTopics = new MutableLiveData<>();
-    private final MutableLiveData<List<Comment>> mComments = new MutableLiveData<>();
+    private MutableLiveData<User> mUser;
+    private MutableLiveData<List<User>> mUsers;
+    private MutableLiveData<List<Track>> mTracks;
+    private MutableLiveData<List<Topic>> mTopics;
+    private MutableLiveData<List<Comment>> mComments;
 
     private Api mApi;
-    private UserDataSource mDataSource;
+    private UserDataSource mUserDataSource;
+    private ProgramDataSource mProgramDataSource;
 
     @Inject
-    public ProgramViewModel(Api api, UserDataSource userDataSource) {
+    public ProgramViewModel(Api api, UserDataSource userDataSource, ProgramDataSource programDataSource) {
         this.mApi = api;
-        this.mDataSource = userDataSource;
-        fetchTracks();
-        fetchAllUsers();
-        fetchUser();
+        this.mUserDataSource = userDataSource;
+        this.mProgramDataSource = programDataSource;
     }
 
     public MutableLiveData<List<Track>> getTracks() {
+        if (mTracks == null) {
+            mTracks = new MutableLiveData<>();
+            fetchTracks();
+        }
         return mTracks;
     }
 
     public MutableLiveData<List<Topic>> getTopics() {
+        if (mTopics == null) {
+            mTopics = new MutableLiveData<>();
+        }
         return mTopics;
     }
 
     public MutableLiveData<List<Comment>> getComments() {
+        if (mComments == null) {
+            mComments = new MutableLiveData<>();
+        }
         return mComments;
     }
 
     public MutableLiveData<User> getUser() {
+        if (mUser == null) {
+            mUser = new MutableLiveData<>();
+            fetchUser();
+        }
         return mUser;
     }
 
     public MutableLiveData<List<User>> getUsers() {
+        if (mUsers == null) {
+            mUsers = new MutableLiveData<>();
+            fetchAllUsers();
+        }
         return mUsers;
     }
 
@@ -82,7 +105,7 @@ public class ProgramViewModel extends BaseViewModel {
 
     public void fetchTracks() {
         mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mProgramDataSource
                 .getTracks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +123,7 @@ public class ProgramViewModel extends BaseViewModel {
 
     public void fetchTopics(int position) {
         mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mProgramDataSource
                 .getTopics()
                 .flatMap(Observable::fromIterable)
                 .filter(topic -> topic.getParentId() == position)
@@ -120,7 +143,7 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public void fetchAllUsers() {
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mUserDataSource
                 .getUsers()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -137,9 +160,47 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public void fetchUser() {
-        mCompositeDisposable.add(mDataSource.getUser()
+        mCompositeDisposable.add(mUserDataSource
+                .getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mUser::setValue));
+    }
+
+    public void fetchData() {
+        mCompositeDisposable.add(mUserDataSource
+                .getUsers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap((Function<Map<String, User>, ObservableSource<?>>) stringUserMap ->
+                        Observable.concat(Observable.fromArray(
+                                new ArrayList<>(stringUserMap.values())),
+                                mApi.getComments(1)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                        ))
+                .subscribe()
+        );
+    }
+
+    public class Response {
+        private List<User> users;
+        private List<Comment> comments;
+
+        public List<User> getUsers() {
+            return users;
+        }
+
+        public void setUsers(List<User> users) {
+            this.users = users;
+        }
+
+        public List<Comment> getComments() {
+            return comments;
+        }
+
+        public void setComments(List<Comment> comments) {
+            this.comments = comments;
+        }
     }
 }

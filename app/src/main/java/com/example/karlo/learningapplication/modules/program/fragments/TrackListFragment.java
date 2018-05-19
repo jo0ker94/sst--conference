@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.modules.program;
+package com.example.karlo.learningapplication.modules.program.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +11,7 @@ import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.TrackAdapter;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.models.program.Track;
+import com.example.karlo.learningapplication.modules.program.ProgramActivity;
 import com.example.karlo.learningapplication.pager.CardFragmentPagerAdapter;
 import com.example.karlo.learningapplication.pager.ShadowTransformer;
 

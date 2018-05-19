@@ -7,14 +7,11 @@ import android.util.Log;
 
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.BaseViewModel;
-import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
 import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.LoginRequest;
 import com.example.karlo.learningapplication.models.User;
-import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
-import com.example.karlo.learningapplication.servertasks.interfaces.Api;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -35,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LoginViewModel extends BaseViewModel {
 
     private static final String TAG = "LoginViewModel";
-    private final MutableLiveData<User> mUser = new MutableLiveData<>();
+    private MutableLiveData<User> mUser;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private UserDataSource mDataSource;
@@ -43,7 +40,6 @@ public class LoginViewModel extends BaseViewModel {
     @Inject
     public LoginViewModel(UserDataSource userDataSource) {
         this.mDataSource = userDataSource;
-        checkIfLoggedIn();
     }
 
     public void checkIfLoggedIn() {
@@ -74,15 +70,15 @@ public class LoginViewModel extends BaseViewModel {
     }
 
     public LiveData<User> getUser() {
+        if (mUser == null) {
+            mUser = new MutableLiveData<>();
+            checkIfLoggedIn();
+        }
         return mUser;
     }
 
     public Completable deleteUser(User user) {
         return Completable.fromAction(() -> mDataSource.deleteUser(user));
-    }
-
-    public Completable insertUser(User user) {
-        return Completable.fromAction(() -> mDataSource.insertOrUpdateUser(user));
     }
 
     public void login(final LoginRequest request) {
@@ -151,9 +147,7 @@ public class LoginViewModel extends BaseViewModel {
     }
 
     private void getDisplayNameAndSaveUser(FirebaseUser firebaseUser) {
-        mCompositeDisposable.add(RetrofitUtil
-                .getRetrofit(Constants.FIREBASE_BASE_URL)
-                .create(Api.class)
+        mCompositeDisposable.add(mDataSource
                 .getDisplayName(firebaseUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +158,8 @@ public class LoginViewModel extends BaseViewModel {
 
     private void saveUserToDatabase(FirebaseUser firebaseUser, String displayName) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), displayName != null ? displayName : firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl());
-        mCompositeDisposable.add(insertUser(user)
+        mCompositeDisposable.add(mDataSource
+                .insertOrUpdateUser(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> mStatus.setValue(Status.login(user))));

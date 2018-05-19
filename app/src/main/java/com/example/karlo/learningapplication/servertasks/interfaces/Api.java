@@ -22,23 +22,11 @@ public interface Api {
     @GET("strings.json")
     io.reactivex.Observable<List<String>> getStrings();
 
-    @GET("users/{id}/displayName.json")
-    io.reactivex.Observable<String> getDisplayName(@Path("id") String id);
-
-    @GET("users.json")
-    io.reactivex.Observable<Map<String, User>> getUsers();
-
     @GET("2017/conferenceChairs.json")
     io.reactivex.Observable<List<ConferenceChair>> getChairs();
 
     @GET("2017/images.json")
     io.reactivex.Observable<List<String>> getImages();
-
-    @GET("2017/conferenceProgram/tracks.json")
-    io.reactivex.Observable<List<Track>> getTracks();
-
-    @GET("2017/conferenceProgram/topics.json")
-    io.reactivex.Observable<List<Topic>> getTopics();
 
     @GET("2017/comments/{id}.json")
     io.reactivex.Observable<List<Comment>> getComments(@Path("id") int id);

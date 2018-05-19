@@ -1,13 +1,13 @@
 package com.example.karlo.learningapplication.models.program;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
-import com.google.api.client.util.DateTime;
+import com.example.karlo.learningapplication.models.program.converters.PersonConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,6 +35,7 @@ public class Track {
 
     @SerializedName("chairs")
     @Expose
+    @TypeConverters(PersonConverter.class)
     private List<Person> mChairs;
 
     public Track(@NonNull int mId, String mStartDate, String mEndDate, int mRoom, String mTitle, List<Person> mChairs) {

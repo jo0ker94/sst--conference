@@ -1,10 +1,12 @@
 package com.example.karlo.learningapplication.models.program;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.example.karlo.learningapplication.models.program.converters.PersonConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +30,7 @@ public class Topic implements Parcelable {
 
     @SerializedName("lecturer")
     @Expose
+    @TypeConverters(PersonConverter.class)
     private List<Person> mLecturers;
 
     public Topic(@NonNull int mId, int mParentId, String mTitle, List<Person> mLecturers) {

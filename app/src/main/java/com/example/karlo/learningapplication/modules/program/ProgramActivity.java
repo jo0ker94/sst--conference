@@ -15,6 +15,9 @@ import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.models.program.Track;
+import com.example.karlo.learningapplication.modules.program.fragments.TopicDetailsFragment;
+import com.example.karlo.learningapplication.modules.program.fragments.TopicListFragment;
+import com.example.karlo.learningapplication.modules.program.fragments.TrackListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

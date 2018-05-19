@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.modules.program;
+package com.example.karlo.learningapplication.modules.program.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +25,7 @@ public class TopicListFragment extends BaseProgramFragment
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    private TopicAdapter mAdapter;
     private List<Topic> mTopics = new ArrayList<>();
 
     @Nullable
@@ -45,7 +46,9 @@ public class TopicListFragment extends BaseProgramFragment
     private void setUpObservers() {
         mViewModel.getTopics().observe(this, topics -> {
             if (topics != null && !topics.isEmpty()) {
-                showTopics(topics, this);
+                mTopics.clear();
+                mTopics.addAll(topics);
+                showTopics(this);
             } else {
                 Topic topic = new Topic(-1,
                         getArguments().getInt(Constants.POSITION),
@@ -67,13 +70,15 @@ public class TopicListFragment extends BaseProgramFragment
         });
     }
 
-    public void showTopics(List<Topic> topics, TopicAdapter.OnItemClickListener listener) {
-        mTopics.clear();
-        mTopics.addAll(topics);
-        TopicAdapter adapter = new TopicAdapter(topics, listener);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+    public void showTopics(TopicAdapter.OnItemClickListener listener) {
+        if (mAdapter == null) {
+            mAdapter = new TopicAdapter(mTopics, listener);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

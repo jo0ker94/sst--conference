@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GalleryViewModel extends BaseViewModel {
 
-    private MutableLiveData<List<String>> mImageUrl = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mImageUrl;
     private List<String> mImages = new ArrayList<>();
 
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
@@ -61,6 +61,10 @@ public class GalleryViewModel extends BaseViewModel {
     }
 
     public LiveData<List<String>> getImages() {
+        if (mImageUrl == null) {
+            mImageUrl = new MutableLiveData<>();
+            downloadImages();
+        }
         return mImageUrl;
     }
 

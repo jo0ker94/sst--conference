@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.modules.program;
+package com.example.karlo.learningapplication.modules.program.fragments;
 
 import android.content.Context;
 import android.os.Bundle;

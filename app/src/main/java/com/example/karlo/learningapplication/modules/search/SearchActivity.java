@@ -176,8 +176,8 @@ public class SearchActivity extends AppCompatActivity
             showNoResult();
         } else {
             mNoResultText.setVisibility(View.GONE);
+            mAdapter.notifyDataSetChanged();
         }
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override

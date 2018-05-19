@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.modules.program;
+package com.example.karlo.learningapplication.modules.program.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

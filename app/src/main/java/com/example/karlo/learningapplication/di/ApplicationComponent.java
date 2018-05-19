@@ -4,7 +4,7 @@ import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.modules.gallery.GalleryActivity;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
-import com.example.karlo.learningapplication.modules.program.BaseProgramFragment;
+import com.example.karlo.learningapplication.modules.program.fragments.BaseProgramFragment;
 import com.example.karlo.learningapplication.modules.program.ProgramActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
 
