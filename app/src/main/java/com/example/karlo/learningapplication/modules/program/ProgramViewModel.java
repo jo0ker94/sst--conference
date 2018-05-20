@@ -127,6 +127,7 @@ public class ProgramViewModel extends BaseViewModel {
                 .getTopics()
                 .flatMap(Observable::fromIterable)
                 .filter(topic -> topic.getParentId() == position)
+                .distinct(Topic::getTitle)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

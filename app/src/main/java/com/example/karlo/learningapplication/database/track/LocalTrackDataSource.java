@@ -20,7 +20,8 @@ public class LocalTrackDataSource implements TrackDataSource {
 
     @Override
     public Observable<List<Track>> getTracks() {
-        return Observable.concat(getTracksFromDatabase(), getTracksFromApi());
+        return Observable.concat(getTracksFromDatabase(),
+                getTracksFromApi().onErrorResumeNext(Observable.empty()));
     }
 
     private Observable<List<Track>> getTracksFromDatabase() {

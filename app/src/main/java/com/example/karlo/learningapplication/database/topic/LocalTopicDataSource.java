@@ -20,7 +20,8 @@ public class LocalTopicDataSource implements TopicDataSource {
 
     @Override
     public Observable<List<Topic>> getTopics() {
-        return Observable.concat(getTopicsFromDatabase(), getTopicsFromApi());
+        return Observable.concat(getTopicsFromDatabase(),
+                getTopicsFromApi().onErrorResumeNext(Observable.empty()));
     }
 
     private Observable<List<Topic>> getTopicsFromDatabase() {

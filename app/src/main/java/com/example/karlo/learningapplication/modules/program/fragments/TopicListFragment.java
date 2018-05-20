@@ -71,14 +71,14 @@ public class TopicListFragment extends BaseProgramFragment
     }
 
     public void showTopics(TopicAdapter.OnItemClickListener listener) {
-        if (mAdapter == null) {
+        //if (mAdapter == null) {
             mAdapter = new TopicAdapter(mTopics, listener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
-        }
+        //} else {
+        //    mAdapter.notifyDataSetChanged();
+        //}
     }
 
     @Override
