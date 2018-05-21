@@ -89,7 +89,7 @@ public class LoginViewModel extends BaseViewModel {
             mAuth.signInWithEmailAndPassword(request.getEmail(), request.getPassword())
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            getDisplayNameAndSaveUser(mAuth.getCurrentUser());
+                            getUserDataFromServerAndSave(mAuth.getCurrentUser());
                         } else {
                             mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
@@ -107,7 +107,7 @@ public class LoginViewModel extends BaseViewModel {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            saveDisplayNameOnServer(firebaseUser, request.getDisplayName());
+                            pushUserToServer(firebaseUser, request.getDisplayName());
                             request.setDisplayName(null);
                             mStatus.setValue(Status.onSignUp(request));
                         } else {
@@ -132,8 +132,7 @@ public class LoginViewModel extends BaseViewModel {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            saveUserToDatabase(firebaseUser, null);
-                            saveDisplayNameOnServer(firebaseUser, null);
+                            getUserDataFromServerAndSave(firebaseUser);
                             mStatus.setValue(new Status(Status.Response.LOGIN, true));
                         } else {
                             mStatus.setValue(Status.error(task.getException().getMessage()));
@@ -146,18 +145,19 @@ public class LoginViewModel extends BaseViewModel {
         }
     }
 
-    private void getDisplayNameAndSaveUser(FirebaseUser firebaseUser) {
+    private void getUserDataFromServerAndSave(FirebaseUser firebaseUser) {
         mCompositeDisposable.add(mDataSource
-                .getDisplayName(firebaseUser.getUid())
+                .getUserFromServer(firebaseUser.getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(name -> {
-                    saveUserToDatabase(firebaseUser, name);
-                }));
+                .subscribe(this::saveUserToDatabase,
+                        throwable -> {
+                            pushUserToServer(firebaseUser, null);
+                            getUserDataFromServerAndSave(firebaseUser);
+                        }));
     }
 
-    private void saveUserToDatabase(FirebaseUser firebaseUser, String displayName) {
-        User user = new User(firebaseUser.getUid(), firebaseUser.getEmail(), displayName != null ? displayName : firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl());
+    private void saveUserToDatabase(User user) {
         mCompositeDisposable.add(mDataSource
                 .insertOrUpdateUser(user)
                 .subscribeOn(Schedulers.io())
@@ -165,7 +165,7 @@ public class LoginViewModel extends BaseViewModel {
                 .subscribe(() -> mStatus.setValue(Status.login(user))));
     }
 
-    private void saveDisplayNameOnServer(FirebaseUser firebaseUser, String displayName) {
+    private void pushUserToServer(FirebaseUser firebaseUser, String displayName) {
         DatabaseHelper.getUserReference()
                 .child(firebaseUser.getUid())
                 .setValue(new User(

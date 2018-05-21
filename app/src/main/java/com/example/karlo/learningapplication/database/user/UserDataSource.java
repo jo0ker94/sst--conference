@@ -16,7 +16,7 @@ public interface UserDataSource {
      */
     Maybe<User> getUser();
 
-    Observable<String> getDisplayName(String id);
+    Observable<User> getUserFromServer(String id);
 
     Observable<Map<String, User>> getUsers();
 

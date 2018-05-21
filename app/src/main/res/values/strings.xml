@@ -1,18 +1,18 @@
 <resources>
 
     <plurals name="minutes">
-        <item quantity="one" formatted="true">%d minute ago</item>
-        <item quantity="other" formatted="true">%d minutes ago</item>
+        <item formatted="true" quantity="one">%d minute ago</item>
+        <item formatted="true" quantity="other">%d minutes ago</item>
     </plurals>
 
     <plurals name="hours">
-        <item quantity="one" formatted="true">%d hour ago</item>
-        <item quantity="other" formatted="true">%d hours ago</item>
+        <item formatted="true" quantity="one">%d hour ago</item>
+        <item formatted="true" quantity="other">%d hours ago</item>
     </plurals>
 
     <plurals name="days">
-        <item quantity="one" formatted="true">%d day ago</item>
-        <item quantity="other" formatted="true">%d days ago</item>
+        <item formatted="true" quantity="one">%d day ago</item>
+        <item formatted="true" quantity="other">%d days ago</item>
     </plurals>
 
     <string name="app_name">Learning Application</string>
@@ -67,6 +67,7 @@
     <string name="no">No</string>
     <string name="ok">Ok</string>
     <string name="no_result_found">No result found!</string>
+    <string name="you_are_not_subscribed_on_any_event">You are not subscribed on any event!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

@@ -1,4 +1,4 @@
-package com.example.karlo.learningapplication.models.program.converters;
+package com.example.karlo.learningapplication.models.converters;
 
 import android.arch.persistence.room.TypeConverter;
 

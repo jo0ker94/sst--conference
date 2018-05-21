@@ -1,26 +1,30 @@
 package com.example.karlo.learningapplication.models;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.net.Uri;
 
+import com.example.karlo.learningapplication.models.converters.IntegerListConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import io.reactivex.annotations.NonNull;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Karlo on 25.3.2018..
  */
 
 @Entity
-public class User extends RealmObject {
+public class User {
 
-    @PrimaryKey
     @SerializedName("userId")
+    @PrimaryKey
     @Expose
-    @android.arch.persistence.room.PrimaryKey @android.support.annotation.NonNull private String userId;
+    @android.support.annotation.NonNull
+    private String userId;
 
     @SerializedName("mail")
     @Expose
@@ -34,15 +38,25 @@ public class User extends RealmObject {
     @Expose
     private String imageUrl;
 
+    @TypeConverters(IntegerListConverter.class)
+    @SerializedName("subscribedEvents")
+    @Expose
+    private List<Integer> subscribedEvents;
+
     public User() {}
 
-    public User(String userId, String mail, String displayName, Uri imageUrl) {
+    public User(@NonNull String userId, String mail, String displayName, Uri imageUrl) {
+        this(userId, mail, displayName, imageUrl, null);
+    }
+
+    public User(@NonNull String userId, String mail, String displayName, Uri imageUrl, List<Integer> subscribedEvents) {
         this.userId = userId;
         this.mail = mail;
         this.displayName = displayName;
         if (imageUrl != null) {
             this.imageUrl = imageUrl.toString();
         }
+        this.subscribedEvents = subscribedEvents;
     }
 
     public String getUserId() {
@@ -75,5 +89,13 @@ public class User extends RealmObject {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<Integer> getSubscribedEvents() {
+        return subscribedEvents;
+    }
+
+    public void setSubscribedEvents(List<Integer> subscribedEvents) {
+        this.subscribedEvents = subscribedEvents;
     }
 }

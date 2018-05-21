@@ -28,6 +28,7 @@ import com.example.karlo.learningapplication.modules.gallery.GalleryActivity;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
 import com.example.karlo.learningapplication.modules.program.ProgramActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
+import com.example.karlo.learningapplication.modules.subscribed.SubscriptionActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -51,6 +52,8 @@ public class HomeActivity extends AppCompatActivity
     CardView mLinkToProgram;
     @BindView(R.id.gallery_link)
     CardView mLinkToGallery;
+    @BindView(R.id.subscribed_link)
+    CardView mLinkToSubscribed;
 
     //
     // Navigation
@@ -104,6 +107,7 @@ public class HomeActivity extends AppCompatActivity
     private void setUpListeners() {
         mLinkToGallery.setOnClickListener(view -> goToGallery());
         mLinkToProgram.setOnClickListener(view -> goToProgram());
+        mLinkToSubscribed.setOnClickListener(view -> goToSubscribed());
     }
 
     private void setUpNavigation() {
@@ -168,6 +172,12 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void goToProgram() {
         Intent intent = new Intent(HomeActivity.this, ProgramActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void goToSubscribed() {
+        Intent intent = new Intent(HomeActivity.this, SubscriptionActivity.class);
         startActivity(intent);
     }
 

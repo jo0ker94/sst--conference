@@ -7,6 +7,7 @@ import com.example.karlo.learningapplication.modules.login.LoginActivity;
 import com.example.karlo.learningapplication.modules.program.fragments.BaseProgramFragment;
 import com.example.karlo.learningapplication.modules.program.ProgramActivity;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
+import com.example.karlo.learningapplication.modules.subscribed.SubscriptionActivity;
 
 import javax.inject.Singleton;
 
@@ -26,4 +27,5 @@ public interface ApplicationComponent {
     void inject(ProgramActivity target);
     void inject(BaseProgramFragment target);
     void inject(SearchActivity target);
+    void inject(SubscriptionActivity target);
 }

@@ -17,5 +17,6 @@ public interface HomeView extends BaseView {
     void goToSearch();
     void goToProgram();
     void goToGallery();
+    void goToSubscribed();
     void logOut();
 }

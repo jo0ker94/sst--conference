@@ -22,10 +22,10 @@
 
         <activity
             android:name=".modules.login.LoginActivity"
-            android:theme="@style/NoActionBarTheme.Launcher"
-            android:windowSoftInputMode="adjustNothing"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme.Launcher"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,22 +34,23 @@
         </activity>
         <activity
             android:name=".modules.home.HomeActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".modules.calendar.CalendarActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".modules.search.SearchActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".modules.gallery.GalleryActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".modules.program.ProgramActivity"
-            android:windowSoftInputMode="adjustResize"/>
-
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".modules.program.ProgramActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver android:name=".receivers.EventAlarmReceiver" />
 
+        <activity android:name=".modules.subscribed.SubscriptionActivity"></activity>
     </application>
 
 </manifest>

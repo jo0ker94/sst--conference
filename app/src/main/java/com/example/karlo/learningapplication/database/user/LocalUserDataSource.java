@@ -25,8 +25,8 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Observable<String> getDisplayName(String id) {
-        return mApi.getDisplayName(id);
+    public Observable<User> getUserFromServer(String id) {
+        return mApi.getUser(id);
     }
 
     @Override

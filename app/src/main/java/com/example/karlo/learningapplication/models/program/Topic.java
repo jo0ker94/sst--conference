@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.example.karlo.learningapplication.models.program.converters.PersonConverter;
+import com.example.karlo.learningapplication.models.converters.PersonConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
