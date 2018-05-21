@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements
                     if (status.getMessage() != null) {
                         showError(new Throwable(status.getMessage()));
                     } else {
-                        showError(new Throwable(getString(status.getProgress())));
+                        showError(new Throwable(getString(status.getInteger())));
                     }
                     break;
                 case SUCCESS:

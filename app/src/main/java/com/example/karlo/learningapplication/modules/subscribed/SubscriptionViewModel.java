@@ -6,6 +6,7 @@ import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.database.program.ProgramDataSource;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
+import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.models.program.Topic;
 
@@ -69,5 +70,25 @@ public class SubscriptionViewModel extends BaseViewModel {
                             mStatus.setValue(Status.loading(false));
                         }
                 ));
+    }
+
+    public void deleteTopicSubscription(Topic topic) {
+        List<Integer> events = mUser.getSubscribedEvents();
+        if (events.contains(topic.getId())) {
+            events.remove((Integer) topic.getId());
+            mUser.setSubscribedEvents(events);
+
+            DatabaseHelper.getUserReference()
+                    .child(mUser.getUserId())
+                    .setValue(mUser);
+
+            mCompositeDisposable.add(mUserDataSource
+                    .insertOrUpdateUser(mUser)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> mStatus.setValue(Status.delete(topic.getId()))));
+        } else {
+            mStatus.setValue(Status.error("Error!"));
+        }
     }
 }

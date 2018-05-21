@@ -18,6 +18,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     public TopicAdapter(List<Topic> items, OnItemClickListener listener) {
@@ -36,6 +37,10 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
         Topic topic = this.mItems.get(position);
         holder.title.setText(topic.getTitle());
         holder.title.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
+        holder.title.getRootView().setOnLongClickListener(view -> {
+            mListener.onItemLongClick(holder.itemView, position);
+            return true;
+        });
     }
 
     @Override

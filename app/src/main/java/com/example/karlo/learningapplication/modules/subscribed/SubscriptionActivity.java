@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +76,7 @@ public class SubscriptionActivity extends AppCompatActivity
                 mFilteredTopics.clear();
                 mTopics.addAll(topics);
                 mFilteredTopics.addAll(topics);
-                showTopics(this);
+                showTopics();
             } else {
                 showNoSubscription();
             }
@@ -86,16 +87,35 @@ public class SubscriptionActivity extends AppCompatActivity
                 case LOADING:
                     loadingData(status.getState());
                     break;
+                case MESSAGE:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+                case DELETED:
+                    showError(new Throwable("Unsubscribed!"));
+                    removeTopicFromList(status.getInteger());
+                    mAdapter.notifyDataSetChanged();
+                    break;
                 case ERROR:
                     showError(new Throwable(status.getMessage()));
-                    showNoSubscription();
+                    if (mFilteredTopics.isEmpty()) {
+                        showNoSubscription();
+                    }
                     break;
             }
         });
     }
 
-    public void showTopics(TopicAdapter.OnItemClickListener listener) {
-        mAdapter = new TopicAdapter(mFilteredTopics, listener);
+    private void removeTopicFromList(int id) {
+        List<Topic> temp = new ArrayList<>(mFilteredTopics);
+        for (Topic topic : temp) {
+            if (topic.getId() == id) {
+                mFilteredTopics.remove(topic);
+            }
+        }
+    }
+
+    public void showTopics() {
+        mAdapter = new TopicAdapter(mFilteredTopics, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -105,6 +125,11 @@ public class SubscriptionActivity extends AppCompatActivity
     public void onItemClick(View view, int position) {
         //showTopicDetails(mFilteredTopics.get(position), false);
         Toast.makeText(this, String.valueOf(mFilteredTopics.get(position).getId()), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        mViewModel.deleteTopicSubscription(mFilteredTopics.get(position));
     }
 
     @Override

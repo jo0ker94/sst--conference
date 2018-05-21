@@ -85,4 +85,9 @@ public class TopicListFragment extends BaseProgramFragment
     public void onItemClick(View view, int position) {
         mListener.showTopicDetails(mTopics.get(position), false);
     }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+
+    }
 }

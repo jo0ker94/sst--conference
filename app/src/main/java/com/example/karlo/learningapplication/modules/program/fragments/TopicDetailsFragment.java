@@ -64,6 +64,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
         setUpViews();
         setUpListeners();
         setUpObservers();
+        mTitle.setOnClickListener(v -> mViewModel.subscribeToTopic(mTopic));
     }
 
     private void setUpListeners() {
@@ -147,6 +148,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
                 case LOADING:
                     mListener.loadingData(status.getState());
                     break;
+                case MESSAGE:
                 case ERROR:
                     mListener.showError(new Throwable(status.getMessage()));
                     break;

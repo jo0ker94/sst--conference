@@ -1,13 +1,13 @@
 package com.example.karlo.learningapplication.modules.program;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 
+import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
-import com.example.karlo.learningapplication.database.LocalDatabase;
 import com.example.karlo.learningapplication.database.program.ProgramDataSource;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
+import com.example.karlo.learningapplication.helpers.DatabaseHelper;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Topic;
@@ -30,12 +30,13 @@ public class ProgramViewModel extends BaseViewModel {
 
     private static final String TAG = "ProgramViewModel";
 
-    private MutableLiveData<User> mUser;
+    private MutableLiveData<User> mLiveUser;
     private MutableLiveData<List<User>> mUsers;
     private MutableLiveData<List<Track>> mTracks;
     private MutableLiveData<List<Topic>> mTopics;
     private MutableLiveData<List<Comment>> mComments;
 
+    private User mUser;
     private Api mApi;
     private UserDataSource mUserDataSource;
     private ProgramDataSource mProgramDataSource;
@@ -70,11 +71,11 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public MutableLiveData<User> getUser() {
-        if (mUser == null) {
-            mUser = new MutableLiveData<>();
+        if (mLiveUser == null) {
+            mLiveUser = new MutableLiveData<>();
             fetchUser();
         }
-        return mUser;
+        return mLiveUser;
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -165,7 +166,11 @@ public class ProgramViewModel extends BaseViewModel {
                 .getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mUser::setValue));
+                .subscribe(user -> {
+                            mUser = user;
+                            mLiveUser.setValue(user);
+                        }
+                ));
     }
 
     public void fetchData() {
@@ -182,6 +187,26 @@ public class ProgramViewModel extends BaseViewModel {
                         ))
                 .subscribe()
         );
+    }
+
+    public void subscribeToTopic(Topic topic) {
+        List<Integer> events = mUser.getSubscribedEvents();
+        if (!events.contains(topic.getId())) {
+            events.add(topic.getId());
+            mUser.setSubscribedEvents(events);
+
+            DatabaseHelper.getUserReference()
+                    .child(mUser.getUserId())
+                    .setValue(mUser);
+
+            mCompositeDisposable.add(mUserDataSource
+                    .insertOrUpdateUser(mUser)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> mStatus.setValue(Status.message("Subscribed!"))));
+        } else {
+            mStatus.setValue(Status.message("Already subscribed!"));
+        }
     }
 
     public class Response {

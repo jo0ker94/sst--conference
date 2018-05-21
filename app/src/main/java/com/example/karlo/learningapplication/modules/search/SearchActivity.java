@@ -109,6 +109,11 @@ public class SearchActivity extends AppCompatActivity
     }
 
     @Override
+    public void onItemLongClick(View view, int position) {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);

@@ -98,7 +98,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
                     mProgressDialog.dismiss();
                     break;
                 case PROGRESS:
-                    mProgressDialog.setMessage(String.format(getString(R.string.upload_process), status.getProgress()));
+                    mProgressDialog.setMessage(String.format(getString(R.string.upload_process), status.getInteger()));
                     break;
                 case ERROR:
                     Toast.makeText(mActivity, status.getMessage(), Toast.LENGTH_SHORT).show();

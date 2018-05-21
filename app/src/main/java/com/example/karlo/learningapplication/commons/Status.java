@@ -7,7 +7,7 @@ public class Status {
 
     private Response mResponse;
     private String mMessage;
-    private int mProgress;
+    private int mInteger;
     private boolean mState;
     private LoginRequest mLoginRequest;
     private User mUser;
@@ -34,7 +34,7 @@ public class Status {
 
     public Status(Response mResponse, int progress) {
         this.mResponse = mResponse;
-        this.mProgress = progress;
+        this.mInteger = progress;
     }
 
     public Response getResponse() {
@@ -51,6 +51,10 @@ public class Status {
 
     public LoginRequest getLoginRequest() {
         return mLoginRequest;
+    }
+
+    public int getInteger() {
+        return mInteger;
     }
 
     public static Status loading(boolean loading) {
@@ -85,12 +89,12 @@ public class Status {
         return new Status(Response.LOGOUT, true);
     }
 
-    public int getProgress() {
-        return mProgress;
+    public static Status delete(int id) {
+        return new Status(Response.DELETED, id);
     }
 
     public enum Response {
-        LOADING, SUCCESS, ERROR, LOGIN, LOGOUT, SIGNUP, MESSAGE, PROGRESS
+        LOADING, SUCCESS, ERROR, LOGIN, LOGOUT, SIGNUP, MESSAGE, PROGRESS, DELETED
     }
 }
 
