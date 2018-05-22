@@ -209,7 +209,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private void scrollMode() {
         if (mCommentContainer.getVisibility() == View.VISIBLE) {
             mCommentContainer.setVisibility(View.GONE);
-            mTopicContainer.setVisibility(View.GONE);
+            //mTopicContainer.setVisibility(View.GONE);
             if (mListState != null) {
                 mLayoutManager.onRestoreInstanceState(mListState);
             }
@@ -219,25 +219,25 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private void exitScrollMode() {
         if (mCommentContainer.getVisibility() == View.GONE) {
             mCommentContainer.setVisibility(View.VISIBLE);
-            mTopicContainer.setVisibility(View.VISIBLE);
+            //mTopicContainer.setVisibility(View.VISIBLE);
             mRecyclerView.scrollToPosition(position);
         }
     }
 
     @Override
     public void stoppedScrolling() {
-        //if (!mRecyclerView.canScrollVertically(-1)) {
-        //    position = 0;
-        //} else {
-        //    position = mLayoutManager.findLastCompletelyVisibleItemPosition();
-        //}
-        //mListState = mLayoutManager.onSaveInstanceState();
-        //exitScrollMode();
+        if (!mRecyclerView.canScrollVertically(-1)) {
+            position = 0;
+        } else {
+            position = mLayoutManager.findLastCompletelyVisibleItemPosition();
+        }
+        mListState = mLayoutManager.onSaveInstanceState();
+        exitScrollMode();
     }
 
     @Override
     public void scrolling() {
-        //scrollMode();
+        scrollMode();
     }
 
     @Override
