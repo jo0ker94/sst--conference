@@ -14,12 +14,14 @@ import com.example.karlo.learningapplication.modules.program.ProgramViewModel;
 import javax.inject.Inject;
 
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 public abstract class BaseProgramFragment extends Fragment {
 
     @Inject
     ProgramViewModel mViewModel;
 
+    protected CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     protected ProgramListener mListener;
     protected Unbinder mUnbinder;
 
@@ -42,5 +44,6 @@ public abstract class BaseProgramFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
+        mCompositeDisposable.clear();
     }
 }

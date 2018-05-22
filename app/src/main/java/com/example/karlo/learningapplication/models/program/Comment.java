@@ -21,15 +21,20 @@ public class Comment {
     @Expose
     private String mUserId;
 
+    @SerializedName("parentId")
+    @Expose
+    private int mParentId;
+
     @SerializedName("timestamp")
     @Expose
     private String mTimestamp;
 
-    public Comment(@NonNull int mId, String mText, String mUserId, String mTimestamp) {
+    public Comment(@NonNull int mId, String mText, String mUserId, int parentId, String mTimestamp) {
         this.mId = mId;
         this.mText = mText;
         this.mUserId = mUserId;
         this.mTimestamp = mTimestamp;
+        this.mParentId = parentId;
     }
 
     @NonNull
@@ -63,5 +68,13 @@ public class Comment {
 
     public void setTimestamp(String mTimestamp) {
         this.mTimestamp = mTimestamp;
+    }
+
+    public int getParentId() {
+        return mParentId;
+    }
+
+    public void setParentId(int mParentId) {
+        this.mParentId = mParentId;
     }
 }

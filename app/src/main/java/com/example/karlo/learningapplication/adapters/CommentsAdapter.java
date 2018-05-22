@@ -25,6 +25,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     public CommentsAdapter(Activity activity, List<Comment> items, List<User> users, OnItemClickListener listener) {
@@ -47,6 +48,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         holder.timestamp.setText(getPostedTime(comment.getTimestamp()));
         holder.user.setText(getUserName(comment.getUserId()));
         holder.title.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
+        holder.title.getRootView().setOnLongClickListener(view -> {
+            mListener.onItemLongClick(holder.itemView, position);
+            return true;
+        });
     }
 
     private String getPostedTime(String timeString) {

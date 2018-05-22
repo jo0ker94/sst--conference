@@ -2,7 +2,6 @@ package com.example.karlo.learningapplication.modules.program;
 
 import android.arch.lifecycle.MutableLiveData;
 
-import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.BaseViewModel;
 import com.example.karlo.learningapplication.commons.Status;
 import com.example.karlo.learningapplication.database.program.ProgramDataSource;
@@ -13,6 +12,7 @@ import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.models.program.Track;
 import com.example.karlo.learningapplication.servertasks.interfaces.Api;
+import com.example.karlo.learningapplication.utility.DateUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,9 +35,11 @@ public class ProgramViewModel extends BaseViewModel {
     private MutableLiveData<List<User>> mUsers;
     private MutableLiveData<List<Track>> mTracks;
     private MutableLiveData<List<Topic>> mTopics;
-    private MutableLiveData<List<Comment>> mComments;
+    private MutableLiveData<List<Comment>> mLiveComments;
 
     private User mUser;
+    private List<Comment> mComments;
+
     private Api mApi;
     private UserDataSource mUserDataSource;
     private ProgramDataSource mProgramDataSource;
@@ -64,10 +67,10 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public MutableLiveData<List<Comment>> getComments() {
-        if (mComments == null) {
-            mComments = new MutableLiveData<>();
+        if (mLiveComments == null) {
+            mLiveComments = new MutableLiveData<>();
         }
-        return mComments;
+        return mLiveComments;
     }
 
     public MutableLiveData<User> getUser() {
@@ -93,7 +96,8 @@ public class ProgramViewModel extends BaseViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(comments -> {
-                            mComments.setValue(comments);
+                            mComments = new ArrayList<>(comments);
+                            mLiveComments.setValue(comments);
                             mStatus.setValue(Status.loading(false));
                         }
                         ,
@@ -207,6 +211,22 @@ public class ProgramViewModel extends BaseViewModel {
         } else {
             mStatus.setValue(Status.message("Already subscribed!"));
         }
+    }
+
+    public Completable deleteComment(Comment comment) {
+        return Completable.fromAction(() -> {
+            mComments.remove(comment);
+            DatabaseHelper.getCommentsReference()
+                    .child(String.valueOf(comment.getParentId()))
+                    .setValue(mComments);
+        });
+    }
+
+    public Completable addComment(Comment comment) {
+        return Completable.fromAction(() -> DatabaseHelper.getCommentsReference()
+                .child(String.valueOf(comment.getParentId()))
+                .child(String.valueOf(mComments.size()))
+                .setValue(comment));
     }
 
     public class Response {

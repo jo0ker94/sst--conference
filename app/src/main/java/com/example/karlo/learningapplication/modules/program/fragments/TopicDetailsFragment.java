@@ -1,5 +1,7 @@
 package com.example.karlo.learningapplication.modules.program.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -28,6 +30,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class TopicDetailsFragment extends BaseProgramFragment
         implements CommentsAdapter.OnItemClickListener {
@@ -69,21 +73,22 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     private void setUpListeners() {
         mCommentEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 Comment comment = new Comment(
                         mComments.size(),
                         mCommentEditText.getText().toString(),
                         mUser.getUserId(),
+                        mTopic.getId(),
                         DateUtility.getNowInIsoFormat()
                 );
-                DatabaseHelper.getCommentsReference()
-                        .child(String.valueOf(mTopic.getId()))
-                        .child(String.valueOf(mComments.size()))
-                        .setValue(comment);
-
-                mCommentEditText.setText("");
-                mComments.add(comment);
-                showComments(this);
+                mCompositeDisposable.add(mViewModel.addComment(comment)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            mCommentEditText.setText("");
+                            mComments.add(comment);
+                            showComments(this);
+                        }));
             }
             return false;
         });
@@ -170,5 +175,25 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getContext(), mComments.get(position).getUserId(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        Comment comment = mComments.get(position);
+        if (comment.getUserId().equalsIgnoreCase(mUser.getUserId())) {
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.delete_comment_message)
+                    .setPositiveButton(R.string.yes,
+                            (dialogInterface, i) -> mCompositeDisposable.add(
+                                    mViewModel.deleteComment(comment)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(() -> {
+                                                mComments.remove(comment);
+                                                mAdapter.notifyDataSetChanged();;
+                                            })))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        }
     }
 }

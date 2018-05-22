@@ -48,7 +48,11 @@ public class TopicListFragment extends BaseProgramFragment
             if (topics != null && !topics.isEmpty()) {
                 mTopics.clear();
                 mTopics.addAll(topics);
-                showTopics(this);
+                if (topics.size() > 1) {
+                    showTopics(this);
+                } else {
+                    mListener.showTopicDetails(mTopics.get(0), true);
+                }
             } else {
                 Topic topic = new Topic(-1,
                         getArguments().getInt(Constants.POSITION),
@@ -88,6 +92,5 @@ public class TopicListFragment extends BaseProgramFragment
 
     @Override
     public void onItemLongClick(View view, int position) {
-
     }
 }
