@@ -8,9 +8,13 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +66,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private Parcelable mListState;
     private int position = 0;
 
+    private MenuItem menuItem;
+    private CheckBox mSubscribedCheckBox;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,7 +83,20 @@ public class TopicDetailsFragment extends BaseProgramFragment
         setUpViews();
         setUpListeners();
         setUpObservers();
-        mTitle.setOnClickListener(v -> mViewModel.subscribeToTopic(mTopic));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.subscribe_menu, menu);
+        menuItem = menu.findItem(R.id.subscribe);
+        mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void setUpListeners() {
@@ -135,6 +155,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mViewModel.getUser().observe(this, user -> {
             if (user != null) {
                 mUser = user;
+                setUpBookmark();
             }
         });
 
@@ -165,6 +186,17 @@ public class TopicDetailsFragment extends BaseProgramFragment
                 case ERROR:
                     mListener.showError(new Throwable(status.getMessage()));
                     break;
+            }
+        });
+    }
+
+    private void setUpBookmark() {
+        mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
+        mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                mViewModel.subscribeToTopic(mTopic);
+            } else {
+                mViewModel.deleteTopicSubscription(mTopic);
             }
         });
     }
@@ -207,7 +239,12 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void scrollMode() {
-        if (mCommentContainer.getVisibility() == View.VISIBLE) {
+        if (mCommentContainer.getAlpha() == 1f) {
+            mCommentContainer.animate()
+                    .translationYBy(200f)
+                    .setDuration(200)
+                    .alpha(0f)
+                    .start();
             mCommentContainer.setVisibility(View.GONE);
             //mTopicContainer.setVisibility(View.GONE);
             if (mListState != null) {
@@ -217,8 +254,13 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void exitScrollMode() {
-        if (mCommentContainer.getVisibility() == View.GONE) {
+        if (mCommentContainer.getAlpha() == 0f) {
             mCommentContainer.setVisibility(View.VISIBLE);
+            mCommentContainer.animate()
+                    .translationYBy(-200f)
+                    .setDuration(200)
+                    .alpha(1f)
+                    .start();
             //mTopicContainer.setVisibility(View.VISIBLE);
             mRecyclerView.scrollToPosition(position);
         }

@@ -164,7 +164,7 @@ public class SubscriptionActivity extends AppCompatActivity
 
     private void setUpToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.search);
+        toolbar.setTitle(R.string.subscribed_events);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

@@ -26,4 +26,5 @@ public class Constants {
     public static final String NAME = "name";
     public static final String POSITION = "position";
     public static final String SIZE = "size";
+    public static final String SKIP = "skip";
 }

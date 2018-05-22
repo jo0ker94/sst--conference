@@ -69,6 +69,8 @@
     <string name="no_result_found">No result found!</string>
     <string name="you_are_not_subscribed_on_any_event">You are not subscribed on any event!</string>
     <string name="delete_comment_message">Do you really want to delete this comment?</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="subscribed_events">Subscribed events</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -56,13 +54,6 @@ public class ProgramActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -107,6 +98,7 @@ public class ProgramActivity extends AppCompatActivity
         TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.DATA, topic);
+        args.putBoolean(Constants.SKIP, forward);
         topicDetailsFragment.setArguments(args);
         replaceFragment(topicDetailsFragment, forward);
     }
@@ -115,7 +107,7 @@ public class ProgramActivity extends AppCompatActivity
         if (forward) {
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
-                    .replace(R.id.content, fragment)
+                    .replace(R.id.content, fragment, Constants.SKIP)
                     .commit();
         } else {
             getSupportFragmentManager().beginTransaction()

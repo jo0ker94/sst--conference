@@ -213,6 +213,26 @@ public class ProgramViewModel extends BaseViewModel {
         }
     }
 
+    public void deleteTopicSubscription(Topic topic) {
+        List<Integer> events = mUser.getSubscribedEvents();
+        if (events.contains(topic.getId())) {
+            events.remove((Integer) topic.getId());
+            mUser.setSubscribedEvents(events);
+
+            DatabaseHelper.getUserReference()
+                    .child(mUser.getUserId())
+                    .setValue(mUser);
+
+            mCompositeDisposable.add(mUserDataSource
+                    .insertOrUpdateUser(mUser)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> mStatus.setValue(Status.message("Unsubscribed!"))));
+        } else {
+            mStatus.setValue(Status.error("Error!"));
+        }
+    }
+
     public Completable deleteComment(Comment comment) {
         return Completable.fromAction(() -> {
             mComments.remove(comment);
