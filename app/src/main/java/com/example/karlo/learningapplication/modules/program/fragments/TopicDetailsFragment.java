@@ -1,8 +1,8 @@
 package com.example.karlo.learningapplication.modules.program.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +18,8 @@ import android.widget.Toast;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.adapters.CommentsAdapter;
 import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.helpers.DatabaseHelper;
+import com.example.karlo.learningapplication.commons.OnRecyclerViewScrollListener;
+import com.example.karlo.learningapplication.commons.RecyclerViewScrollListener;
 import com.example.karlo.learningapplication.models.User;
 import com.example.karlo.learningapplication.models.program.Comment;
 import com.example.karlo.learningapplication.models.program.Person;
@@ -34,7 +35,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class TopicDetailsFragment extends BaseProgramFragment
-        implements CommentsAdapter.OnItemClickListener {
+        implements CommentsAdapter.OnItemClickListener,
+        OnRecyclerViewScrollListener {
 
     @BindView(R.id.topic_title)
     TextView mTitle;
@@ -46,6 +48,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
     EditText mCommentEditText;
     @BindView(R.id.comment_container)
     CardView mCommentContainer;
+    @BindView(R.id.topic_container)
+    CardView mTopicContainer;
 
     private List<User> mUsers = new ArrayList<>();
     private List<Comment> mComments = new ArrayList<>();
@@ -53,6 +57,10 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private User mUser;
     private Topic mTopic;
     private CommentsAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+
+    private Parcelable mListState;
+    private int position = 0;
 
     @Nullable
     @Override
@@ -164,8 +172,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
     public void showComments(CommentsAdapter.OnItemClickListener listener) {
         if (mAdapter == null) {
             mAdapter = new CommentsAdapter(getActivity(), mComments, mUsers, listener);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(layoutManager);
+            mLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -190,10 +199,77 @@ public class TopicDetailsFragment extends BaseProgramFragment
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(() -> {
                                                 mComments.remove(comment);
-                                                mAdapter.notifyDataSetChanged();;
+                                                mAdapter.notifyDataSetChanged();
                                             })))
                     .setNegativeButton(R.string.no, null)
                     .show();
         }
+    }
+
+    private void scrollMode() {
+        if (mCommentContainer.getVisibility() == View.VISIBLE) {
+            mCommentContainer.setVisibility(View.GONE);
+            mTopicContainer.setVisibility(View.GONE);
+            if (mListState != null) {
+                mLayoutManager.onRestoreInstanceState(mListState);
+            }
+        }
+    }
+
+    private void exitScrollMode() {
+        if (mCommentContainer.getVisibility() == View.GONE) {
+            mCommentContainer.setVisibility(View.VISIBLE);
+            mTopicContainer.setVisibility(View.VISIBLE);
+            mRecyclerView.scrollToPosition(position);
+        }
+    }
+
+    @Override
+    public void stoppedScrolling() {
+        //if (!mRecyclerView.canScrollVertically(-1)) {
+        //    position = 0;
+        //} else {
+        //    position = mLayoutManager.findLastCompletelyVisibleItemPosition();
+        //}
+        //mListState = mLayoutManager.onSaveInstanceState();
+        //exitScrollMode();
+    }
+
+    @Override
+    public void scrolling() {
+        //scrollMode();
+    }
+
+    @Override
+    public void scrollSettling() {
+
+    }
+
+    @Override
+    public void scrolledRight() {
+
+    }
+
+    @Override
+    public void scrolledLeft() {
+
+    }
+
+    @Override
+    public void noHorizontalScroll() {
+
+    }
+
+    @Override
+    public void scrolledDown() {
+    }
+
+    @Override
+    public void scrolledUp() {
+    }
+
+    @Override
+    public void noVerticalScroll() {
+
     }
 }
