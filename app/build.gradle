@@ -107,6 +107,10 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
     implementation 'android.arch.persistence.room:rxjava2:1.1.0'
 
+    // -- Stream
+
+    implementation 'com.annimon:stream:1.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -66,7 +66,6 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private Parcelable mListState;
     private int position = 0;
 
-    private MenuItem menuItem;
     private CheckBox mSubscribedCheckBox;
 
     @Nullable
@@ -94,7 +93,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.subscribe_menu, menu);
-        menuItem = menu.findItem(R.id.subscribe);
+        MenuItem menuItem = menu.findItem(R.id.subscribe);
         mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
         super.onCreateOptionsMenu(menu, inflater);
     }

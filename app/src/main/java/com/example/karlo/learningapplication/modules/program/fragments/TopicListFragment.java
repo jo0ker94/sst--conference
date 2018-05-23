@@ -48,17 +48,20 @@ public class TopicListFragment extends BaseProgramFragment
             if (topics != null && !topics.isEmpty()) {
                 mTopics.clear();
                 mTopics.addAll(topics);
-                if (topics.size() > 1) {
+                //if (topics.size() > 1) {
                     showTopics(this);
-                } else {
-                    mListener.showTopicDetails(mTopics.get(0), true);
-                }
+                //} else {
+                //    mListener.showTopicDetails(mTopics.get(0), true);
+                //}
             } else {
                 Topic topic = new Topic(-1,
                         getArguments().getInt(Constants.POSITION),
                         getArguments().getString(Constants.NAME),
                         null);
-                mListener.showTopicDetails(topic, true);
+                mTopics.clear();
+                mTopics.add(topic);
+                showTopics(this);
+                //mListener.showTopicDetails(topic, false);
             }
         });
 
