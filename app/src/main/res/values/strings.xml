@@ -71,6 +71,10 @@
     <string name="delete_comment_message">Do you really want to delete this comment?</string>
     <string name="subscribe">Subscribe</string>
     <string name="subscribed_events">Subscribed events</string>
+    <string name="delete">Delete</string>
+    <string name="deleted_successfully">Deleted Successfully</string>
+    <string name="undo">Undo</string>
+    <string name="event_restored">Event is restored!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

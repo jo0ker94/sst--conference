@@ -52,7 +52,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
         return mItems.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends SwipeViewHolder {
         public TextView title;
 
         public ViewHolder(View view) {

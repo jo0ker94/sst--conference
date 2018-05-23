@@ -15,5 +15,6 @@
     <color name="material_blue">#0690ED</color>
     <color name="black_trans">#35000000</color>
     <color name="button_blue">#00adf2</color>
+    <color name="bg_row_background">#fa315b</color>
 
 </resources>

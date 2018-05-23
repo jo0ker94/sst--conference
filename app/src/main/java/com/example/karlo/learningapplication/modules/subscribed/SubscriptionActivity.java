@@ -1,21 +1,23 @@
 package com.example.karlo.learningapplication.modules.subscribed;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.adapters.RecyclerItemTouchHelper;
 import com.example.karlo.learningapplication.adapters.TopicAdapter;
 import com.example.karlo.learningapplication.models.program.Topic;
 import com.example.karlo.learningapplication.ui.SearchBarView;
@@ -33,7 +35,7 @@ public class SubscriptionActivity extends AppCompatActivity
         implements SubscriptionView,
         SearchBarView.SearchBarListener,
         TopicAdapter.OnItemClickListener,
-        SearchBarView.TextChangedListener {
+        SearchBarView.TextChangedListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     @BindView(R.id.searchListView)
     RecyclerView mRecyclerView;
@@ -92,8 +94,6 @@ public class SubscriptionActivity extends AppCompatActivity
                     break;
                 case DELETED:
                     showError(new Throwable("Unsubscribed!"));
-                    removeTopicFromList(status.getInteger());
-                    mAdapter.notifyDataSetChanged();
                     break;
                 case ERROR:
                     showError(new Throwable(status.getMessage()));
@@ -105,20 +105,15 @@ public class SubscriptionActivity extends AppCompatActivity
         });
     }
 
-    private void removeTopicFromList(int id) {
-        List<Topic> temp = new ArrayList<>(mFilteredTopics);
-        for (Topic topic : temp) {
-            if (topic.getId() == id) {
-                mFilteredTopics.remove(topic);
-            }
-        }
-    }
-
     public void showTopics() {
         mAdapter = new TopicAdapter(mFilteredTopics, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+
     }
 
     @Override
@@ -129,7 +124,6 @@ public class SubscriptionActivity extends AppCompatActivity
 
     @Override
     public void onItemLongClick(View view, int position) {
-        mViewModel.deleteTopicSubscription(mFilteredTopics.get(position));
     }
 
     @Override
@@ -225,5 +219,37 @@ public class SubscriptionActivity extends AppCompatActivity
     @Override
     public void afterTextChanged(String text) {
         filterTopics(text);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        final boolean[] revert = {false};
+        Topic topic = mFilteredTopics.get(position);
+        mFilteredTopics.remove(position);
+        mAdapter.notifyItemRemoved(position);
+
+        Snackbar snackbar = Snackbar
+                .make(mRecyclerView, R.string.deleted_successfully, Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.undo).toUpperCase(), view -> {
+                    revert[0] = true;
+                    Snackbar.make(mRecyclerView, R.string.event_restored, Snackbar.LENGTH_SHORT)
+                            .show();
+                    mFilteredTopics.add(position, topic);
+                    mAdapter.notifyItemInserted(position);
+                });
+
+        snackbar.show();
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (!revert[0]) {
+                    mViewModel.deleteTopicSubscription(topic);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
     }
 }
