@@ -95,6 +95,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
         inflater.inflate(R.menu.subscribe_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.subscribe);
         mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
+        if (mUser != null) {
+            setUpBookmark();
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -154,7 +157,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mViewModel.getUser().observe(this, user -> {
             if (user != null) {
                 mUser = user;
-                setUpBookmark();
+                if (mSubscribedCheckBox != null) {
+                    setUpBookmark();
+                }
             }
         });
 

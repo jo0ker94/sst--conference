@@ -94,38 +94,26 @@ public class ProgramActivity extends AppCompatActivity
     }
 
     @Override
-    public void showTopicDetails(Topic topic, boolean forward) {
+    public void showTopicDetails(Topic topic) {
         TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.DATA, topic);
-        args.putBoolean(Constants.SKIP, forward);
         topicDetailsFragment.setArguments(args);
-        replaceFragment(topicDetailsFragment, forward);
+        replaceFragment(topicDetailsFragment);
     }
 
-    private void replaceFragment(Fragment fragment, boolean forward) {
-        if (forward) {
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
-                    .replace(R.id.content, fragment, Constants.SKIP)
-                    .commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)
                     .replace(R.id.content, fragment)
                     .addToBackStack(fragment.getTag())
                     .commit();
-        }
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        replaceFragment(fragment, false);
     }
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }

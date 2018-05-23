@@ -28,6 +28,14 @@ public class TopicListFragment extends BaseProgramFragment
     private TopicAdapter mAdapter;
     private List<Topic> mTopics = new ArrayList<>();
 
+    private boolean mIsRestoredFromBackStack = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIsRestoredFromBackStack = false;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,25 +51,27 @@ public class TopicListFragment extends BaseProgramFragment
         mViewModel.fetchTopics(getArguments().getInt(Constants.POSITION));
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mIsRestoredFromBackStack = true;
+    }
+
     private void setUpObservers() {
         mViewModel.getTopics().observe(this, topics -> {
             if (topics != null && !topics.isEmpty()) {
                 mTopics.clear();
                 mTopics.addAll(topics);
-                //if (topics.size() > 1) {
+                if (topics.size() > 1) {
                     showTopics(this);
-                //} else {
-                //    mListener.showTopicDetails(mTopics.get(0), true);
-                //}
+                } else {
+                    handleLoadEvent(mTopics.get(0));
+                }
             } else {
-                Topic topic = new Topic(-1,
+                handleLoadEvent(new Topic(-1,
                         getArguments().getInt(Constants.POSITION),
                         getArguments().getString(Constants.NAME),
-                        null);
-                mTopics.clear();
-                mTopics.add(topic);
-                showTopics(this);
-                //mListener.showTopicDetails(topic, false);
+                        null));
             }
         });
 
@@ -77,6 +87,15 @@ public class TopicListFragment extends BaseProgramFragment
         });
     }
 
+    private void handleLoadEvent(Topic topic) {
+        if (!mIsRestoredFromBackStack) {
+            mListener.showTopicDetails(topic);
+
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        }
+    }
+
     public void showTopics(TopicAdapter.OnItemClickListener listener) {
         //if (mAdapter == null) {
             mAdapter = new TopicAdapter(mTopics, listener);
@@ -90,7 +109,7 @@ public class TopicListFragment extends BaseProgramFragment
 
     @Override
     public void onItemClick(View view, int position) {
-        mListener.showTopicDetails(mTopics.get(position), false);
+        mListener.showTopicDetails(mTopics.get(position));
     }
 
     @Override
