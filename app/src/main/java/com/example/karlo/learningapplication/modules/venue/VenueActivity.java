@@ -1,7 +1,10 @@
 package com.example.karlo.learningapplication.modules.venue;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,12 +16,21 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.learningapplication.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class VenueActivity extends AppCompatActivity implements VenueView {
+public class VenueActivity extends AppCompatActivity
+        implements VenueView,
+        OnMapReadyCallback {
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -32,11 +44,18 @@ public class VenueActivity extends AppCompatActivity implements VenueView {
     private Unbinder mUnbinder;
     private VenuePagerAdapter mVenuePagerAdapter;
 
+    private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue);
         mUnbinder = ButterKnife.bind(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         setUpToolbar();
         setUpTab();
     }
@@ -119,5 +138,25 @@ public class VenueActivity extends AppCompatActivity implements VenueView {
     @Override
     public void showError(Throwable error) {
         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        UiSettings uiSettings = this.mMap.getUiSettings();
+        uiSettings.setZoomControlsEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setZoomGesturesEnabled(true);
+        LatLng sydney = new LatLng(-34, 151);
+
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        this.mMap.setMyLocationEnabled(true);
     }
 }

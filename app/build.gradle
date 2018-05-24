@@ -111,6 +111,10 @@ dependencies {
 
     implementation 'com.annimon:stream:1.2.0'
 
+    // -- Google Maps
+
+    implementation 'com.google.android.gms:play-services-maps:15.0.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
