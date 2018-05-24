@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/tab_image"
+        android:src="@drawable/venue_tab_region"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/underline_image"
+        android:layout_alignStart="@+id/tab_image"
+        android:layout_alignEnd="@+id/tab_image"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/venue_tab_region_underline"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        />
+</RelativeLayout>

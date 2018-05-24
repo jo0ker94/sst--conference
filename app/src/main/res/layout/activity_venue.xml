@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/BasicParentLayout">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:tabIndicatorHeight="0dp"
+        android:background="@color/white"/>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_below="@+id/tab_layout"
+        style="@style/HorizontalDivider"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_below="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+</RelativeLayout>

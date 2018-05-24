@@ -27,4 +27,5 @@ public class Constants {
     public static final String POSITION = "position";
     public static final String SIZE = "size";
     public static final String SKIP = "skip";
+    public static final String TYPE = "type";
 }

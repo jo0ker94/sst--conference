@@ -17,4 +17,13 @@
     <color name="button_blue">#00adf2</color>
     <color name="bg_row_background">#fa315b</color>
 
+    //
+    //  Venue Tab Colors
+    //
+    <color name="conference_color">#ca70c2</color>
+    <color name="region_color">#777fdf</color>
+    <color name="food_color">#23c9c1</color>
+    <color name="sights_color">#1bb5e0</color>
+    <color name="faculty_color">#469df2</color>
+
 </resources>

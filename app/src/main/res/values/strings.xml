@@ -75,6 +75,11 @@
     <string name="deleted_successfully">Deleted Successfully</string>
     <string name="undo">Undo</string>
     <string name="event_restored">Event is restored!</string>
+    <string name="food">Food</string>
+    <string name="region">Region</string>
+    <string name="sights">Sights</string>
+    <string name="faculty">Faculty</string>
+    <string name="conference">Conference</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

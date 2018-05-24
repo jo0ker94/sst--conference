@@ -50,7 +50,8 @@
 
         <receiver android:name=".receivers.EventAlarmReceiver" />
 
-        <activity android:name=".modules.subscribed.SubscriptionActivity"></activity>
+        <activity android:name=".modules.subscribed.SubscriptionActivity" />
+        <activity android:name=".modules.venue.VenueActivity"></activity>
     </application>
 
 </manifest>
