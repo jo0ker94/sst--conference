@@ -28,6 +28,7 @@
         android:layout_margin="5dp"
         tools:context=".modules.venue.VenueActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+
     <View
         android:id="@+id/map_separator"
         android:layout_below="@+id/map"

@@ -2,10 +2,16 @@ package com.example.karlo.learningapplication.modules.venue;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,7 +21,19 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.annimon.stream.Stream;
 import com.example.karlo.learningapplication.R;
+import com.example.karlo.learningapplication.commons.Constants;
+import com.example.karlo.learningapplication.models.nearbyplaces.LocationCoordinates;
+import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
+import com.example.karlo.learningapplication.servertasks.interfaces.MapsApi;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,10 +45,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class VenueActivity extends AppCompatActivity
         implements VenueView,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
+    private static final int REQUEST_LOCATION_PERMISSION = 10;
+    private static final long REFRESH_INTERVAL = 10000;
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -44,7 +70,14 @@ public class VenueActivity extends AppCompatActivity
     private Unbinder mUnbinder;
     private VenuePagerAdapter mVenuePagerAdapter;
 
-    private GoogleMap mMap;
+    private GoogleMap mGoogleMap;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private LatLng mCurrentLocation;
+    private boolean mFirstChange = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +89,27 @@ public class VenueActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = getLocationCallback();
+
+        GoogleApiClient mClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mClient.connect();
+
         setUpToolbar();
         setUpTab();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!hasLocationPermission()){
+            requestPermission();
+        }
     }
 
     @Override
@@ -74,6 +126,11 @@ public class VenueActivity extends AppCompatActivity
                 finish();
                 return true;
             case R.id.searchMenu:
+                if (hasLocationPermission()) {
+                    findRestaurants(mCurrentLocation);
+                } else {
+                    requestPermission();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -142,21 +199,126 @@ public class VenueActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        mGoogleMap = googleMap;
 
-        UiSettings uiSettings = this.mMap.getUiSettings();
+        UiSettings uiSettings = this.mGoogleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setMyLocationButtonEnabled(true);
         uiSettings.setZoomGesturesEnabled(true);
-        LatLng sydney = new LatLng(-34, 151);
-
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        this.mMap.setMyLocationEnabled(true);
+        this.mGoogleMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        LocationRequest mLocationRequest = LocationRequest.create();
+        mLocationRequest.setInterval(REFRESH_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private LocationCallback getLocationCallback() {
+        return new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    if (location == null) {
+                        showError(new Throwable("LocationCoordinates not found!"));
+                    } else {
+                        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        if (mFirstChange) {
+                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15));
+                            mFirstChange = false;
+                        }
+                        showError(new Throwable("Changed!"));
+                    }
+                }
+            }
+        };
+    }
+
+    private void findRestaurants(LatLng latLng) {
+        mCompositeDisposable.add(RetrofitUtil.getRetrofit(Constants.GOOGLE_PLACES_BASE_URL)
+                .create(MapsApi.class)
+                .getNearbyPlaces(
+                        String.format("%s,%s", latLng.latitude, latLng.longitude),
+                        1000,
+                        "restaurant",
+                        getString(R.string.google_api_key))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        nearbyPlaces -> Stream.of(nearbyPlaces.getResults())
+                                .forEach(place -> {
+                                    LocationCoordinates location = place.getGeometry().getLocationCoordinates();
+                                    LatLng latLng1 = new LatLng(location.getLat(), location.getLng());
+
+                                    mGoogleMap.addMarker(new MarkerOptions()
+                                            .position(latLng1)
+                                            .title(place.getName())
+                                            .snippet(place.getVicinity()));
+                                })
+                ));
+    }
+
+    private boolean hasLocationPermission(){
+        int status = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        return status == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission(){
+        String[] permissions = new String[]{ Manifest.permission.ACCESS_FINE_LOCATION };
+        ActivityCompat.requestPermissions(VenueActivity.this,
+                permissions, REQUEST_LOCATION_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_LOCATION_PERMISSION:
+                if (grantResults.length > 0) {
+                    if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                        askForPermission();
+                    }
+                }
+        }
+    }
+
+    private void askForPermission(){
+        boolean shouldExplain = ActivityCompat.shouldShowRequestPermissionRationale(
+                VenueActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (shouldExplain) {
+            this.displayDialog();
+        }
+    }
+
+    private void displayDialog() {
+        new AlertDialog.Builder(this).setTitle(R.string.location_permission)
+                .setMessage(R.string.permission_explain)
+                .setNegativeButton(R.string.dismiss, null)
+                .setPositiveButton(R.string.grant, (dialog, which) -> {
+                    requestPermission();
+                    dialog.dismiss();
+                })
+                .show();
     }
 }

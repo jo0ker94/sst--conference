@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String FIREBASE_BASE_URL = "https://learning-a7cfa.firebaseio.com/";
     public static final String FIREBASE_STORAGE_URL = "https://firebasestorage.googleapis.com/v0/b/learning-a7cfa.appspot.com/o/";
-    public static final String WIKI_BASE_URL = "https://www.googleapis.com/";
+    public static final String GOOGLE_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/";
 
     public static final String IMAGES_ENDPOINT = "images%2F";
 
