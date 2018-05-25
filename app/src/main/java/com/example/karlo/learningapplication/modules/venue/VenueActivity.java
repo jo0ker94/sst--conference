@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.annimon.stream.Stream;
+import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.example.karlo.learningapplication.models.nearbyplaces.LocationCoordinates;
@@ -41,6 +42,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +73,9 @@ public class VenueActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @Inject
+    VenueViewModel mViewModel;
+
     private Unbinder mUnbinder;
     private VenuePagerAdapter mVenuePagerAdapter;
 
@@ -74,16 +83,20 @@ public class VenueActivity extends AppCompatActivity
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
     private LatLng mCurrentLocation;
     private boolean mFirstChange = true;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private List<MarkerOptions> mMarkerOptions = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue);
         mUnbinder = ButterKnife.bind(this);
+        ((App) getApplication()).getComponent().inject(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -102,6 +115,31 @@ public class VenueActivity extends AppCompatActivity
 
         setUpToolbar();
         setUpTab();
+        setUpObservers();
+    }
+
+    private void setUpObservers() {
+        mViewModel.getMarkers().observe(this, markers -> {
+            if (markers != null && !markers.isEmpty()) {
+                mMarkerOptions.clear();
+                mMarkerOptions.addAll(markers);
+                showMarkers();
+            }
+        });
+
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case MESSAGE:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+            }
+        });
     }
 
     @Override
@@ -127,7 +165,7 @@ public class VenueActivity extends AppCompatActivity
                 return true;
             case R.id.searchMenu:
                 if (hasLocationPermission()) {
-                    findRestaurants(mCurrentLocation);
+                    mViewModel.fetchRestaurants(mCurrentLocation);
                 } else {
                     requestPermission();
                 }
@@ -198,6 +236,13 @@ public class VenueActivity extends AppCompatActivity
     }
 
     @Override
+    public void showMarkers() {
+        for (MarkerOptions marker : mMarkerOptions) {
+            mGoogleMap.addMarker(marker);
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
@@ -254,30 +299,6 @@ public class VenueActivity extends AppCompatActivity
                 }
             }
         };
-    }
-
-    private void findRestaurants(LatLng latLng) {
-        mCompositeDisposable.add(RetrofitUtil.getRetrofit(Constants.GOOGLE_PLACES_BASE_URL)
-                .create(MapsApi.class)
-                .getNearbyPlaces(
-                        String.format("%s,%s", latLng.latitude, latLng.longitude),
-                        1000,
-                        "restaurant",
-                        getString(R.string.google_api_key))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        nearbyPlaces -> Stream.of(nearbyPlaces.getResults())
-                                .forEach(place -> {
-                                    LocationCoordinates location = place.getGeometry().getLocationCoordinates();
-                                    LatLng latLng1 = new LatLng(location.getLat(), location.getLng());
-
-                                    mGoogleMap.addMarker(new MarkerOptions()
-                                            .position(latLng1)
-                                            .title(place.getName())
-                                            .snippet(place.getVicinity()));
-                                })
-                ));
     }
 
     private boolean hasLocationPermission(){

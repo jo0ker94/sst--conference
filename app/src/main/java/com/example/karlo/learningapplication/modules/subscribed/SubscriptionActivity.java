@@ -70,7 +70,6 @@ public class SubscriptionActivity extends AppCompatActivity
         setUpObservers();
     }
 
-
     private void setUpObservers() {
         mViewModel.getSubscribedTopics().observe(this, topics -> {
             if (topics != null && !topics.isEmpty()) {

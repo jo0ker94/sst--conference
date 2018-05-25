@@ -10,6 +10,8 @@ public class Constants {
     public static final String FIREBASE_STORAGE_URL = "https://firebasestorage.googleapis.com/v0/b/learning-a7cfa.appspot.com/o/";
     public static final String GOOGLE_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/";
 
+    public static final String GOOGLE_API_KEY = "AIzaSyDZn8584dM9fQo3mcQ7Mgj-1sy6umRpKWE";
+
     public static final String IMAGES_ENDPOINT = "images%2F";
 
     public static final int RC_SIGN_IN = 9001;

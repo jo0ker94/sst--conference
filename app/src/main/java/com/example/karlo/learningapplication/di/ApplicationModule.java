@@ -18,6 +18,7 @@ import com.example.karlo.learningapplication.database.user.UserDao;
 import com.example.karlo.learningapplication.database.user.UserDataSource;
 import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
 import com.example.karlo.learningapplication.servertasks.interfaces.Api;
+import com.example.karlo.learningapplication.servertasks.interfaces.MapsApi;
 import com.example.karlo.learningapplication.servertasks.interfaces.ProgramApi;
 import com.example.karlo.learningapplication.servertasks.interfaces.UserApi;
 
@@ -102,5 +103,12 @@ public class ApplicationModule {
     public UserApi providesUserApi() {
         return RetrofitUtil.getRetrofit(Constants.FIREBASE_BASE_URL)
                 .create(UserApi.class);
+    }
+
+    @Provides
+    @Singleton
+    public MapsApi providesMapsApi() {
+        return RetrofitUtil.getRetrofit(Constants.GOOGLE_PLACES_BASE_URL)
+                .create(MapsApi.class);
     }
 }

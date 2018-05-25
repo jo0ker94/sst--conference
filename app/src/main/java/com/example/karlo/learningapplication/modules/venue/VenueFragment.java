@@ -81,6 +81,6 @@ public class VenueFragment extends BaseVenueFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mUnbinder.unbind();
+ //       mUnbinder.unbind();
     }
 }
