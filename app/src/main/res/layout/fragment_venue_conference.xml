@@ -4,13 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:layout_below="@id/separator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:text="@string/conference"/>
+        android:layout_height="200dp"
+        android:layout_margin="5dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <View
+        android:id="@+id/map_separator"
+        android:layout_below="@+id/map"
+        style="@style/HorizontalDivider"/>
 
 </RelativeLayout>

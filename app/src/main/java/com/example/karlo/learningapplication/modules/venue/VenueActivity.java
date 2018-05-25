@@ -2,11 +2,8 @@ package com.example.karlo.learningapplication.modules.venue;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,48 +18,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.annimon.stream.Stream;
-import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.R;
-import com.example.karlo.learningapplication.commons.Constants;
-import com.example.karlo.learningapplication.models.nearbyplaces.LocationCoordinates;
-import com.example.karlo.learningapplication.servertasks.RetrofitUtil;
-import com.example.karlo.learningapplication.servertasks.interfaces.MapsApi;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class VenueActivity extends AppCompatActivity
-        implements VenueView,
-        OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        implements VenueView {
 
     private static final int REQUEST_LOCATION_PERMISSION = 10;
-    private static final long REFRESH_INTERVAL = 10000;
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -73,73 +38,16 @@ public class VenueActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Inject
-    VenueViewModel mViewModel;
-
     private Unbinder mUnbinder;
     private VenuePagerAdapter mVenuePagerAdapter;
-
-    private GoogleMap mGoogleMap;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
-
-    private LatLng mCurrentLocation;
-    private boolean mFirstChange = true;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
-    private List<MarkerOptions> mMarkerOptions = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue);
         mUnbinder = ButterKnife.bind(this);
-        ((App) getApplication()).getComponent().inject(this);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocationCallback = getLocationCallback();
-
-        GoogleApiClient mClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        mClient.connect();
-
         setUpToolbar();
         setUpTab();
-        setUpObservers();
-    }
-
-    private void setUpObservers() {
-        mViewModel.getMarkers().observe(this, markers -> {
-            if (markers != null && !markers.isEmpty()) {
-                mMarkerOptions.clear();
-                mMarkerOptions.addAll(markers);
-                showMarkers();
-            }
-        });
-
-        mViewModel.getStatus().observe(this, status -> {
-            switch(status.getResponse()) {
-                case LOADING:
-                    loadingData(status.getState());
-                    break;
-                case MESSAGE:
-                    showError(new Throwable(status.getMessage()));
-                    break;
-                case ERROR:
-                    showError(new Throwable(status.getMessage()));
-                    break;
-            }
-        });
     }
 
     @Override
@@ -162,13 +70,6 @@ public class VenueActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                return true;
-            case R.id.searchMenu:
-                if (hasLocationPermission()) {
-                    mViewModel.fetchRestaurants(mCurrentLocation);
-                } else {
-                    requestPermission();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -233,72 +134,6 @@ public class VenueActivity extends AppCompatActivity
     @Override
     public void showError(Throwable error) {
         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showMarkers() {
-        for (MarkerOptions marker : mMarkerOptions) {
-            mGoogleMap.addMarker(marker);
-        }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-
-        UiSettings uiSettings = this.mGoogleMap.getUiSettings();
-        uiSettings.setZoomControlsEnabled(true);
-        uiSettings.setMyLocationButtonEnabled(true);
-        uiSettings.setZoomGesturesEnabled(true);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        this.mGoogleMap.setMyLocationEnabled(true);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(REFRESH_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    private LocationCallback getLocationCallback() {
-        return new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                for (Location location : locationResult.getLocations()) {
-                    if (location == null) {
-                        showError(new Throwable("LocationCoordinates not found!"));
-                    } else {
-                        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        if (mFirstChange) {
-                            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15));
-                            mFirstChange = false;
-                        }
-                        showError(new Throwable("Changed!"));
-                    }
-                }
-            }
-        };
     }
 
     private boolean hasLocationPermission(){

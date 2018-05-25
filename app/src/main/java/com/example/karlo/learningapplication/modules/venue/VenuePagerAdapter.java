@@ -10,7 +10,7 @@ public class VenuePagerAdapter extends FragmentStatePagerAdapter {
 
     private final int COUNT = 5;
 
-    SparseArray<BaseVenueFragment> cachedFragments = new SparseArray<>(COUNT);
+    SparseArray<BaseMapFragment> cachedFragments = new SparseArray<>(COUNT);
 
     public VenuePagerAdapter(FragmentManager fm) {
         super(fm);
@@ -34,7 +34,7 @@ public class VenuePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        BaseVenueFragment fragment = (BaseVenueFragment) super.instantiateItem(container, position);
+        BaseMapFragment fragment = (BaseMapFragment) super.instantiateItem(container, position);
         cachedFragments.put(position, fragment);
         return fragment;
     }
@@ -50,7 +50,7 @@ public class VenuePagerAdapter extends FragmentStatePagerAdapter {
         return COUNT;
     }
 
-    public BaseVenueFragment getFragmentByPosition(int position) {
+    public BaseMapFragment getFragmentByPosition(int position) {
         return cachedFragments.get(position);
     }
 }

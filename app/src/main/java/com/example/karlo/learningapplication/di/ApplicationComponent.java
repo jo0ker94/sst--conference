@@ -4,11 +4,11 @@ import com.example.karlo.learningapplication.App;
 import com.example.karlo.learningapplication.modules.gallery.GalleryActivity;
 import com.example.karlo.learningapplication.modules.home.HomeActivity;
 import com.example.karlo.learningapplication.modules.login.LoginActivity;
-import com.example.karlo.learningapplication.modules.program.fragments.BaseProgramFragment;
 import com.example.karlo.learningapplication.modules.program.ProgramActivity;
+import com.example.karlo.learningapplication.modules.program.fragments.BaseProgramFragment;
 import com.example.karlo.learningapplication.modules.search.SearchActivity;
 import com.example.karlo.learningapplication.modules.subscribed.SubscriptionActivity;
-import com.example.karlo.learningapplication.modules.venue.VenueActivity;
+import com.example.karlo.learningapplication.modules.venue.BaseMapFragment;
 
 import javax.inject.Singleton;
 
@@ -29,5 +29,5 @@ public interface ApplicationComponent {
     void inject(BaseProgramFragment target);
     void inject(SearchActivity target);
     void inject(SubscriptionActivity target);
-    void inject(VenueActivity target);
+    void inject(BaseMapFragment target);
 }
