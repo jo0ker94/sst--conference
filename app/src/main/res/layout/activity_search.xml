@@ -12,7 +12,7 @@
         <include android:id="@+id/toolbar"
             layout="@layout/toolbar"/>
 
-        <com.example.karlo.learningapplication.ui.SearchBarView
+        <com.example.karlo.sstconference.ui.SearchBarView
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

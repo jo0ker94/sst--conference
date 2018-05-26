@@ -15,7 +15,7 @@
         <item formatted="true" quantity="other">%d days ago</item>
     </plurals>
 
-    <string name="app_name">Learning Application</string>
+    <string name="app_name">SST Conference</string>
     <string name="no_text_message">Please enter text in search field!</string>
     <string name="email_address">Email address</string>
     <string name="password">Password</string>

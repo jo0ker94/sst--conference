@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.karlo.learningapplication">
+    package="com.example.karlo.sstconference">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".App"
+        android:name="com.example.karlo.sstconference.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,7 +23,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".modules.login.LoginActivity"
+            android:name="com.example.karlo.sstconference.modules.login.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme.Launcher"
@@ -35,26 +35,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".modules.home.HomeActivity"
+            android:name="com.example.karlo.sstconference.modules.home.HomeActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".modules.calendar.CalendarActivity"
+            android:name="com.example.karlo.sstconference.modules.calendar.CalendarActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".modules.search.SearchActivity"
+            android:name="com.example.karlo.sstconference.modules.search.SearchActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".modules.gallery.GalleryActivity"
+            android:name="com.example.karlo.sstconference.modules.gallery.GalleryActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".modules.program.ProgramActivity"
+            android:name="com.example.karlo.sstconference.modules.program.ProgramActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".modules.subscribed.SubscriptionActivity" />
+        <activity android:name="com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity" />
 
-        <activity android:name=".modules.venue.VenueActivity"/>
+        <activity android:name="com.example.karlo.sstconference.modules.venue.VenueActivity"/>
 
-        <receiver android:name=".receivers.EventAlarmReceiver" />
+        <receiver android:name="com.example.karlo.sstconference.receivers.EventAlarmReceiver" />
 
         <meta-data
             android:name="com.google.android.gms.version"
