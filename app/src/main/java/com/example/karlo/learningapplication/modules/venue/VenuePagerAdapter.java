@@ -10,7 +10,7 @@ public class VenuePagerAdapter extends FragmentStatePagerAdapter {
 
     private final int COUNT = 5;
 
-    SparseArray<BaseMapFragment> cachedFragments = new SparseArray<>(COUNT);
+    private SparseArray<BaseMapFragment> cachedFragments = new SparseArray<>(COUNT);
 
     public VenuePagerAdapter(FragmentManager fm) {
         super(fm);

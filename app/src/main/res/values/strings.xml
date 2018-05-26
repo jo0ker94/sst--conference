@@ -81,9 +81,12 @@
     <string name="faculty">Faculty</string>
     <string name="conference">Conference</string>
     <string name="location_permission">Location permission</string>
-    <string name="permission_explain">We need your permission to use your locationCoordinates.</string>
+    <string name="permission_explain">We need your permission to use your location.</string>
     <string name="dismiss">Dismiss</string>
     <string name="grant">Grant</string>
+    <string name="info_about_region">Info about Region</string>
+    <string name="show_map">Show Map</string>
+    <string name="hide_map">Hide Map</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

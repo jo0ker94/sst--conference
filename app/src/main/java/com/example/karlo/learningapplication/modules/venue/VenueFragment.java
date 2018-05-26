@@ -10,6 +10,7 @@ import com.example.karlo.learningapplication.R;
 import com.example.karlo.learningapplication.commons.Constants;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class VenueFragment extends BaseMapFragment {
@@ -38,8 +39,8 @@ public class VenueFragment extends BaseMapFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_venue_conference, container, false);
-//        mUnbinder = ButterKnife.bind(this, rootView);
+        View rootView = inflater.inflate(R.layout.fragment_venue_layout, container, false);
+        mUnbinder = ButterKnife.bind(this, rootView);
         mActivity = (VenueActivity) getActivity();
         readBundle(getArguments());
 
@@ -89,6 +90,8 @@ public class VenueFragment extends BaseMapFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mUnbinder.unbind();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
     }
 }

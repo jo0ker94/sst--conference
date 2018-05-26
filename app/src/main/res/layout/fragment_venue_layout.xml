@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/map_separator"
+        style="@style/HorizontalDivider"/>
+
+    <com.example.karlo.learningapplication.ui.HeaderView
+        android:id="@+id/header_view"
+        android:layout_below="@id/map_separator"
+        android:layout_margin="2dp"
+        app:titleText="@string/show_map"
+        app:expandedTitleText="@string/hide_map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_below="@id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    </com.example.karlo.learningapplication.ui.HeaderView>
+
+</RelativeLayout>

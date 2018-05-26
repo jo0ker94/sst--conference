@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="hintText" format="string" />
+    <attr name="titleText" format="string" />
+    <attr name="expandedTitleText" format="string" />
 
     <declare-styleable name="SearchBarView">
         <attr name="hintText"/>
+    </declare-styleable>
+
+    <declare-styleable name="HeaderView">
+        <attr name="titleText"/>
+        <attr name="expandedTitleText"/>
     </declare-styleable>
 
 </resources>

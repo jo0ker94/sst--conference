@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.example.karlo.learningapplication.App;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,7 +36,8 @@ public class BaseMapFragment extends Fragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long REFRESH_INTERVAL = 10000;
+    private static final String TAG = "BaseMapFragment";
+    private static final long REFRESH_INTERVAL = 30000;
 
     private VenueActivity mActivity;
 
@@ -117,15 +119,16 @@ public class BaseMapFragment extends Fragment
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(REFRESH_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(REFRESH_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+
+        mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
     }
 
     @Override
@@ -143,11 +146,16 @@ public class BaseMapFragment extends Fragment
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
+                    if (mCurrentLocation != null && location != null && location.getLatitude() == mCurrentLocation.latitude
+                            && location.getLongitude() == mCurrentLocation.longitude) {
+                        Log.e(TAG, "Skipped location" + location.toString());
+                        return;
+                    }
                     if (location == null) {
                         mActivity.showError(new Throwable("Location not found!"));
                     } else {
                         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        if (mFirstChange) {
+                        if (mFirstChange && mGoogleMap != null) {
                             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15));
                             mFirstChange = false;
                         }

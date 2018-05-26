@@ -41,13 +41,13 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     }
 
     private LoginInterface mListener;
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_login, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
+        mUnbinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -68,8 +68,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (unbinder != null) {
-            unbinder.unbind();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
         }
     }
 
