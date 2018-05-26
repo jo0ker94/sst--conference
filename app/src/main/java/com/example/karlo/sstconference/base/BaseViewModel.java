@@ -1,8 +1,10 @@
-package com.example.karlo.sstconference.commons;
+package com.example.karlo.sstconference.base;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+
+import com.example.karlo.sstconference.commons.Status;
 
 import io.reactivex.disposables.CompositeDisposable;
 

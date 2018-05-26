@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.karlo.sstconference.R;
-import com.example.karlo.sstconference.commons.BaseViewModel;
+import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;

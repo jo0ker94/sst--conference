@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.example.karlo.sstconference.R;
-import com.example.karlo.sstconference.commons.BaseViewModel;
+import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;

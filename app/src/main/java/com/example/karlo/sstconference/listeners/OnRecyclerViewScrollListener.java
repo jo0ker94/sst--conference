@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.commons;
+package com.example.karlo.sstconference.listeners;
 
 public interface OnRecyclerViewScrollListener {
     void stoppedScrolling();

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.example.karlo.sstconference.ui.SwitchButton
+        android:id="@+id/restaurants_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/restaurants"/>
+
+    <com.example.karlo.sstconference.ui.SwitchButton
+        android:id="@+id/caffe_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/cafe"/>
+
+    <com.example.karlo.sstconference.ui.SwitchButton
+        android:id="@+id/bar_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/bars"/>
+
+</LinearLayout>

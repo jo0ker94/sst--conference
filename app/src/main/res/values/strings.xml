@@ -87,6 +87,10 @@
     <string name="info_about_region">Info about Region</string>
     <string name="show_map">Show Map</string>
     <string name="hide_map">Hide Map</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="bars">Bars</string>
+    <string name="cafe">Cafe</string>
+    <string name="type_of_places">Type of places</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

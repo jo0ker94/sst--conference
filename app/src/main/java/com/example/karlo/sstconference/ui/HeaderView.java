@@ -68,8 +68,6 @@ public class HeaderView extends RelativeLayout {
 
         if (titleText != null) {
             mTitleView.setText(titleText);
-        } else if (mTitle != null) {
-            mTitleView.setText(mTitle);
         }
 
         String finalExpandedTitleText = expandedTitleText;

@@ -112,4 +112,16 @@
         <item name="android:background">@drawable/background</item>
     </style>
 
+    <style name="BlueSwitch" parent="AppTheme">
+        <item name="android:paddingRight">16dp</item>
+        <item name="colorControlNormal">@color/grey_80</item>
+        <item name="colorControlActivated">@color/button_blue</item>
+        <item name="android:theme">@style/BlueColorTheme</item>
+    </style>
+
+    <style name="BlueColorTheme" parent="AppTheme">
+        <item name="colorControlNormal">@color/grey_80</item>
+        <item name="colorControlActivated">@color/button_blue</item>
+    </style>
+
 </resources>

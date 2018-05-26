@@ -81,6 +81,7 @@ public class VenueFragment extends BaseMapFragment {
                         mViewModel.fetchRestaurants(mCurrentLocation);
                     }
                 });
+                addFoodSections();
                 break;
             case REGION:
                 setTitle(getString(R.string.region));
@@ -114,9 +115,25 @@ public class VenueFragment extends BaseMapFragment {
                 break;
             case CONFERENCE:
                 setTitle(getString(R.string.conference));
-                //mText.setText(R.string.conference);
+                if (mVenue != null) {
+                    populateSection(mVenue.getHotel());
+                } else {
+                    mViewModel.getVenueDetails().observe(this, venue -> {
+                        mVenue = venue;
+                        populateSection(mVenue.getHotel());
+                    });
+                }
                 break;
         }
+    }
+
+    private void addFoodSections() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_section_layout, null);
+        HeaderView content = view.findViewById(R.id.header_view);
+        content.setTitle(getString(R.string.type_of_places));
+        View foodSection = LayoutInflater.from(getContext()).inflate(R.layout.food_sections_layout, null);
+        content.addView(foodSection);
+        mBaseLayout.addView(view);
     }
 
     private void populateSection(List<Info> infoList) {

@@ -14,6 +14,9 @@ public class Venue {
     @SerializedName("region")
     @Expose
     private List<Info> region = null;
+    @SerializedName("hotel")
+    @Expose
+    private List<Info> hotel = null;
 
     public List<Info> getFaculty() {
         return faculty;
@@ -31,4 +34,11 @@ public class Venue {
         this.region = region;
     }
 
+    public List<Info> getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(List<Info> hotel) {
+        this.hotel = hotel;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.commons;
+package com.example.karlo.sstconference.base;
 
 import android.support.annotation.NonNull;
 

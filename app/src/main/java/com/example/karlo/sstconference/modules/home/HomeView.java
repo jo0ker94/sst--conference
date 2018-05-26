@@ -1,6 +1,6 @@
 package com.example.karlo.sstconference.modules.home;
 
-import com.example.karlo.sstconference.commons.BaseView;
+import com.example.karlo.sstconference.base.BaseView;
 import com.example.karlo.sstconference.models.User;
 
 /**

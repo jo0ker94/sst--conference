@@ -3,7 +3,7 @@ package com.example.karlo.sstconference.modules.home;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
-import com.example.karlo.sstconference.commons.BaseViewModel;
+import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;

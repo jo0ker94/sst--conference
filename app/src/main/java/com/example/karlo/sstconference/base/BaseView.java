@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.commons;
+package com.example.karlo.sstconference.base;
 
 /**
  * Created by Karlo on 31.3.2018..

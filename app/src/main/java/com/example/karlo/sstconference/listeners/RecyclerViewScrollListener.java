@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.commons;
+package com.example.karlo.sstconference.listeners;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
