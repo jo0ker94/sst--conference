@@ -28,6 +28,7 @@ import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Topic;
+import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.utility.DateUtility;
 
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     private User mUser;
     private Topic mTopic;
+    private Track mTrack;
+
     private CommentsAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
@@ -73,6 +76,11 @@ public class TopicDetailsFragment extends BaseProgramFragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topic_details, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+        if (getArguments().getParcelable(Constants.DATA) instanceof Topic) {
+            mTopic = getArguments().getParcelable(Constants.DATA);
+        } else {
+            mTrack = getArguments().getParcelable(Constants.DATA);
+        }
         return rootView;
     }
 
@@ -93,11 +101,13 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.subscribe_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.subscribe);
-        mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
-        if (mUser != null) {
-            setUpBookmark();
+        if (mTopic != null) {
+            inflater.inflate(R.menu.subscribe_menu, menu);
+            MenuItem menuItem = menu.findItem(R.id.subscribe);
+            mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
+            if (mUser != null) {
+                setUpBookmark();
+            }
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -126,11 +136,12 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpViews() {
-        mTopic = getArguments().getParcelable(Constants.DATA);
         if (mTopic != null) {
             mTitle.setText(mTopic.getTitle());
             if (mTopic.getLecturers() != null) {
                 mLecturers.setText(getLecturers(mTopic.getLecturers()));
+            } else {
+                mLecturers.setVisibility(View.GONE);
             }
             if (mTopic.getId() != -1) {
                 mViewModel.fetchComments(mTopic.getId());
@@ -138,7 +149,17 @@ public class TopicDetailsFragment extends BaseProgramFragment
             } else {
                 mCommentContainer.setVisibility(View.GONE);
             }
+        } else if (mTrack != null) {
+            mTitle.setText(mTrack.getTitle());
+            mLecturers.setText(getTimeString());
+            mCommentContainer.setVisibility(View.GONE);
         }
+    }
+
+    private String getTimeString() {
+        String sTime = DateUtility.getTimeFromIsoDate(mTrack.getStartDate());
+        String eTime = DateUtility.getTimeFromIsoDate(mTrack.getEndDate());
+        return String.format(getString(R.string.time_format), sTime, eTime);
     }
 
     private String getLecturers(List<Person> people) {
@@ -196,14 +217,18 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpBookmark() {
-        mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
-        mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked) {
-                mViewModel.subscribeToTopic(mTopic);
-            } else {
-                mViewModel.deleteTopicSubscription(mTopic);
-            }
-        });
+        if (mTopic != null) {
+            mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
+            mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                if (isChecked) {
+                    mViewModel.subscribeToTopic(mTopic);
+                } else {
+                    mViewModel.deleteTopicSubscription(mTopic);
+                }
+            });
+        } else {
+            setHasOptionsMenu(false);
+        }
     }
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {

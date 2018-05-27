@@ -2,7 +2,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
+    android:minHeight="150dp"
     android:layout_margin="5dp">
 
     <RelativeLayout
@@ -10,10 +11,19 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/track_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:text="9:45h - 11:25h"/>
+
+        <TextView
             android:id="@+id/track_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_below="@id/track_time"
             android:gravity="center"
             android:textSize="20sp"
             android:layout_margin="10dp"
@@ -31,14 +41,6 @@
             android:layout_margin="10dp"
             android:text="Room"/>
 
-        <TextView
-            android:id="@+id/track_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/track_room"
-            android:layout_marginTop="-10dp"
-            android:layout_centerHorizontal="true"
-            android:text="(9:45 - 11:25)"/>
 
     </RelativeLayout>
 

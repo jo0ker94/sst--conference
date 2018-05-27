@@ -14,6 +14,7 @@ public class DateUtility {
     public static final long MINUTE = 60;
     public static final long HOUR = 3600;
     public static final long DAY = 86400;
+    public static final long MONTH = 2592000;
 
     public static final TimeZone TIME_ZONE_GMT = TimeZone.getTimeZone("GMT");
 
@@ -29,6 +30,16 @@ public class DateUtility {
         DateFormat df = getIsoFormatter();
         df.setTimeZone(tz);
         return df.format(date);
+    }
+
+    public static String getTimeFromIsoDate(String isoDate) {
+        String sTime = isoDate;
+        try {
+            sTime = getTimeFormatter().format(getIsoFormatter().parse(isoDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return sTime;
     }
 
     public static Date getDateInGMT(Date date) {
@@ -58,5 +69,9 @@ public class DateUtility {
 
     public static SimpleDateFormat getIsoFormatter() {
         return new SimpleDateFormat(Constants.ISO_DATE_FORMAT, Locale.ENGLISH);
+    }
+
+    public static SimpleDateFormat getTimeFormatter() {
+        return new SimpleDateFormat(Constants.TIME_FORMAT, Locale.ENGLISH);
     }
 }

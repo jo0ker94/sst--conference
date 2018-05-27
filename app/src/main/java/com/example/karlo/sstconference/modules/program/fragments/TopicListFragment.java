@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.TopicAdapter;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.models.program.Program;
 import com.example.karlo.sstconference.models.program.Topic;
+import com.example.karlo.sstconference.models.program.Track;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class TopicListFragment extends BaseProgramFragment
 
     private TopicAdapter mAdapter;
     private List<Topic> mTopics = new ArrayList<>();
+    private Track mTrack;
 
     private boolean mIsRestoredFromBackStack = false;
 
@@ -51,7 +54,8 @@ public class TopicListFragment extends BaseProgramFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpObservers();
-        mViewModel.fetchTopics(getArguments().getInt(Constants.POSITION));
+        mTrack = getArguments().getParcelable(Constants.DATA);
+        mViewModel.fetchTopics(mTrack.getId());
     }
 
     @Override
@@ -77,10 +81,7 @@ public class TopicListFragment extends BaseProgramFragment
                     handleLoadEvent(mTopics.get(0));
                 }
             } else {
-                handleLoadEvent(new Topic(-1,
-                        getArguments().getInt(Constants.POSITION),
-                        getArguments().getString(Constants.NAME),
-                        null));
+                handleLoadEvent(mTrack);
             }
         });
 
@@ -96,10 +97,13 @@ public class TopicListFragment extends BaseProgramFragment
         });
     }
 
-    private void handleLoadEvent(Topic topic) {
+    private void handleLoadEvent(Program program) {
         if (!mIsRestoredFromBackStack) {
-            mListener.showTopicDetails(topic);
-
+            if (program instanceof Topic) {
+                mListener.showTopicDetails((Topic) program);
+            } else {
+                mListener.showTrackDetails((Track) program);
+            }
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }

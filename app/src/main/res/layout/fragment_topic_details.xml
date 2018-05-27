@@ -32,6 +32,7 @@
                 android:gravity="center"
                 android:textSize="15sp"
                 android:layout_margin="10dp"
+                android:textColor="@color/button_blue"
                 android:text="Lecturers"/>
 
         </LinearLayout>
@@ -58,7 +59,7 @@
             android:id="@+id/et_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_a_new_comment"
+            android:hint="@string/add_comment"
             android:maxLines="1"
             android:inputType="text"
             android:padding="15dp"/>

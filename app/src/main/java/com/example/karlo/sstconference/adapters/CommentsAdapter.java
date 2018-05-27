@@ -44,11 +44,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Comment comment = this.mItems.get(position);
-        holder.title.setText(comment.getText());
-        holder.timestamp.setText(getPostedTime(comment.getTimestamp()));
-        holder.user.setText(getUserName(comment.getUserId()));
-        holder.title.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
-        holder.title.getRootView().setOnLongClickListener(view -> {
+        holder.mTitle.setText(comment.getText());
+        holder.mTimestamp.setText(getPostedTime(comment.getTimestamp()));
+        holder.mUser.setText(getUserName(comment.getUserId()));
+        holder.mTitle.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
+        holder.mTitle.getRootView().setOnLongClickListener(view -> {
             mListener.onItemLongClick(holder.itemView, position);
             return true;
         });
@@ -65,9 +65,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         } else if (diff > DateUtility.HOUR && diff < DateUtility.DAY) {
             int value = (int) (diff / DateUtility.HOUR);
             return String.format(mActivity.getResources().getQuantityString(R.plurals.hours, value), value);
-        } else if (diff > DateUtility.DAY) {
+        } else if (diff > DateUtility.DAY && diff < DateUtility.MONTH) {
             int value = (int) (diff / DateUtility.DAY);
             return String.format(mActivity.getResources().getQuantityString(R.plurals.days, value), value);
+        } else if (diff > DateUtility.MONTH) {
+            int value = (int) (diff / DateUtility.MONTH);
+            return String.format(mActivity.getResources().getQuantityString(R.plurals.months, value), value);
         } else {
             return timeString;
         }
@@ -94,13 +97,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, timestamp, user;
+        public TextView mTitle, mTimestamp, mUser;
 
         public ViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            timestamp = (TextView) view.findViewById(R.id.timestamp);
-            user = (TextView) view.findViewById(R.id.user);
+            mTitle = (TextView) view.findViewById(R.id.title);
+            mTimestamp = (TextView) view.findViewById(R.id.timestamp);
+            mUser = (TextView) view.findViewById(R.id.user);
         }
     }
 }

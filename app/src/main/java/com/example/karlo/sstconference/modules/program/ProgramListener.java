@@ -8,4 +8,5 @@ public interface ProgramListener {
     void showError(Throwable throwable);
     void switchFragment(ProgramActivity.FragmentType fragmentType, Track track);
     void showTopicDetails(Topic topic);
+    void showTrackDetails(Track track);
 }

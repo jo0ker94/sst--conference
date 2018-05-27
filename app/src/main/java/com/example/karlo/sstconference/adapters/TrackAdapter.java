@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +11,13 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.utility.DateUtility;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> {
 
     private List<Track> mItems;
     private OnItemClickListener mListener;
+    private Context mContext;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -32,36 +31,33 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track, parent, false);
+        mContext = view.getContext();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Track track = this.mItems.get(position);
-        SimpleDateFormat format = DateUtility.getIsoFormatter();
-        try {
-            Date sDate = format.parse(track.getStartDate());
-            Date eDate = format.parse(track.getEndDate());
-            holder.time.setText(String.format("(%s:%s - %s:%s)", sDate.getHours(), sDate.getMinutes(), eDate.getHours(), eDate.getMinutes()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        holder.room.setText(getRoom(track.getRoom()));
-        holder.title.setText(track.getTitle());
+        String sTime = DateUtility.getTimeFromIsoDate(track.getStartDate());
+        String eTime = DateUtility.getTimeFromIsoDate(track.getEndDate());
 
-        holder.room.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
+        holder.mTime.setText(String.format(mContext.getString(R.string.time_format), sTime, eTime));
+        holder.mRoom.setText(getRoom(track.getRoom()));
+        holder.mTitle.setText(track.getTitle());
+
+        holder.mRoom.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
     }
 
     private String getRoom(int num) {
         switch (num) {
             case 0:
-                return "Room A – Lipa";
+                return mContext.getString(R.string.room_a);
             case 1:
-                return "Room B – Kesten";
+                return mContext.getString(R.string.room_b);
             case 2:
-                return "Restaurant";
+                return mContext.getString(R.string.restaurant);
             default:
-                return "Hall – 1st fl.";
+                return mContext.getString(R.string.hall_1st);
         }
     }
 
@@ -75,13 +71,13 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView time, title, room;
+        public TextView mTime, mTitle, mRoom;
 
         public ViewHolder(View view) {
             super(view);
-            time = (TextView) view.findViewById(R.id.track_time);
-            title = (TextView) view.findViewById(R.id.track_title);
-            room = (TextView) view.findViewById(R.id.track_room);
+            mTime = (TextView) view.findViewById(R.id.track_time);
+            mTitle = (TextView) view.findViewById(R.id.track_title);
+            mRoom = (TextView) view.findViewById(R.id.track_room);
         }
     }
 }

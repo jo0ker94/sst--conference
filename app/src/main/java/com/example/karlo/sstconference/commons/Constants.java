@@ -20,6 +20,7 @@ public class Constants {
     public static final int PICK_IMAGE_REQUEST = 71;
 
     public static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String TIME_FORMAT = "HH:mm";
 
     public static final String ID = "id";
     public static final String URI = "uri";

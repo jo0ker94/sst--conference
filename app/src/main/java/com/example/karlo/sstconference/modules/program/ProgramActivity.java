@@ -119,8 +119,7 @@ public class ProgramActivity extends AppCompatActivity
         Fragment fragment = (fragmentType == FragmentType.TRACK) ? mTrackFragment : mTopicFragment;
         if (fragmentType == FragmentType.TOPIC) {
             Bundle args = new Bundle();
-            args.putString(Constants.NAME, track.getTitle());
-            args.putInt(Constants.POSITION, track.getId());
+            args.putParcelable(Constants.DATA, track);
             mTopicFragment.setArguments(args);
         }
         replaceFragment(fragment);
@@ -131,6 +130,15 @@ public class ProgramActivity extends AppCompatActivity
         TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.DATA, topic);
+        topicDetailsFragment.setArguments(args);
+        replaceFragment(topicDetailsFragment);
+    }
+
+    @Override
+    public void showTrackDetails(Track track) {
+        TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.DATA, track);
         topicDetailsFragment.setArguments(args);
         replaceFragment(topicDetailsFragment);
     }

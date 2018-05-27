@@ -14,7 +14,7 @@
         android:gravity="center"
         android:textSize="14sp"
         android:layout_margin="10dp"
-        android:text="27.10.2017. 8:35:12h"/>
+        android:text="@string/just_posted"/>
 
     <TextView
         android:id="@+id/user"
@@ -24,6 +24,8 @@
         android:gravity="center"
         android:textSize="14sp"
         android:layout_margin="10dp"
+        android:textColor="@color/button_blue"
+        android:textStyle="bold"
         android:text="User Name"/>
 
     <TextView

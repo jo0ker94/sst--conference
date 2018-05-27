@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Topic implements Parcelable {
+public class Topic extends Program implements Parcelable {
 
     @SerializedName("id")
     @Expose

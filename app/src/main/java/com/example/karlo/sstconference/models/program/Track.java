@@ -2,6 +2,8 @@ package com.example.karlo.sstconference.models.program;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.TypeConverters;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.example.karlo.sstconference.models.converters.PersonConverter;
@@ -11,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @Entity
-public class Track {
+public class Track extends Program implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -95,4 +97,40 @@ public class Track {
     public void setChairs(List<Person> mChairs) {
         this.mChairs = mChairs;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.mId);
+        dest.writeString(this.mStartDate);
+        dest.writeString(this.mEndDate);
+        dest.writeInt(this.mRoom);
+        dest.writeString(this.mTitle);
+        dest.writeTypedList(this.mChairs);
+    }
+
+    protected Track(Parcel in) {
+        this.mId = in.readInt();
+        this.mStartDate = in.readString();
+        this.mEndDate = in.readString();
+        this.mRoom = in.readInt();
+        this.mTitle = in.readString();
+        this.mChairs = in.createTypedArrayList(Person.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+        @Override
+        public Track createFromParcel(Parcel source) {
+            return new Track(source);
+        }
+
+        @Override
+        public Track[] newArray(int size) {
+            return new Track[size];
+        }
+    };
 }
