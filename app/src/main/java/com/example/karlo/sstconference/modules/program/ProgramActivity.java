@@ -41,6 +41,8 @@ public class ProgramActivity extends AppCompatActivity
 
     private Unbinder mUnbinder;
 
+    private boolean mTopicDetails = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,17 @@ public class ProgramActivity extends AppCompatActivity
                 .commit();
 
         setUpToolbar();
+        getExtras();
+    }
+
+    private void getExtras() {
+        if (getIntent().getExtras() != null) {
+            mTopicDetails = getIntent().getExtras().getBoolean(Constants.INTENT_TOPIC_DETAILS, false);
+            if (mTopicDetails) {
+                Topic topic = getIntent().getExtras().getParcelable(Constants.DATA);
+                showTopicDetails(topic);
+            }
+        }
     }
 
     @Override
@@ -132,7 +145,9 @@ public class ProgramActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (mTopicDetails) {
+            finish();
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();

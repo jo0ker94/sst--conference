@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.modules.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.example.karlo.sstconference.adapters.TopicAdapter;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.ui.SearchBarView;
 
 import java.util.ArrayList;
@@ -118,7 +120,14 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int position) {
-        //showTopicDetails(mFilteredTopics.get(position), false);
+        showTopicDetails(mFilteredTopics.get(position));
+    }
+
+    private void showTopicDetails(Topic topic) {
+        Intent intent = new Intent(SearchActivity.this, ProgramActivity.class);
+        intent.putExtra(Constants.INTENT_TOPIC_DETAILS, true);
+        intent.putExtra(Constants.DATA, topic);
+        startActivity(intent);
     }
 
     @Override

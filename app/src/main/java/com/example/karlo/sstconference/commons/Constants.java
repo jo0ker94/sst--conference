@@ -32,4 +32,5 @@ public class Constants {
     public static final String TYPE = "type";
 
     public static final String INTENT_FROM_PROGRAM = "from_program";
+    public static final String INTENT_TOPIC_DETAILS = "topic_details";
 }

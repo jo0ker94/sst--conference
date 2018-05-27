@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.modules.subscribed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,9 @@ import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.RecyclerItemTouchHelper;
 import com.example.karlo.sstconference.adapters.TopicAdapter;
+import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Topic;
+import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.ui.SearchBarView;
 
 import java.util.ArrayList;
@@ -117,8 +120,14 @@ public class SubscriptionActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int position) {
-        //showTopicDetails(mFilteredTopics.get(position), false);
-        Toast.makeText(this, String.valueOf(mFilteredTopics.get(position).getId()), Toast.LENGTH_SHORT).show();
+        showTopicDetails(mFilteredTopics.get(position));
+    }
+
+    private void showTopicDetails(Topic topic) {
+        Intent intent = new Intent(SubscriptionActivity.this, ProgramActivity.class);
+        intent.putExtra(Constants.INTENT_TOPIC_DETAILS, true);
+        intent.putExtra(Constants.DATA, topic);
+        startActivity(intent);
     }
 
     @Override
