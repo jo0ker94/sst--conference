@@ -6,21 +6,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.example.karlo.sstconference.ui.SwitchButton
-        android:id="@+id/restaurants_switch"
+        android:id="@+id/museum_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="@string/restaurants"/>
+        app:titleText="Museum"/>
 
     <com.example.karlo.sstconference.ui.SwitchButton
-        android:id="@+id/cafe_switch"
+        android:id="@+id/church_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="@string/cafe"/>
+        app:titleText="Church"/>
 
     <com.example.karlo.sstconference.ui.SwitchButton
-        android:id="@+id/bar_switch"
+        android:id="@+id/library_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="@string/bars"/>
+        app:titleText="Library"/>
+
+    <com.example.karlo.sstconference.ui.SwitchButton
+        android:id="@+id/zoo_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="Zoo"/>
 
 </LinearLayout>

@@ -16,6 +16,5 @@ public interface MapsApi {
     Observable<NearbyPlaces> getNearbyPlaces(@Query("location") String location,
                                              @Query("radius") long radius,
                                              @Query("type") String type,
-                                             @Query("keyword") String keyword,
                                              @Query("key") String key);
 }

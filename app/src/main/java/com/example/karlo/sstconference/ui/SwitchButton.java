@@ -62,6 +62,10 @@ public class SwitchButton extends RelativeLayout {
         mSwitchButton.getRootView().setOnClickListener(view -> mSwitchButton.performClick());
     }
 
+    public SwitchCompat getSwitchButton() {
+        return mSwitchButton;
+    }
+
     private void setTitle(String title) {
         mTitle = title;
         mTitleView.setText(title);
@@ -71,7 +75,11 @@ public class SwitchButton extends RelativeLayout {
         this.mSwitchButton.setOnCheckedChangeListener(listener);
     }
 
-    public void setSwitchState(boolean checked) {
+    public void setChecked(boolean checked) {
         this.mSwitchButton.setChecked(checked);
+    }
+
+    public boolean isChecked() {
+        return this.mSwitchButton.isChecked();
     }
 }

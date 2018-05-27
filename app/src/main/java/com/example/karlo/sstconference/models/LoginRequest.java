@@ -1,15 +1,11 @@
 package com.example.karlo.sstconference.models;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by Karlo on 25.3.2018..
  */
 
-public class LoginRequest extends RealmObject {
+public class LoginRequest {
 
-    @PrimaryKey
     private int mId;
     private String mEmail;
     private String mPassword;

@@ -53,6 +53,7 @@ public class BaseMapFragment extends Fragment
     protected String mTitle;
 
     protected MutableLiveData<Boolean> mLocationSet = new MutableLiveData<>();
+    protected MutableLiveData<Boolean> mMapReady = new MutableLiveData<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,12 +75,6 @@ public class BaseMapFragment extends Fragment
     }
 
     private void setUpObservers() {
-        mViewModel.getMarkers().observe(this, markers -> {
-            if (markers != null && !markers.isEmpty()) {
-                showMarkers(markers);
-            }
-        });
-
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {
                 case LOADING:
@@ -101,6 +96,12 @@ public class BaseMapFragment extends Fragment
         }
     }
 
+    protected void clearMarkers() {
+        if (mGoogleMap != null) {
+            mGoogleMap.clear();
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -115,6 +116,7 @@ public class BaseMapFragment extends Fragment
             return;
         }
         this.mGoogleMap.setMyLocationEnabled(true);
+        mMapReady.setValue(true);
     }
 
     @Override

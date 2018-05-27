@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
@@ -11,6 +10,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
     dataBinding {
         enabled = true
@@ -65,7 +70,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:0.6.0'
 
     // -- EasyPrefs
-    //compile 'com.github.globulus.easyprefs:easyprefs:84010d9299'
+    implementation 'com.github.globulus.easyprefs:easyprefs:84010d9299'
 
     // -- Google Signup
     implementation 'com.google.firebase:firebase-auth:15.0.0'
