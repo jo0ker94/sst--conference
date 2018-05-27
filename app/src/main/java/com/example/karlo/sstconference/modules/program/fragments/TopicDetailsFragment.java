@@ -92,6 +92,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.subscribe_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.subscribe);
         mSubscribedCheckBox = (CheckBox) menuItem.getActionView();

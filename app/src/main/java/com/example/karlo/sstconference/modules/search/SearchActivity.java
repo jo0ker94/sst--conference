@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.TopicAdapter;
+import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.ui.SearchBarView;
@@ -60,6 +61,8 @@ public class SearchActivity extends AppCompatActivity
     private List<Topic> mFilteredTopics = new ArrayList<>();
     private List<Track> mTracks = new ArrayList<>();
 
+    private boolean mFromProgram = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +74,16 @@ public class SearchActivity extends AppCompatActivity
         mSearchBar.setEnabled(false);
         setUpToolbar();
         setUpObservers();
+        getExtras();
+    }
+
+    private void getExtras() {
+        if (getIntent().getExtras() != null) {
+            mFromProgram = getIntent().getExtras().getBoolean(Constants.INTENT_FROM_PROGRAM, false);
+            if (mFromProgram) {
+                mSearchBar.showSearchBar(toolbar);
+            }
+        }
     }
 
     private void setUpObservers() {
@@ -136,7 +149,7 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mSearchBar.getVisibility() == View.VISIBLE) {
+        if (mSearchBar.getVisibility() == View.VISIBLE && !mFromProgram) {
             mSearchBar.hideSearchBar(toolbar);
         } else {
             super.onBackPressed();

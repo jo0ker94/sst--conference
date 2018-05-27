@@ -30,4 +30,6 @@ public class Constants {
     public static final String SIZE = "size";
     public static final String SKIP = "skip";
     public static final String TYPE = "type";
+
+    public static final String INTENT_FROM_PROGRAM = "from_program";
 }

@@ -1,9 +1,12 @@
 package com.example.karlo.sstconference.modules.program;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -16,6 +19,7 @@ import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.program.fragments.TopicDetailsFragment;
 import com.example.karlo.sstconference.modules.program.fragments.TopicListFragment;
 import com.example.karlo.sstconference.modules.program.fragments.TrackListFragment;
+import com.example.karlo.sstconference.modules.search.SearchActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,14 +58,30 @@ public class ProgramActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.searchMenu:
+                goToSearch();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void goToSearch() {
+        Intent intent = new Intent(ProgramActivity.this, SearchActivity.class);
+        intent.putExtra(Constants.INTENT_FROM_PROGRAM, true);
+        startActivity(intent);
     }
 
     private void setUpToolbar() {
