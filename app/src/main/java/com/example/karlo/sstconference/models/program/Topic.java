@@ -10,11 +10,12 @@ import com.example.karlo.sstconference.models.converters.PersonConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Topic extends Program implements Parcelable {
+
+    public enum ProgramType { TOPIC, TRACK }
 
     @SerializedName("id")
     @Expose
@@ -28,16 +29,21 @@ public class Topic extends Program implements Parcelable {
     @Expose
     private String mTitle;
 
+    @SerializedName("type")
+    @Expose
+    private int mType;
+
     @SerializedName("lecturer")
     @Expose
     @TypeConverters(PersonConverter.class)
     private List<Person> mLecturers;
 
-    public Topic(@NonNull int mId, int mParentId, String mTitle, List<Person> mLecturers) {
+    public Topic(@NonNull int mId, int mParentId, String mTitle, List<Person> mLecturers, int type) {
         this.mId = mId;
         this.mParentId = mParentId;
         this.mTitle = mTitle;
         this.mLecturers = mLecturers;
+        this.mType = type;
     }
 
     @NonNull
@@ -73,6 +79,18 @@ public class Topic extends Program implements Parcelable {
         this.mLecturers = mLecturers;
     }
 
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int mType) {
+        this.mType = mType;
+    }
+
+    public boolean isTrack() {
+        return mType == ProgramType.TRACK.ordinal();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -83,18 +101,19 @@ public class Topic extends Program implements Parcelable {
         dest.writeInt(this.mId);
         dest.writeInt(this.mParentId);
         dest.writeString(this.mTitle);
-        dest.writeList(this.mLecturers);
+        dest.writeInt(this.mType);
+        dest.writeTypedList(this.mLecturers);
     }
 
     protected Topic(Parcel in) {
         this.mId = in.readInt();
         this.mParentId = in.readInt();
         this.mTitle = in.readString();
-        this.mLecturers = new ArrayList<Person>();
-        in.readList(this.mLecturers, Person.class.getClassLoader());
+        this.mType = in.readInt();
+        this.mLecturers = in.createTypedArrayList(Person.CREATOR);
     }
 
-    public static final Creator<Topic> CREATOR = new Creator<Topic>() {
+    public static final Parcelable.Creator<Topic> CREATOR = new Parcelable.Creator<Topic>() {
         @Override
         public Topic createFromParcel(Parcel source) {
             return new Topic(source);

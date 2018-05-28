@@ -15,15 +15,12 @@ import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProgramViewModel extends BaseViewModel {
@@ -114,6 +111,28 @@ public class ProgramViewModel extends BaseViewModel {
                 ));
     }
 
+    public void fetchTrack(int id) {
+        mStatus.setValue(Status.loading(true));
+        mCompositeDisposable.add(mProgramDataSource
+                .getTracks()
+                .flatMap(Observable::fromIterable)
+                .filter(track -> track.getId() == id)
+                .distinct(Track::getId)
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tracks -> {
+                            mTracks.setValue(tracks);
+                            mStatus.setValue(Status.loading(false));
+                        }
+                        ,
+                        throwable -> {
+                            mStatus.setValue(Status.error(throwable.getMessage()));
+                            mStatus.setValue(Status.loading(false));
+                        }
+                ));
+    }
+
     public void fetchTracks() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mProgramDataSource
@@ -138,7 +157,7 @@ public class ProgramViewModel extends BaseViewModel {
                 .getTopics()
                 .flatMap(Observable::fromIterable)
                 .filter(topic -> topic.getParentId() == position)
-                .distinct(Topic::getTitle)
+                .distinct(Topic::getId)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

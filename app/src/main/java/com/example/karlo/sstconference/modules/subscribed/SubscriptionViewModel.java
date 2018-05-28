@@ -55,7 +55,7 @@ public class SubscriptionViewModel extends BaseViewModel {
                 .getTopics()
                 .flatMap(Observable::fromIterable)
                 .filter(topic -> mUser.getSubscribedEvents().contains(topic.getId()))
-                .distinct(Topic::getTitle)
+                .distinct(Topic::getId)
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

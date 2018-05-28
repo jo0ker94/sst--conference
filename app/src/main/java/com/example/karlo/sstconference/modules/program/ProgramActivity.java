@@ -138,15 +138,6 @@ public class ProgramActivity extends AppCompatActivity
         replaceFragment(topicDetailsFragment);
     }
 
-    @Override
-    public void showTrackDetails(Track track) {
-        TopicDetailsFragment topicDetailsFragment = new TopicDetailsFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.DATA, track);
-        topicDetailsFragment.setArguments(args);
-        replaceFragment(topicDetailsFragment);
-    }
-
     private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom, R.anim.slide_in_top, R.anim.slide_in_bottom)

@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.TopicAdapter;
 import com.example.karlo.sstconference.commons.Constants;
-import com.example.karlo.sstconference.models.program.Program;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
-import com.example.karlo.sstconference.modules.program.ProgramActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +80,6 @@ public class TopicListFragment extends BaseProgramFragment
                 } else {
                     handleLoadEvent(mTopics.get(0));
                 }
-            } else {
-                handleLoadEvent(mTrack);
             }
         });
 
@@ -99,13 +95,9 @@ public class TopicListFragment extends BaseProgramFragment
         });
     }
 
-    private void handleLoadEvent(Program program) {
+    private void handleLoadEvent(Topic topic) {
         if (!mIsRestoredFromBackStack) {
-            if (program instanceof Topic) {
-                mListener.showTopicDetails((Topic) program);
-            } else {
-                mListener.showTrackDetails((Track) program);
-            }
+            mListener.showTopicDetails(topic);
         } else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }

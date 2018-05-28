@@ -78,10 +78,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topic_details, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
-        if (getArguments().getParcelable(Constants.DATA) instanceof Topic) {
-            mTopic = getArguments().getParcelable(Constants.DATA);
-        } else {
-            mTrack = getArguments().getParcelable(Constants.DATA);
+        mTopic = getArguments().getParcelable(Constants.DATA);
+        if (mTopic.isTrack()) {
+            mViewModel.fetchTrack(mTopic.getParentId());
         }
         return rootView;
     }
@@ -103,13 +102,11 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        if (mTopic != null) {
-            inflater.inflate(R.menu.subscribe_menu, menu);
-            MenuItem menuItem = menu.findItem(R.id.subscribe);
-            mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
-            if (mUser != null) {
-                setUpBookmark();
-            }
+        inflater.inflate(R.menu.subscribe_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.subscribe);
+        mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
+        if (mUser != null) {
+            setUpBookmark();
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -138,7 +135,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpViews() {
-        if (mTopic != null) {
+        if (mTopic != null && !mTopic.isTrack()) {
             mTitle.setText(mTopic.getTitle());
             if (mTopic.getLecturers() != null) {
                 mLecturers.setText(getLecturers(mTopic.getLecturers()));
@@ -151,8 +148,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
             } else {
                 mCommentContainer.setVisibility(View.GONE);
             }
-        } else if (mTrack != null) {
-            mTitle.setText(mTrack.getTitle());
+        } else if (mTopic != null && mTopic.isTrack() && mTrack != null) {
+            mTitle.setText(mTopic.getTitle());
             mLecturers.setText(getTimeString());
             mCommentContainer.setVisibility(View.GONE);
         }
@@ -205,6 +202,13 @@ public class TopicDetailsFragment extends BaseProgramFragment
             }
         });
 
+        mViewModel.getTracks().observe(this, tracks -> {
+            if (tracks != null && tracks.size() == 1) {
+                mTrack = tracks.get(0);
+                setUpViews();
+            }
+        });
+
         mViewModel.getStatus().observe(this, status -> {
             switch(status.getResponse()) {
                 case LOADING:
@@ -224,18 +228,14 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpBookmark() {
-        if (mTopic != null) {
-            mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
-            mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                if (isChecked) {
-                    mViewModel.subscribeToTopic(mTopic);
-                } else {
-                    mViewModel.deleteTopicSubscription(mTopic);
-                }
-            });
-        } else {
-            setHasOptionsMenu(false);
-        }
+        mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
+        mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                mViewModel.subscribeToTopic(mTopic);
+            } else {
+                mViewModel.deleteTopicSubscription(mTopic);
+            }
+        });
     }
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {
