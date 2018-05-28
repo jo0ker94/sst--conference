@@ -108,6 +108,7 @@
     <string name="room_b">Room B – Kesten</string>
     <string name="restaurant">Restaurant</string>
     <string name="hall_1st">Hall – 1st fl.</string>
+    <string name="no_comments">There are no comments on this event, be the first one to comment!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

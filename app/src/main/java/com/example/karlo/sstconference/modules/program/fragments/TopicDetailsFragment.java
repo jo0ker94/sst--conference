@@ -55,6 +55,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
     CardView mCommentContainer;
     @BindView(R.id.topic_container)
     CardView mTopicContainer;
+    @BindView(R.id.no_comments)
+    TextView mNoComments;
 
     private List<User> mUsers = new ArrayList<>();
     private List<Comment> mComments = new ArrayList<>();
@@ -212,6 +214,11 @@ public class TopicDetailsFragment extends BaseProgramFragment
                 case ERROR:
                     mListener.showError(new Throwable(status.getMessage()));
                     break;
+                case NO_DATA:
+                    if (status.getState()) {
+                        showNoComments();
+                    }
+                    break;
             }
         });
     }
@@ -232,6 +239,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mNoComments.setVisibility(View.GONE);
         if (mAdapter == null) {
             mAdapter = new CommentsAdapter(mActivity, mComments, mUsers, listener);
             mLayoutManager = new LinearLayoutManager(getContext());
@@ -241,6 +250,11 @@ public class TopicDetailsFragment extends BaseProgramFragment
         } else {
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void showNoComments() {
+        mRecyclerView.setVisibility(View.GONE);
+        mNoComments.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -262,6 +276,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
                                             .subscribe(() -> {
                                                 mComments.remove(comment);
                                                 mAdapter.notifyDataSetChanged();
+                                                if (mComments.isEmpty()) {
+                                                    showNoComments();
+                                                }
                                             })))
                     .setNegativeButton(R.string.no, null)
                     .show();

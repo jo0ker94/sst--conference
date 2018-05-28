@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import com.annimon.stream.Stream;
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.models.enums.PlaceType;
 import com.example.karlo.sstconference.models.nearbyplaces.LocationCoordinates;
 import com.example.karlo.sstconference.models.venue.MarkersGroup;
@@ -67,6 +68,7 @@ public class VenueViewModel extends BaseViewModel {
         if (mGroup == null) {
             mGroup = new MutableLiveData<>();
         }
+        mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(fetchRestaurants(latLng)
                 .andThen(fetchCafe(latLng))
                 .andThen(fetchBar(latLng))
@@ -74,7 +76,11 @@ public class VenueViewModel extends BaseViewModel {
                 .andThen(fetchLibrary(latLng))
                 .andThen(fetchChurch(latLng))
                 .andThen(fetchZoo(latLng))
-                .subscribe(() -> mGroup.setValue(mPlacesGroup)));
+                .subscribe(() -> {
+                            mGroup.setValue(mPlacesGroup);
+                            mStatus.setValue(Status.loading(false));
+                        },
+                        throwable -> mStatus.setValue(Status.loading(true))));
     }
 
     private void fetchGooglePlaces(PlaceType type, LatLng latLng) {

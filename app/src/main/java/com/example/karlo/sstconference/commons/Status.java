@@ -93,8 +93,12 @@ public class Status {
         return new Status(Response.DELETED, id);
     }
 
+    public static Status noData(boolean b) {
+        return new Status(Response.NO_DATA, b);
+    }
+
     public enum Response {
-        LOADING, SUCCESS, ERROR, LOGIN, LOGOUT, SIGNUP, MESSAGE, PROGRESS, DELETED
+        LOADING, SUCCESS, ERROR, LOGIN, LOGOUT, SIGNUP, MESSAGE, PROGRESS, DELETED, NO_DATA
     }
 }
 

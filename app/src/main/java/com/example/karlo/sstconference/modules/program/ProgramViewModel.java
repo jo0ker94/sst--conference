@@ -30,6 +30,8 @@ public class ProgramViewModel extends BaseViewModel {
 
     private static final String TAG = "ProgramViewModel";
 
+    private static final String NO_COMMENTS = "Null is not a valid element";
+
     private MutableLiveData<User> mLiveUser;
     private MutableLiveData<List<User>> mUsers;
     private MutableLiveData<List<Track>> mTracks;
@@ -101,8 +103,13 @@ public class ProgramViewModel extends BaseViewModel {
                         }
                         ,
                         throwable -> {
-                            mStatus.setValue(Status.error(throwable.getMessage()));
                             mStatus.setValue(Status.loading(false));
+                            if (throwable.getMessage().equalsIgnoreCase(NO_COMMENTS)) {
+                                mStatus.setValue(Status.noData(true));
+                            } else {
+                                mStatus.setValue(Status.error(throwable.getMessage()));
+
+                            }
                         }
                 ));
     }
@@ -176,22 +183,6 @@ public class ProgramViewModel extends BaseViewModel {
                 ));
     }
 
-    public void fetchData() {
-        mCompositeDisposable.add(mUserDataSource
-                .getUsers()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap((Function<Map<String, User>, ObservableSource<?>>) stringUserMap ->
-                        Observable.concat(Observable.fromArray(
-                                new ArrayList<>(stringUserMap.values())),
-                                mApi.getComments(1)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                        ))
-                .subscribe()
-        );
-    }
-
     public void subscribeToTopic(Topic topic) {
         List<Integer> events = mUser.getSubscribedEvents();
         if (!events.contains(topic.getId())) {
@@ -242,6 +233,9 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public Completable addComment(Comment comment) {
+        if (mComments == null) {
+            mComments = new ArrayList<>();
+        }
         return Completable.fromAction(() -> DatabaseHelper.getCommentsReference()
                 .child(String.valueOf(comment.getParentId()))
                 .child(String.valueOf(mComments.size()))
