@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.example.karlo.sstconference.modules.venue.fragments.BaseMapFragment;
+import com.example.karlo.sstconference.modules.venue.fragments.VenueFragment;
+
 public class VenuePagerAdapter extends FragmentStatePagerAdapter {
 
     private final int COUNT = 5;

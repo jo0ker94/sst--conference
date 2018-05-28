@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.modules.venue;
+package com.example.karlo.sstconference.modules.venue.fragments;
 
 import android.Manifest;
 import android.arch.lifecycle.MutableLiveData;
@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.example.karlo.sstconference.App;
+import com.example.karlo.sstconference.modules.venue.VenueActivity;
+import com.example.karlo.sstconference.modules.venue.VenueViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;

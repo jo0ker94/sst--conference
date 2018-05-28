@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import com.annimon.stream.Stream;
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.models.enums.PlaceType;
 import com.example.karlo.sstconference.models.nearbyplaces.LocationCoordinates;
 import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;

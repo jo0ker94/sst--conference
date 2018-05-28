@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.modules.venue;
+package com.example.karlo.sstconference.modules.venue.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.models.enums.PlaceType;
 import com.example.karlo.sstconference.models.venue.Info;
 import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
+import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.ui.HeaderView;
 import com.example.karlo.sstconference.ui.SwitchButton;
 import com.google.android.gms.maps.SupportMapFragment;

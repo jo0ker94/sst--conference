@@ -1,4 +1,4 @@
-package com.example.karlo.sstconference.modules.venue;
+package com.example.karlo.sstconference.models.enums;
 
 public enum PlaceType {
 

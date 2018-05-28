@@ -8,7 +8,7 @@ import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.program.fragments.BaseProgramFragment;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
-import com.example.karlo.sstconference.modules.venue.BaseMapFragment;
+import com.example.karlo.sstconference.modules.venue.fragments.BaseMapFragment;
 
 import javax.inject.Singleton;
 
