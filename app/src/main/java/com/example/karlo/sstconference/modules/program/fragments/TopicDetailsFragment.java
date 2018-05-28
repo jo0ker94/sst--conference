@@ -233,7 +233,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {
         if (mAdapter == null) {
-            mAdapter = new CommentsAdapter(getActivity(), mComments, mUsers, listener);
+            mAdapter = new CommentsAdapter(mActivity, mComments, mUsers, listener);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
@@ -252,7 +252,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     public void onItemLongClick(View view, int position) {
         Comment comment = mComments.get(position);
         if (comment.getUserId().equalsIgnoreCase(mUser.getUserId())) {
-            new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(mActivity)
                     .setMessage(R.string.delete_comment_message)
                     .setPositiveButton(R.string.yes,
                             (dialogInterface, i) -> mCompositeDisposable.add(

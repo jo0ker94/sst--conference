@@ -30,10 +30,9 @@ public class SubscriptionViewModel extends BaseViewModel {
     public SubscriptionViewModel(UserDataSource userDataSource, ProgramDataSource topicDataSource) {
         this.mDataSource = topicDataSource;
         this.mUserDataSource = userDataSource;
-        getUser();
     }
 
-    private void getUser() {
+    public void getUserAndFetchEvents() {
         mCompositeDisposable.add(mUserDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -73,6 +73,12 @@ public class SubscriptionActivity extends AppCompatActivity
         setUpObservers();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mViewModel.getUserAndFetchEvents();
+    }
+
     private void setUpObservers() {
         mViewModel.getSubscribedTopics().observe(this, topics -> {
             if (topics != null && !topics.isEmpty()) {

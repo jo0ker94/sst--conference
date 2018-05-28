@@ -25,11 +25,14 @@ public abstract class BaseProgramFragment extends Fragment {
     protected ProgramListener mListener;
     protected Unbinder mUnbinder;
 
+    protected ProgramActivity mActivity;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Application activity = ((ProgramActivity) getActivity()).getApplication();
         ((App) activity).getComponent().inject(this);
+        mActivity = (ProgramActivity) getActivity();
     }
 
     @Override

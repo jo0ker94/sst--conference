@@ -16,6 +16,7 @@ import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Program;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.example.karlo.sstconference.modules.program.ProgramActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class TopicListFragment extends BaseProgramFragment
         super.onViewCreated(view, savedInstanceState);
         setUpObservers();
         mTrack = getArguments().getParcelable(Constants.DATA);
+        mActivity.setTitle(mTrack.getTitle());
         mViewModel.fetchTopics(mTrack.getId());
     }
 

@@ -133,6 +133,7 @@ public class TrackListFragment extends BaseProgramFragment
     @Override
     public void onResume() {
         super.onResume();
+        mActivity.setTitle(mActivity.getString(R.string.conference_program));
         if (mViewPager != null) {
             onArrowClick(mViewPager.getCurrentItem());
         }
@@ -163,7 +164,7 @@ public class TrackListFragment extends BaseProgramFragment
         @Override
         public void onPageSelected(int position) {
             mCards.get(mViewPager.getCurrentItem())
-                    .showTracks(getActivity(), filteredTracks(position), new OnItemClickListener());
+                    .showTracks(mActivity, filteredTracks(position), new OnItemClickListener());
         }
 
         @Override

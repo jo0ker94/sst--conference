@@ -104,6 +104,10 @@ public class ProgramActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void setTitle(String title) {
+        toolbar.setTitle(title);
+    }
+
     @Override
     public void loadingData(boolean loading) {
         mProgressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
