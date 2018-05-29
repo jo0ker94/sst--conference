@@ -174,7 +174,8 @@ public class VenueViewModel extends BaseViewModel {
                 .getVenue()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(venue -> mVenue.setValue(venue))
+                .subscribe(venue -> mVenue.setValue(venue),
+                        throwable -> mStatus.setValue(Status.error(throwable.getMessage())))
         );
     }
 

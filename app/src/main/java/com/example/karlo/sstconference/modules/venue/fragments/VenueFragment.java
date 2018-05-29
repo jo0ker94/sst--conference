@@ -18,6 +18,7 @@ import com.example.karlo.sstconference.models.enums.PlaceType;
 import com.example.karlo.sstconference.models.venue.Info;
 import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
+import com.example.karlo.sstconference.models.venue.VenueMarker;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.ui.HeaderView;
 import com.example.karlo.sstconference.ui.SwitchButton;
@@ -142,11 +143,6 @@ public class VenueFragment extends BaseMapFragment {
                         populateSection(mVenue.getHotel());
                     });
                 }
-                mLocationSet.observe(this, hasLocation -> {
-                    if (hasLocation != null && hasLocation) {
-                        setConferenceMarkers();
-                    }
-                });
                 break;
 
             case REGION:
@@ -159,30 +155,15 @@ public class VenueFragment extends BaseMapFragment {
                         populateSection(mVenue.getRegion());
                     });
                 }
-                mLocationSet.observe(this, hasLocation -> {
-                    if (hasLocation != null && hasLocation) {
-                        setRegionMarkers();
-                    }
-                });
                 break;
 
             case FOOD:
                 setTitle(getString(R.string.food));
-                //mLocationSet.observe(this, hasLocation -> {
-                //    if (hasLocation != null && hasLocation) {
-                //        mViewModel.fetchAllPlaces(mCurrentLocation);
-                //    }
-                //});
                 addFoodSections();
                 break;
 
             case SIGHTS:
                 setTitle(getString(R.string.sights));
-                //mLocationSet.observe(this, hasLocation -> {
-                //    if (hasLocation != null && hasLocation) {
-                //        mViewModel.fetchAllPlaces(mCurrentLocation);
-                //    }
-                //});
                 addSightsSections();
                 break;
 
@@ -196,51 +177,8 @@ public class VenueFragment extends BaseMapFragment {
                         populateSection(mVenue.getFaculty());
                     });
                 }
-                mLocationSet.observe(this, hasLocation -> {
-                    if (hasLocation != null && hasLocation) {
-                        setFacultyMarkers();
-                    }
-                });
                 break;
         }
-    }
-
-    private void setRegionMarkers() {
-        MarkerOptions osijek = new MarkerOptions()
-                .position(new LatLng(45.5548, 18.6955))
-                .title(getString(R.string.osijek));
-
-        List<MarkerOptions> markerOptions = new ArrayList<>();
-        markerOptions.add(osijek);
-        showMarkers(markerOptions);
-    }
-
-    private void setFacultyMarkers() {
-        MarkerOptions ferit = new MarkerOptions()
-                .position(new LatLng(45.556784916805064, 18.695619106292725))
-                .title(getString(R.string.ferit_osijek))
-                .snippet(getString(R.string.ferit_address));
-
-        MarkerOptions university = new MarkerOptions()
-                .position(new LatLng(45.5609596, 18.69593169999996))
-                .title(getString(R.string.university))
-                .snippet(getString(R.string.university_address));
-
-        List<MarkerOptions> markerOptions = new ArrayList<>();
-        markerOptions.add(ferit);
-        markerOptions.add(university);
-        showMarkers(markerOptions);
-    }
-
-    private void setConferenceMarkers() {
-        MarkerOptions hotel = new MarkerOptions()
-                .position(new LatLng(45.56214079999999, 18.67980280000006))
-                .title(getString(R.string.hotel_osijek))
-                .snippet(getString(R.string.hotel_address));
-
-        List<MarkerOptions> markerOptions = new ArrayList<>();
-        markerOptions.add(hotel);
-        showMarkers(markerOptions);
     }
 
     private void addFoodSections() {
@@ -293,6 +231,9 @@ public class VenueFragment extends BaseMapFragment {
     private void populateSection(List<Info> infoList) {
         for (int i = 0; i < infoList.size(); i++) {
             addSection(infoList.get(i));
+            if (infoList.get(i).getMarker() != null) {
+                setVenueMarker(infoList.get(i).getMarker());
+            }
         }
     }
 
@@ -318,6 +259,17 @@ public class VenueFragment extends BaseMapFragment {
                 .into(imageView);
 
         mBaseLayout.addView(view);
+    }
+
+    private void setVenueMarker(VenueMarker marker) {
+        MarkerOptions options = new MarkerOptions()
+                .position(new LatLng(marker.getLat(), marker.getLng()))
+                .title(marker.getTitle())
+                .snippet(marker.getSnippet());
+
+        List<MarkerOptions> markerOptions = new ArrayList<>();
+        markerOptions.add(options);
+        showMarkers(markerOptions);
     }
 
     @Override

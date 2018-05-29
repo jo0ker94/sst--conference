@@ -11,9 +11,11 @@ public class Venue {
     @SerializedName("faculty")
     @Expose
     private List<Info> faculty = null;
+
     @SerializedName("region")
     @Expose
     private List<Info> region = null;
+
     @SerializedName("hotel")
     @Expose
     private List<Info> hotel = null;

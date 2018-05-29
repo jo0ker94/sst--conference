@@ -22,6 +22,10 @@ public class Info {
     @Expose
     private String title;
 
+    @SerializedName("marker")
+    @Expose
+    private VenueMarker marker = null;
+
     public String getDescription() {
         return description;
     }
@@ -60,6 +64,14 @@ public class Info {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public VenueMarker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(VenueMarker markers) {
+        this.marker = markers;
     }
 
 }
