@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BasicParentLayout"
+    android:orientation="vertical"
+    tools:context="com.example.karlo.sstconference.modules.committee.CommitteeActivity">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
+    <com.example.karlo.sstconference.ui.HeaderView
+        android:layout_margin="2dp"
+        app:titleText="@string/organizing_committee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/organizing_committee_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+
+    </com.example.karlo.sstconference.ui.HeaderView>
+
+    <com.example.karlo.sstconference.ui.HeaderView
+        android:layout_margin="2dp"
+        app:titleText="@string/steering_committee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/steering_committee_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+
+    </com.example.karlo.sstconference.ui.HeaderView>
+
+    <com.example.karlo.sstconference.ui.HeaderView
+        android:layout_margin="2dp"
+        app:titleText="@string/program_committee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/program_committee_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+
+    </com.example.karlo.sstconference.ui.HeaderView>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="?android:progressBarStyleLarge"
+        android:visibility="gone"/>
+
+</LinearLayout>

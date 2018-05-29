@@ -1,6 +1,7 @@
 package com.example.karlo.sstconference.servertasks.interfaces;
 
 import com.example.karlo.sstconference.models.ConferenceChair;
+import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.program.Comment;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public interface Api {
 
     @GET("2017/conferenceChairs.json")
     Observable<List<ConferenceChair>> getChairs();
+
+    @GET("2017/committee/{type}.json")
+    Observable<List<CommitteeMember>> getCommittee(@Path("type") String type);
 
     @GET("2017/images.json")
     Observable<List<String>> getImages();

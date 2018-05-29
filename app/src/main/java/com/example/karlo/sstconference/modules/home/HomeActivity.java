@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.User;
+import com.example.karlo.sstconference.modules.committee.CommitteeActivity;
 import com.example.karlo.sstconference.modules.gallery.GalleryActivity;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
@@ -159,8 +160,11 @@ public class HomeActivity extends AppCompatActivity
             case R.id.logout:
                 mViewModel.signOut();
                 return true;
+            case R.id.committee:
+                startActivity(new Intent(HomeActivity.this, CommitteeActivity.class));
+                return true;
             case R.id.images:
-                startActivity(new Intent(HomeActivity.this, GalleryActivity.class));
+                goToGallery();
                 return true;
             default:
                 return false;

@@ -5,6 +5,9 @@ import android.content.Context;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.database.LocalDatabase;
+import com.example.karlo.sstconference.database.committee.CommitteeDao;
+import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
+import com.example.karlo.sstconference.database.committee.LocalCommitteeDataSource;
 import com.example.karlo.sstconference.database.program.LocalProgramDataSource;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.topic.LocalTopicDataSource;
@@ -72,6 +75,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public CommitteeDao providesCommitteeDao() {
+        return LocalDatabase.getDatabase(application).committeeModel();
+    }
+
+    @Provides
+    @Singleton
     public UserDataSource providesLocalUserDataSource(UserDao userDao, UserApi userApi) {
         return new LocalUserDataSource(userDao, userApi);
     }
@@ -98,6 +107,12 @@ public class ApplicationModule {
     @Singleton
     public VenueDataSource providesLocalVenueDataSource(VenueDao venueDao, VenueApi venueApi) {
         return new LocalVenueDataSource(venueDao, venueApi);
+    }
+
+    @Provides
+    @Singleton
+    public CommitteeDataSource providesLocalCommitteeDataSource(CommitteeDao committeeDao, Api api) {
+        return new LocalCommitteeDataSource(committeeDao, api);
     }
 
     @Provides

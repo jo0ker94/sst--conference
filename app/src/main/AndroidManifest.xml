@@ -54,6 +54,8 @@
 
         <activity android:name="com.example.karlo.sstconference.modules.venue.VenueActivity"/>
 
+        <activity android:name="com.example.karlo.sstconference.modules.committee.CommitteeActivity"/>
+
         <receiver android:name="com.example.karlo.sstconference.receivers.EventAlarmReceiver" />
 
         <meta-data
