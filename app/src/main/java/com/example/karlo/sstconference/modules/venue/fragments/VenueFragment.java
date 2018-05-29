@@ -47,7 +47,6 @@ public class VenueFragment extends BaseMapFragment {
 
     private Venue mVenue;
     private MarkersGroup mMarkersGroup;
-    private List<MarkerOptions> mMarkers;
 
     public static VenueFragment newInstance(VenueType venueType) {
         Bundle bundle = new Bundle();
@@ -82,12 +81,12 @@ public class VenueFragment extends BaseMapFragment {
 
     private void setUpObserver() {
         mLocationSet.observe(this, hasLocation -> {
-            if (hasLocation != null && hasLocation) {
-                mViewModel.fetchAllPlaces(mCurrentLocation);
+            if (hasLocation != null && hasLocation && (mType == VenueType.FOOD || mType == VenueType.SIGHTS)) {
+                mViewModel.fetchAllPlaces(mType, mCurrentLocation);
             }
         });
         mViewModel.getMarkerGroup().observe(this, markers -> {
-            if (markers != null) {
+            if (markers != null && (mType == VenueType.FOOD || mType == VenueType.SIGHTS)) {
                 mMarkersGroup = markers;
                 filterMarkers();
             }
@@ -95,36 +94,36 @@ public class VenueFragment extends BaseMapFragment {
     }
 
     private void filterMarkers() {
-        mMarkers = new ArrayList<>();
+        List<MarkerOptions> markers = new ArrayList<>();
         clearMarkers();
         if (mMarkersGroup != null) {
             if (mType == VenueType.FOOD) {
                 if (mMarkersGroup.getRestaurants() != null && EasyPrefs.getShowRestaurants(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getRestaurants());
+                    markers.addAll(mMarkersGroup.getRestaurants());
                 }
                 if (mMarkersGroup.getBars() != null && EasyPrefs.getShowBars(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getBars());
+                    markers.addAll(mMarkersGroup.getBars());
                 }
                 if (mMarkersGroup.getCafe() != null && EasyPrefs.getShowCafe(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getCafe());
+                    markers.addAll(mMarkersGroup.getCafe());
                 }
 
             } else {
                 if (mMarkersGroup.getMuseum() != null && EasyPrefs.getShowMuseums(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getMuseum());
+                    markers.addAll(mMarkersGroup.getMuseum());
                 }
                 if (mMarkersGroup.getLibrary() != null && EasyPrefs.getShowLibrary(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getLibrary());
+                    markers.addAll(mMarkersGroup.getLibrary());
                 }
                 if (mMarkersGroup.getChurch() != null && EasyPrefs.getShowChurch(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getChurch());
+                    markers.addAll(mMarkersGroup.getChurch());
                 }
                 if (mMarkersGroup.getZoo() != null && EasyPrefs.getShowZoo(mActivity)) {
-                    mMarkers.addAll(mMarkersGroup.getZoo());
+                    markers.addAll(mMarkersGroup.getZoo());
                 }
             }
         }
-        showMarkers(mMarkers);
+        showMarkers(markers);
     }
 
     @Override
