@@ -53,6 +53,7 @@ public class BaseMapFragment extends Fragment
     protected LatLng mCurrentLocation;
     private boolean mFirstChange = true;
     protected String mTitle;
+    private boolean mHasLocation = false;
 
     protected MutableLiveData<Boolean> mLocationSet = new MutableLiveData<>();
     protected MutableLiveData<Boolean> mMapReady = new MutableLiveData<>();
@@ -104,6 +105,12 @@ public class BaseMapFragment extends Fragment
         }
     }
 
+    public void radiusChanged() {
+        if (mHasLocation) {
+            mLocationSet.setValue(true);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -152,7 +159,7 @@ public class BaseMapFragment extends Fragment
                 for (Location location : locationResult.getLocations()) {
                     if (mCurrentLocation != null && location != null && location.getLatitude() == mCurrentLocation.latitude
                             && location.getLongitude() == mCurrentLocation.longitude) {
-                        Log.e(TAG, "Skipped location" + location.toString());
+                        Log.e(TAG, "Skipped location: " + location.toString());
                         return;
                     }
                     if (location == null) {
@@ -163,8 +170,9 @@ public class BaseMapFragment extends Fragment
                             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 15));
                             mFirstChange = false;
                         }
+                        mHasLocation = true;
                         mLocationSet.setValue(true);
-                        mActivity.showError(new Throwable("Changed!"));
+                        Log.e(TAG, "Location has changed: " + location.toString());
                     }
                 }
             }

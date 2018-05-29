@@ -153,7 +153,7 @@ public class SubscriptionActivity extends AppCompatActivity
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.searchMenu:
+            case R.id.search_icon:
                 mSearchBar.showSearchBar(toolbar);
                 return true;
             default:

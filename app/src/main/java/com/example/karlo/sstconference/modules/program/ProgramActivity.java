@@ -83,7 +83,7 @@ public class ProgramActivity extends AppCompatActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.searchMenu:
+            case R.id.search_icon:
                 goToSearch();
                 return true;
             default:

@@ -15,10 +15,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.utility.AppConfig;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +32,17 @@ public class VenueActivity extends AppCompatActivity
         implements VenueView {
 
     private static final int REQUEST_LOCATION_PERMISSION = 10;
+
+    private static final int CONFERENCE_POSITION = 0;
+    private static final int REGION_POSITION = 1;
+    private static final int FOOD_POSITION = 2;
+    private static final int SIGHTS_POSITION = 3;
+    private static final int FACULTY_POSITION = 4;
+
+    private static final String KILOMETERS = "kilometers";
+    private static final String METERS = "meters";
+    private static final String MILES = "miles";
+    private static final String FEET = "feet";
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -46,6 +61,7 @@ public class VenueActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue);
         mUnbinder = ButterKnife.bind(this);
+        AppConfig.MAP_RADIUS = EasyPrefs.getMapRadius(this);
         setUpToolbar();
         setUpTab();
     }
@@ -71,9 +87,60 @@ public class VenueActivity extends AppCompatActivity
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.search_icon:
+                changeRadiusDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void changeRadiusDialog() {
+        View view = getLayoutInflater().inflate(R.layout.radius_picker_dialog, null);
+        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.radius_picker);
+        NumberPicker unitsPicker = (NumberPicker) view.findViewById(R.id.units_picker);
+
+        String[] arrayString= new String[]{KILOMETERS, METERS, MILES, FEET};
+
+        unitsPicker.setMinValue(0);
+        unitsPicker.setMaxValue(arrayString.length - 1);
+        unitsPicker.setDisplayedValues(arrayString);
+
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(1000);
+
+        new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle)
+                .setTitle(R.string.search_radius)
+                .setView(view)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                    long radius = getMetersFromSelection(numberPicker.getValue(), arrayString[unitsPicker.getValue()]);
+                    EasyPrefs.putMapRadius(this, radius);
+                    AppConfig.MAP_RADIUS = radius;
+                    notifyFragmentsRadiusHasChanged();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private long getMetersFromSelection(int number, String units) {
+        switch (units) {
+            case KILOMETERS:
+                return number * 1000;
+
+            case MILES:
+                return number * 1609;
+
+            case FEET:
+                return (long) (number * 0.3048);
+
+            default:
+                return number;
+        }
+    }
+
+    private void notifyFragmentsRadiusHasChanged() {
+        mVenuePagerAdapter.getFragmentByPosition(FOOD_POSITION).radiusChanged();
+        mVenuePagerAdapter.getFragmentByPosition(SIGHTS_POSITION).radiusChanged();
     }
 
     private void setUpToolbar() {
@@ -104,15 +171,16 @@ public class VenueActivity extends AppCompatActivity
 
             }
         });
-        mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(0).setCustomView(R.layout.venue_tab_conference);
-        mTabLayout.getTabAt(1).setCustomView(R.layout.venue_tab_region);
-        mTabLayout.getTabAt(2).setCustomView(R.layout.venue_tab_food);
-        mTabLayout.getTabAt(3).setCustomView(R.layout.venue_tab_sights);
-        mTabLayout.getTabAt(4).setCustomView(R.layout.venue_tab_faculty);
 
-        mViewPager.setCurrentItem(1);
-        mViewPager.setCurrentItem(0);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(CONFERENCE_POSITION).setCustomView(R.layout.venue_tab_conference);
+        mTabLayout.getTabAt(REGION_POSITION).setCustomView(R.layout.venue_tab_region);
+        mTabLayout.getTabAt(FOOD_POSITION).setCustomView(R.layout.venue_tab_food);
+        mTabLayout.getTabAt(SIGHTS_POSITION).setCustomView(R.layout.venue_tab_sights);
+        mTabLayout.getTabAt(FACULTY_POSITION).setCustomView(R.layout.venue_tab_faculty);
+
+        mViewPager.setCurrentItem(REGION_POSITION);
+        mViewPager.setCurrentItem(CONFERENCE_POSITION);
         setTitle(R.string.conference);
     }
 
