@@ -2,6 +2,7 @@ package com.example.karlo.sstconference.modules.gallery;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
@@ -29,8 +29,6 @@ import com.example.karlo.sstconference.pager.ShadowTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,11 +48,9 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     @BindView(R.id.emptyData)
     TextView mEmptyData;
 
-    @Inject
-    GalleryViewModel mViewModel;
+    private GalleryViewModel mViewModel;
     private GalleryFeedAdapter mAdapter;
     private ProgressDialog mProgressDialog;
-    private GalleryActivity mActivity;
 
     private Uri filePath;
     private List<String> mItems = new ArrayList<>();
@@ -67,10 +63,8 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
         mUnbinder = ButterKnife.bind(this);
-        ((App) getApplication()).getComponent().inject(this);
         setUpToolbar();
-
-        mActivity = this;
+        mViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
         mProgressDialog = new ProgressDialog(this);
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);
@@ -94,14 +88,14 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         mViewModel.getStatus().observe(this, status -> {
             switch (status.getResponse()) {
                 case MESSAGE:
-                    Toast.makeText(mActivity, status.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, status.getMessage(), Toast.LENGTH_SHORT).show();
                     mProgressDialog.dismiss();
                     break;
                 case PROGRESS:
                     mProgressDialog.setMessage(String.format(getString(R.string.upload_process), status.getInteger()));
                     break;
                 case ERROR:
-                    Toast.makeText(mActivity, status.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, status.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
             }
         });

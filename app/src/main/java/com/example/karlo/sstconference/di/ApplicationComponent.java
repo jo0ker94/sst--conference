@@ -24,7 +24,6 @@ public interface ApplicationComponent {
     void inject(App target);
     void inject(LoginActivity target);
     void inject(HomeActivity target);
-    void inject(GalleryActivity target);
     void inject(ProgramActivity target);
     void inject(BaseProgramFragment target);
     void inject(SearchActivity target);

@@ -1,14 +1,15 @@
 package com.example.karlo.sstconference.modules.gallery;
 
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
 import com.example.karlo.sstconference.R;
-import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
@@ -24,25 +25,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class GalleryViewModel extends BaseViewModel {
+public class GalleryViewModel extends AndroidViewModel {
 
+    private MutableLiveData<Status> mStatus = new MutableLiveData<>();
     private MutableLiveData<List<String>> mImageUrl;
     private List<String> mImages = new ArrayList<>();
 
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private StorageReference mStorageReference = mStorage.getReference();
 
-    private Context application;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    @Inject
-    public GalleryViewModel(Context application) {
-        this.application = application;
-        downloadImages();
+    public GalleryViewModel(@NonNull Application application) {
+        super(application);
     }
 
     public void downloadImages() {
@@ -56,6 +55,10 @@ public class GalleryViewModel extends BaseViewModel {
                             mImageUrl.setValue(strings);
                         },
                         throwable -> mStatus.setValue(Status.error(throwable.getMessage()))));
+    }
+
+    public LiveData<Status> getStatus() {
+        return mStatus;
     }
 
     public LiveData<List<String>> getImages() {
@@ -73,7 +76,7 @@ public class GalleryViewModel extends BaseViewModel {
 
             Bitmap bmp = null;
             try {
-                bmp = MediaStore.Images.Media.getBitmap(application.getContentResolver(), filePath);
+                bmp = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), filePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -84,7 +87,7 @@ public class GalleryViewModel extends BaseViewModel {
             UploadTask uploadTask = ref.putBytes(baos.toByteArray());
             uploadTask
                     .addOnSuccessListener(taskSnapshot -> {
-                        mStatus.setValue(Status.message(application.getResources().getString(R.string.uploaded)));
+                        mStatus.setValue(Status.message(getApplication().getResources().getString(R.string.uploaded)));
                         saveImageToServer(name);
                     })
                     .addOnFailureListener(e -> mStatus.setValue(Status.message(e.getMessage())))
@@ -97,7 +100,7 @@ public class GalleryViewModel extends BaseViewModel {
     }
 
     private void saveImageToServer(String name) {
-        String path = String.format(application.
+        String path = String.format(getApplication().
                         getResources().getString(R.string.image_uri),
                 Constants.FIREBASE_STORAGE_URL,
                 Constants.IMAGES_ENDPOINT,
@@ -109,5 +112,11 @@ public class GalleryViewModel extends BaseViewModel {
 
         mImages.add(path);
         mImageUrl.setValue(mImages);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mCompositeDisposable.clear();
     }
 }
