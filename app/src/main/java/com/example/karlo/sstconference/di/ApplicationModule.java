@@ -16,11 +16,15 @@ import com.example.karlo.sstconference.database.track.TrackDataSource;
 import com.example.karlo.sstconference.database.user.LocalUserDataSource;
 import com.example.karlo.sstconference.database.user.UserDao;
 import com.example.karlo.sstconference.database.user.UserDataSource;
+import com.example.karlo.sstconference.database.venue.LocalVenueDataSource;
+import com.example.karlo.sstconference.database.venue.VenueDao;
+import com.example.karlo.sstconference.database.venue.VenueDataSource;
 import com.example.karlo.sstconference.servertasks.RetrofitUtil;
 import com.example.karlo.sstconference.servertasks.interfaces.Api;
 import com.example.karlo.sstconference.servertasks.interfaces.MapsApi;
 import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 import com.example.karlo.sstconference.servertasks.interfaces.UserApi;
+import com.example.karlo.sstconference.servertasks.interfaces.VenueApi;
 
 import javax.inject.Singleton;
 
@@ -62,6 +66,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public VenueDao providesVenueDao() {
+        return LocalDatabase.getDatabase(application).venueModel();
+    }
+
+    @Provides
+    @Singleton
     public UserDataSource providesLocalUserDataSource(UserDao userDao, UserApi userApi) {
         return new LocalUserDataSource(userDao, userApi);
     }
@@ -82,6 +92,12 @@ public class ApplicationModule {
     @Singleton
     public ProgramDataSource providesLocalProgramDataSource(TopicDataSource topicDataSource, TrackDataSource trackDataSource) {
         return new LocalProgramDataSource(topicDataSource, trackDataSource);
+    }
+
+    @Provides
+    @Singleton
+    public VenueDataSource providesLocalVenueDataSource(VenueDao venueDao, VenueApi venueApi) {
+        return new LocalVenueDataSource(venueDao, venueApi);
     }
 
     @Provides
@@ -110,5 +126,12 @@ public class ApplicationModule {
     public MapsApi providesMapsApi() {
         return RetrofitUtil.getRetrofit(Constants.GOOGLE_PLACES_BASE_URL)
                 .create(MapsApi.class);
+    }
+
+    @Provides
+    @Singleton
+    public VenueApi providesVenueApi() {
+        return RetrofitUtil.getRetrofit(Constants.FIREBASE_BASE_URL)
+                .create(VenueApi.class);
     }
 }

@@ -49,6 +49,8 @@ public class VenueFragment extends BaseMapFragment {
     private Venue mVenue;
     private MarkersGroup mMarkersGroup;
 
+    private List<String> mAddedViews = new ArrayList<>();
+
     public static VenueFragment newInstance(VenueType venueType) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.TYPE, venueType);
@@ -159,12 +161,12 @@ public class VenueFragment extends BaseMapFragment {
 
             case FOOD:
                 setTitle(getString(R.string.food));
-                addFoodSections();
+                addFoodSwitchSection();
                 break;
 
             case SIGHTS:
                 setTitle(getString(R.string.sights));
-                addSightsSections();
+                addSightsSwitchSection();
                 break;
 
             case FACULTY:
@@ -181,7 +183,7 @@ public class VenueFragment extends BaseMapFragment {
         }
     }
 
-    private void addFoodSections() {
+    private void addFoodSwitchSection() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_section_layout, null);
         HeaderView content = view.findViewById(R.id.header_view);
         content.setTitle(getString(R.string.type_of_places));
@@ -203,7 +205,7 @@ public class VenueFragment extends BaseMapFragment {
         mBaseLayout.addView(view);
     }
 
-    private void addSightsSections() {
+    private void addSightsSwitchSection() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_section_layout, null);
         HeaderView content = view.findViewById(R.id.header_view);
         content.setTitle(getString(R.string.type_of_places));
@@ -258,7 +260,10 @@ public class VenueFragment extends BaseMapFragment {
                 .placeholder(R.drawable.no_img)
                 .into(imageView);
 
-        mBaseLayout.addView(view);
+        if (!mAddedViews.contains(model.getTitle())) {
+            mAddedViews.add(model.getTitle());
+            mBaseLayout.addView(view);
+        }
     }
 
     private void setVenueMarker(VenueMarker marker) {

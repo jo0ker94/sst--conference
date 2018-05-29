@@ -8,14 +8,17 @@ import android.content.Context;
 import com.example.karlo.sstconference.database.topic.TopicDao;
 import com.example.karlo.sstconference.database.track.TrackDao;
 import com.example.karlo.sstconference.database.user.UserDao;
+import com.example.karlo.sstconference.database.venue.VenueDao;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.example.karlo.sstconference.models.venue.Venue;
 
 @Database(entities = {
         User.class,
         Topic.class,
-        Track.class
+        Track.class,
+        Venue.class
 }, version = 1, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
@@ -43,4 +46,6 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract TopicDao topicModel();
 
     public abstract TrackDao trackModel();
+
+    public abstract VenueDao venueModel();
 }

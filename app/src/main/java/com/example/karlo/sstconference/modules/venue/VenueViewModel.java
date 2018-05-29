@@ -5,13 +5,13 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
+import com.example.karlo.sstconference.database.venue.VenueDataSource;
 import com.example.karlo.sstconference.models.enums.PlaceType;
 import com.example.karlo.sstconference.models.nearbyplaces.LocationCoordinates;
 import com.example.karlo.sstconference.models.nearbyplaces.Result;
 import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.modules.venue.fragments.VenueFragment;
-import com.example.karlo.sstconference.servertasks.interfaces.Api;
 import com.example.karlo.sstconference.servertasks.interfaces.MapsApi;
 import com.example.karlo.sstconference.utility.AppConfig;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,12 +38,12 @@ public class VenueViewModel extends BaseViewModel {
 
     private MarkersGroup mPlacesGroup = new MarkersGroup();
 
-    private Api mApi;
+    private VenueDataSource mVenueDataSource;
     private MapsApi mMapsApi;
 
     @Inject
-    public VenueViewModel(Api api, MapsApi mapsApi) {
-        this.mApi = api;
+    public VenueViewModel(VenueDataSource venueDataSource, MapsApi mapsApi) {
+        this.mVenueDataSource = venueDataSource;
         this.mMapsApi = mapsApi;
     }
 
@@ -170,7 +170,7 @@ public class VenueViewModel extends BaseViewModel {
     }
 
     private void fetchVenueDetails() {
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mVenueDataSource
                 .getVenue()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

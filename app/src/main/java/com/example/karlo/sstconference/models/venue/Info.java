@@ -6,18 +6,22 @@ import com.google.gson.annotations.SerializedName;
 
 public class Info {
 
-    @SerializedName("description")
-    @Expose
-    private String description;
     @SerializedName("id")
     @Expose
     private Integer id;
+
+    @SerializedName("description")
+    @Expose
+    private String description;
+
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
+
     @SerializedName("link")
     @Expose
     private String link;
+
     @SerializedName("title")
     @Expose
     private String title;
