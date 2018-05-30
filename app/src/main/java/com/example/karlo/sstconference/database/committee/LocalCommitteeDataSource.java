@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.database.committee;
 
+import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.enums.CommitteeType;
 import com.example.karlo.sstconference.servertasks.interfaces.Api;
@@ -37,6 +38,12 @@ public class LocalCommitteeDataSource implements CommitteeDataSource {
                 getCommitteeFromApi(CommitteeType.ORGANIZING).onErrorResumeNext(Observable.empty()));
     }
 
+    @Override
+    public Observable<List<ConferenceChair>> getConferenceChairs() {
+        return Observable.concat(getConferenceChairsFromDatabase(),
+                getConferenceChairsFromApi().onErrorResumeNext(Observable.empty()));
+    }
+
     private Observable<List<CommitteeMember>> getSteeringFromDatabase() {
         return mDao.getSteeringCommittee()
                 .toObservable();
@@ -64,6 +71,20 @@ public class LocalCommitteeDataSource implements CommitteeDataSource {
                 .toObservable();
     }
 
+    private Observable<List<ConferenceChair>> getConferenceChairsFromDatabase() {
+        return mDao.getConferenceChairs()
+                .toObservable();
+    }
+
+    private Observable<List<ConferenceChair>> getConferenceChairsFromApi() {
+        return mApi.getChairs()
+                .flatMap(Observable::fromIterable)
+                .subscribeOn(Schedulers.newThread())
+                .doOnNext(this::insertConferenceChair)
+                .toList()
+                .toObservable();
+    }
+
     @Override
     public void insertOrUpdateCommitteeMember(CommitteeMember committeeMember) {
         mDao.insertCommitteeMember(committeeMember);
@@ -73,4 +94,16 @@ public class LocalCommitteeDataSource implements CommitteeDataSource {
     public void deleteCommitteeMember(CommitteeMember committeeMember) {
         mDao.deleteCommitteeMember(committeeMember);
     }
+
+    @Override
+    public void insertConferenceChair(ConferenceChair conferenceChair) {
+        mDao.insertConferenceChair(conferenceChair);
+    }
+
+    @Override
+    public void deleteConferenceChair(ConferenceChair conferenceChair) {
+        mDao.deleteConferenceChair(conferenceChair);
+    }
+
+
 }

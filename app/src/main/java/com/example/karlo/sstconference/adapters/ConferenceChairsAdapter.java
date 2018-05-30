@@ -20,7 +20,7 @@ public class ConferenceChairsAdapter extends RecyclerView.Adapter<ConferenceChai
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(ConferenceChair conferenceChair);
         void openMailDialog(String mail);
     }
 
@@ -49,7 +49,7 @@ public class ConferenceChairsAdapter extends RecyclerView.Adapter<ConferenceChai
                 .centerCrop()
                 .placeholder(R.drawable.no_img)
                 .into(holder.imageView);
-        holder.tvTitle.getRootView().setOnClickListener(view -> mListener.onItemClick(view, holder.getAdapterPosition()));
+        holder.tvTitle.getRootView().setOnClickListener(view -> mListener.onItemClick(chair));
     }
 
     @Override

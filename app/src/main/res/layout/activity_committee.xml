@@ -11,6 +11,20 @@
 
     <com.example.karlo.sstconference.ui.HeaderView
         android:layout_margin="2dp"
+        app:titleText="@string/conference_chairs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/conference_chairs_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+
+    </com.example.karlo.sstconference.ui.HeaderView>
+
+    <com.example.karlo.sstconference.ui.HeaderView
+        android:layout_margin="2dp"
         app:titleText="@string/organizing_committee"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

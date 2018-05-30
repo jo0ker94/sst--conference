@@ -190,6 +190,12 @@ public class HomeActivity extends AppCompatActivity
             case R.id.images:
                 goToGallery();
                 return true;
+            case R.id.events:
+                goToProgram();
+                return true;
+            case R.id.venue:
+                goToVenue();
+                return true;
             default:
                 return false;
         }
