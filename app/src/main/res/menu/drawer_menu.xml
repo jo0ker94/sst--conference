@@ -21,7 +21,7 @@
             android:title="@string/keynote_speakers"/>
 
         <item android:id="@+id/events"
-            android:icon="@drawable/ic_event"
+            android:icon="@drawable/venue_conference"
             android:title="@string/conference_program"/>
 
         <item android:id="@+id/venue"

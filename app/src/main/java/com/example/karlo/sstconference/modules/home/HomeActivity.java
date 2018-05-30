@@ -31,8 +31,13 @@ import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
+import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
+import com.example.karlo.sstconference.utility.AlarmUtility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -75,6 +80,8 @@ public class HomeActivity extends AppCompatActivity
     private Unbinder mUnbinder;
     private ActionBarDrawerToggle mToggle;
 
+    private User mUser;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +96,11 @@ public class HomeActivity extends AppCompatActivity
     private void setUpObservers() {
         mViewModel.getUser().observe(this, user -> {
             if (user != null) {
+                mUser = user;
                 bindUser(user);
+                //if (!user.getSubscribedEvents().isEmpty()) {
+                //    setUpReminders(user.getSubscribedEvents());
+                //}
             }
         });
 
@@ -97,6 +108,7 @@ public class HomeActivity extends AppCompatActivity
             switch(status.getResponse()) {
                 case LOGOUT:
                     logOut();
+                    cancelReminders(mUser.getSubscribedEvents());
                     break;
                 case LOADING:
                     loadingData(status.getState());
@@ -106,6 +118,18 @@ public class HomeActivity extends AppCompatActivity
                     break;
             }
         });
+    }
+
+    private void cancelReminders(List<Integer> subscribedEvents) {
+        for (Integer integer : subscribedEvents) {
+            AlarmUtility.cancelAlarm(this, integer, EventAlarmReceiver.class, null);
+        }
+    }
+
+    private void setUpReminders(List<Integer> subscribedEvents) {
+        for (Integer integer : subscribedEvents) {
+            AlarmUtility.scheduleAlarm(this, Calendar.getInstance(), integer, EventAlarmReceiver.class);
+        }
     }
 
     private void setUpListeners() {

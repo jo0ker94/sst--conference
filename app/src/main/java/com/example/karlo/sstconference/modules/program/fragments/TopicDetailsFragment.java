@@ -29,9 +29,12 @@ import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
+import com.example.karlo.sstconference.utility.AlarmUtility;
 import com.example.karlo.sstconference.utility.DateUtility;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -79,9 +82,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_topic_details, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
         mTopic = getArguments().getParcelable(Constants.DATA);
-        if (mTopic.isTrack()) {
-            mViewModel.fetchTrack(mTopic.getParentId());
-        }
+        mViewModel.fetchTrack(mTopic.getParentId());
         return rootView;
     }
 
@@ -232,8 +233,12 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if (isChecked) {
                 mViewModel.subscribeToTopic(mTopic);
+                Date date = DateUtility.stringToIsoDate(mTrack.getStartDate());
+                AlarmUtility.scheduleAlarm(mActivity, DateUtility.getReminderCalendarFromDate(date), mTopic.getId(), EventAlarmReceiver.class);
+
             } else {
                 mViewModel.deleteTopicSubscription(mTopic);
+                AlarmUtility.cancelAlarm(mActivity, mTopic.getId(), EventAlarmReceiver.class, null);
             }
         });
     }

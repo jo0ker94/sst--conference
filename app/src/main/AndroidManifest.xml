@@ -65,6 +65,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDZn8584dM9fQo3mcQ7Mgj-1sy6umRpKWE"/>
 
+        <service android:name=".service.SendReminderService"/>
     </application>
 
 </manifest>

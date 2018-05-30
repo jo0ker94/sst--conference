@@ -23,7 +23,9 @@ import com.example.karlo.sstconference.adapters.TopicAdapter;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
+import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.ui.SearchBarView;
+import com.example.karlo.sstconference.utility.AlarmUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,6 +260,7 @@ public class SubscriptionActivity extends AppCompatActivity
             public void onDismissed(Snackbar snackbar, int event) {
                 if (!revert[0]) {
                     mViewModel.deleteTopicSubscription(topic);
+                    AlarmUtility.cancelAlarm(getApplicationContext(), topic.getId(), EventAlarmReceiver.class, null);
                 }
             }
 

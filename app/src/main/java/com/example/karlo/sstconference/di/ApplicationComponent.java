@@ -10,6 +10,7 @@ import com.example.karlo.sstconference.modules.program.fragments.BaseProgramFrag
 import com.example.karlo.sstconference.modules.search.SearchActivity;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.fragments.BaseMapFragment;
+import com.example.karlo.sstconference.service.SendReminderService;
 
 import javax.inject.Singleton;
 
@@ -22,13 +23,18 @@ import dagger.Component;
         StorageModule.class
 })
 public interface ApplicationComponent {
+
     void inject(App target);
+
     void inject(LoginActivity target);
     void inject(HomeActivity target);
     void inject(ProgramActivity target);
-    void inject(BaseProgramFragment target);
     void inject(SearchActivity target);
     void inject(SubscriptionActivity target);
-    void inject(BaseMapFragment target);
     void inject(CommitteeActivity target);
+
+    void inject(BaseProgramFragment target);
+    void inject(BaseMapFragment target);
+
+    void inject(SendReminderService target);
 }

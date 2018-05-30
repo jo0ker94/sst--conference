@@ -5,6 +5,7 @@ import com.example.karlo.sstconference.commons.Constants;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -57,6 +58,13 @@ public class DateUtility {
             e.printStackTrace();
         }
         return new Date();
+    }
+
+    public static Calendar getReminderCalendarFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, -15);
+        return calendar;
     }
 
     public static long getDateDifferenceInSeconds(Date firstDate, Date secondDate) {

@@ -16,24 +16,28 @@ public class AlarmUtility {
      * @param context
      * @param calendar
      * 	Defines the time at which the alarm should go off.
-     * @param guid
-     * 	Guid for this alarm, set as its action. Its content is not strictly defined.
+     * @param eventId
+     * 	Id for this alarm, set as its action. Its content is not strictly defined.
      * @param receiverClass
      * 	BroadcastReceiver subclass that will receive the alarm.
      */
-    public static void scheduleAlarm(Context context, Calendar calendar, String guid,
+    public static void scheduleAlarm(Context context,
+                                     Calendar calendar,
+                                     int eventId,
                                      Class<? extends BroadcastReceiver> receiverClass) {
         Intent intent = new Intent(context, receiverClass);
-        intent.setAction(guid);
+        intent.setAction(String.valueOf(eventId));
         PendingIntent operation = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC, calendar.getTimeInMillis(), operation);
     }
 
-    public static void cancelAlarm(Context context, String guid,
-                                   Class<? extends BroadcastReceiver> receiverClass, Bundle extras) {
+    public static void cancelAlarm(Context context,
+                                   int eventId,
+                                   Class<? extends BroadcastReceiver> receiverClass,
+                                   Bundle extras) {
         Intent intent = new Intent(context, receiverClass);
-        intent.setAction(guid);
+        intent.setAction(String.valueOf(eventId));
         if (extras != null) {
             intent.putExtras(extras);
         }
