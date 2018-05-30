@@ -73,9 +73,6 @@ public class LoginActivity extends AppCompatActivity implements
                 case SIGNUP:
                     onSignUp(status.getLoginRequest());
                     break;
-                case LOGIN:
-                    onLoggedIn();
-                    break;
                 case LOADING:
                     loadingData(status.getState());
                     break;
@@ -117,7 +114,6 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onLoggedIn() {
         Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show();
-        goToHome();
     }
 
     @Override

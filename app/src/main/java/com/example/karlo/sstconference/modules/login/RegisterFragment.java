@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.LoginRequest;
-import com.google.android.gms.common.SignInButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +35,7 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
     @BindView(R.id.signup_button)
     Button mSignUpButton;
     @BindView(R.id.google_sign_in)
-    SignInButton mSigninGoogleButton;
+    RelativeLayout mSigninGoogleButton;
     @BindView(R.id.login_text)
     TextView mLoginPage;
 
@@ -92,8 +92,6 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
         mName.getEditText().addTextChangedListener(textWatcher);
         mSigninGoogleButton.setOnClickListener(view -> mListener.signInWithGoogle());
         mLoginPage.setOnClickListener(view -> mListener.goToLogin());
-        TextView textView = (TextView) mSigninGoogleButton.getChildAt(0);
-        textView.setText(R.string.sign_in_with_google);
     }
 
     private boolean fieldsValid() {

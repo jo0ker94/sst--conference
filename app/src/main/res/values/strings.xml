@@ -118,6 +118,8 @@
     <string name="forgot_password_message">Forgot password?\nSubmit your email to reset your password.</string>
     <string name="submit">Submit</string>
     <string name="password_reset_instructions">Password reset instructions sent to email!</string>
+    <string name="email_not_found">Email not found!</string>
+    <string name="skip_login">Skip login</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

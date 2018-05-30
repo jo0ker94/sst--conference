@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.karlo.sstconference.R;
-import com.google.android.gms.common.SignInButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +33,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     @BindView(R.id.login_button)
     Button mLoginButton;
     @BindView(R.id.google_sign_in)
-    SignInButton mSigninGoogleButton;
+    RelativeLayout mSigninGoogleButton;
     @BindView(R.id.forgot_password)
     TextView mForgotPassword;
     @BindView(R.id.create_account)
@@ -91,8 +91,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         mPassword.getEditText().addTextChangedListener(textWatcher);
         mSigninGoogleButton.setOnClickListener(view -> mListener.signInWithGoogle());
         mCreateAccount.setOnClickListener(view -> mListener.goToRegister());
-        TextView textView = (TextView) mSigninGoogleButton.getChildAt(0);
-        textView.setText(R.string.sign_in_with_google);
     }
 
     private void showForgotPasswordDialog() {

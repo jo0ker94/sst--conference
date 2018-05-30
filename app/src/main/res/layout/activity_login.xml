@@ -72,13 +72,31 @@
 
         </LinearLayout>
 
-        <com.google.android.gms.common.SignInButton
+        <include layout="@layout/google_sign_in_button"
             android:id="@+id/google_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom"
+            android:layout_above="@+id/skip_login"
             android:layout_margin="10dp"
             android:layout_centerHorizontal="true"/>
+
+        <LinearLayout
+            android:id="@+id/skip_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@+id/bottom"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/skip_login_button"
+                android:layout_weight="1"
+                style="@style/SideBySideButtonOrange"
+                android:text="@string/skip_login"
+                android:layout_marginStart="5dp"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/bottom"

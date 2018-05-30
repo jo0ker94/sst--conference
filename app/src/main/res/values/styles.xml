@@ -94,6 +94,10 @@
         <item name="android:background">@drawable/clickable_white_button_round_corners</item>
     </style>
 
+    <style name="SideBySideButtonOrange" parent="SideBySideButtonBlue">
+        <item name="android:background">@drawable/clickable_orange_button_round_corners</item>
+    </style>
+
     <style name="ToolbarStyle" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>

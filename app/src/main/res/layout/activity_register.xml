@@ -73,7 +73,7 @@
 
         </LinearLayout>
 
-        <com.google.android.gms.common.SignInButton
+        <include layout="@layout/google_sign_in_button"
             android:id="@+id/google_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

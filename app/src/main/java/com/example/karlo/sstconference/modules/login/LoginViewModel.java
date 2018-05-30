@@ -133,7 +133,6 @@ public class LoginViewModel extends BaseViewModel {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             getUserDataFromServerAndSave(firebaseUser);
-                            mStatus.setValue(new Status(Status.Response.LOGIN, true));
                         } else {
                             mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
@@ -162,7 +161,7 @@ public class LoginViewModel extends BaseViewModel {
                 .insertOrUpdateUser(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> mStatus.setValue(Status.login(user))));
+                .subscribe(() -> mUser.setValue(user)));
     }
 
     private void pushUserToServer(FirebaseUser firebaseUser, String displayName) {
@@ -180,6 +179,8 @@ public class LoginViewModel extends BaseViewModel {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         mStatus.setValue(Status.error(R.string.password_reset_instructions));
+                    } else {
+                        mStatus.setValue(Status.error(R.string.email_not_found));
                     }
                 });
     }
