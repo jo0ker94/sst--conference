@@ -111,6 +111,13 @@
     <string name="no_comments">There are no comments on this event, be the first one to comment!</string>
     <string name="search_radius">Search radius</string>
     <string name="topic_starting_in_fifteen_minutes">Topic is starting in 15 minutes!</string>
+    <string name="no_email_error">Please enter email to proceed!</string>
+    <string name="no_password_error">Please enter password to proceed!</string>
+    <string name="no_name_error">Please enter name to proceed!</string>
+    <string name="forgot_your_password"><u>Forgot your password?</u></string>
+    <string name="forgot_password_message">Forgot password?\nSubmit your email to reset your password.</string>
+    <string name="submit">Submit</string>
+    <string name="password_reset_instructions">Password reset instructions sent to email!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

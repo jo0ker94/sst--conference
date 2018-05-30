@@ -1,96 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/BasicParentLayout">
+    style="@style/BasicParentLayout"
+    android:fillViewport="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/people"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/LoginTextInputLayoutStyle"
-            android:hint="Display Name">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/people"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"/>
 
-            <EditText
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInputLayoutStyle"
                 android:id="@+id/login_display_name"
-                style="@style/EditTextStyle"
-                android:drawableStart="@drawable/ic_user"
-                android:drawablePadding="10dp"
-                android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
+                android:hint="Display Name">
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/LoginTextInputLayoutStyle"
-            android:hint="@string/email_address">
+                <EditText
+                    style="@style/EditTextStyle"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="10dp"
+                    android:inputType="textEmailAddress"/>
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInputLayoutStyle"
                 android:id="@+id/login_email"
-                style="@style/EditTextStyle"
-                android:drawableStart="@drawable/ic_mail"
-                android:drawablePadding="10dp"
-                android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
+                android:hint="@string/email_address">
 
-        <android.support.design.widget.TextInputLayout
-            style="@style/LoginTextInputLayoutStyle"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/divider_grey"
-            android:hint="@string/password"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp">
+                <EditText
+                    style="@style/EditTextStyle"
+                    android:drawableStart="@drawable/ic_mail"
+                    android:drawablePadding="10dp"
+                    android:inputType="textEmailAddress"/>
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
+            <android.support.design.widget.TextInputLayout
+                style="@style/LoginTextInputLayoutStyle"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/divider_grey"
                 android:id="@+id/login_password"
-                style="@style/EditTextStyle"
-                android:drawableStart="@drawable/ic_password"
-                android:drawablePadding="10dp"
-                android:inputType="textPassword"/>
-        </android.support.design.widget.TextInputLayout>
+                android:hint="@string/password"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/login_text"
-            android:layout_width="wrap_content"
+                <EditText
+                    style="@style/EditTextStyle"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawablePadding="10dp"
+                    android:inputType="textPassword"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/login_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/already_have_account"
+                android:textColor="@color/divider_grey"
+                android:fontFamily="sans-serif"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/already_have_account"
-            android:textColor="@color/divider_grey"
-            android:fontFamily="sans-serif"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
+            android:layout_above="@+id/bottom"
+            android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"/>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/background_top_border"
+            android:padding="10dp">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"/>
+            <Button
+                android:id="@+id/signup_button"
+                android:layout_weight="1"
+                style="@style/SideBySideButtonWhite"
+                android:text="@string/register"
+                android:layout_marginEnd="5dp"/>
 
-    <LinearLayout
-        android:id="@+id/bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/background_top_border"
-        android:padding="10dp">
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/signup_button"
-            android:layout_weight="1"
-            style="@style/SideBySideButtonWhite"
-            android:text="@string/register"
-            android:layout_marginEnd="5dp"/>
+    </RelativeLayout>
 
-    </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>

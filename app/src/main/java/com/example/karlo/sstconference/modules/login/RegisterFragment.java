@@ -3,11 +3,13 @@ package com.example.karlo.sstconference.modules.login;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.karlo.sstconference.R;
@@ -25,11 +27,11 @@ import butterknife.Unbinder;
 public class RegisterFragment extends android.support.v4.app.Fragment {
 
     @BindView(R.id.login_display_name)
-    EditText mName;
+    TextInputLayout mName;
     @BindView(R.id.login_email)
-    EditText mEmail;
+    TextInputLayout mEmail;
     @BindView(R.id.login_password)
-    EditText mPassword;
+    TextInputLayout mPassword;
     @BindView(R.id.signup_button)
     Button mSignUpButton;
     @BindView(R.id.google_sign_in)
@@ -77,10 +79,70 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
     }
 
     private void setUpListeners() {
-        mSignUpButton.setOnClickListener(view -> mListener.onRegister(new LoginRequest(mEmail.getText().toString(), mPassword.getText().toString(), mName.getText().toString())));
+        mSignUpButton.setOnClickListener(view -> {
+            if (fieldsValid()) {
+                mListener.onRegister(new LoginRequest(mEmail.getEditText().getText().toString(),
+                        mPassword.getEditText().getText().toString(),
+                        mName.getEditText().getText().toString()));
+            }
+        });
+        TextWatcher textWatcher = new TextWatcher();
+        mEmail.getEditText().addTextChangedListener(textWatcher);
+        mPassword.getEditText().addTextChangedListener(textWatcher);
+        mName.getEditText().addTextChangedListener(textWatcher);
         mSigninGoogleButton.setOnClickListener(view -> mListener.signInWithGoogle());
         mLoginPage.setOnClickListener(view -> mListener.goToLogin());
         TextView textView = (TextView) mSigninGoogleButton.getChildAt(0);
         textView.setText(R.string.sign_in_with_google);
+    }
+
+    private boolean fieldsValid() {
+        boolean valid = true;
+        if (TextUtils.isEmpty(mName.getEditText().getText().toString())) {
+            mName.setError(getString(R.string.no_name_error));
+            valid = false;
+        } else {
+            mName.setError(null);
+        }
+        if (TextUtils.isEmpty(mEmail.getEditText().getText().toString())) {
+            mEmail.setError(getString(R.string.no_email_error));
+            valid = false;
+        } else {
+            mEmail.setError(null);
+        }
+        if (TextUtils.isEmpty(mPassword.getEditText().getText().toString())) {
+            mPassword.setError(getString(R.string.no_password_error));
+            valid = false;
+        } else {
+            mPassword.setError(null);
+        }
+        return valid;
+    }
+
+    private class TextWatcher implements android.text.TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (TextUtils.isEmpty(mEmail.getEditText().getText().toString())
+                    || TextUtils.isEmpty(mPassword.getEditText().getText().toString())
+                    || TextUtils.isEmpty(mName.getEditText().getText().toString())) {
+                mSignUpButton.setTextColor(getResources().getColor(R.color.select_comment_header_color));
+                mSignUpButton.setBackground(getResources().getDrawable(R.drawable.clickable_white_button_round_corners));
+            } else {
+                mSignUpButton.setTextColor(getResources().getColor(R.color.white));
+                mSignUpButton.setBackground(getResources().getDrawable(R.drawable.clickable_blue_button_round_corners));
+
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }

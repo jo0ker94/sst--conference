@@ -174,4 +174,13 @@ public class LoginViewModel extends BaseViewModel {
                         displayName != null ? displayName : firebaseUser.getDisplayName(),
                         firebaseUser.getPhotoUrl()));
     }
+
+    public void resetPassword(String email) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        mStatus.setValue(Status.error(R.string.password_reset_instructions));
+                    }
+                });
+    }
 }

@@ -174,6 +174,11 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void forgotPassword(String email) {
+        mViewModel.resetPassword(email);
+    }
+
+    @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
             super.onBackPressed();
