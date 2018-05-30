@@ -1,0 +1,83 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardUseCompatPadding="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Prof. Jon Doe"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/text_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/button_blue"
+                android:text="mail@email.com"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/text_facility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="University"
+                android:textSize="14sp"/>
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@color/button_blue"/>
+
+            <TextView
+                android:id="@+id/text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Title"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/text_abstract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="sans-serif"
+                android:gravity="start"
+                android:layout_gravity="start"
+                android:text="Abstract"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</android.support.v7.widget.CardView>

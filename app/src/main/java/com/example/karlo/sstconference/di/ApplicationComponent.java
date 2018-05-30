@@ -4,6 +4,7 @@ import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.modules.committee.CommitteeActivity;
 import com.example.karlo.sstconference.modules.gallery.GalleryActivity;
 import com.example.karlo.sstconference.modules.home.HomeActivity;
+import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteActivity;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.program.fragments.BaseProgramFragment;
@@ -32,6 +33,7 @@ public interface ApplicationComponent {
     void inject(SearchActivity target);
     void inject(SubscriptionActivity target);
     void inject(CommitteeActivity target);
+    void inject(KeynoteActivity target);
 
     void inject(BaseProgramFragment target);
     void inject(BaseMapFragment target);

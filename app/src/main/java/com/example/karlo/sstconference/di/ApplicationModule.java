@@ -8,6 +8,9 @@ import com.example.karlo.sstconference.database.LocalDatabase;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
 import com.example.karlo.sstconference.database.committee.LocalCommitteeDataSource;
+import com.example.karlo.sstconference.database.keynote.KeynoteDao;
+import com.example.karlo.sstconference.database.keynote.KeynoteDataSource;
+import com.example.karlo.sstconference.database.keynote.LocalKeynoteDataSource;
 import com.example.karlo.sstconference.database.program.LocalProgramDataSource;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.topic.LocalTopicDataSource;
@@ -81,6 +84,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public KeynoteDao providesKeynoteDao() {
+        return LocalDatabase.getDatabase(application).keynoteModel();
+    }
+
+    @Provides
+    @Singleton
     public UserDataSource providesLocalUserDataSource(UserDao userDao, UserApi userApi) {
         return new LocalUserDataSource(userDao, userApi);
     }
@@ -113,6 +122,12 @@ public class ApplicationModule {
     @Singleton
     public CommitteeDataSource providesLocalCommitteeDataSource(CommitteeDao committeeDao, Api api) {
         return new LocalCommitteeDataSource(committeeDao, api);
+    }
+
+    @Provides
+    @Singleton
+    public KeynoteDataSource providesLocalKeynoteDataSource(KeynoteDao keynoteDao, Api api) {
+        return new LocalKeynoteDataSource(keynoteDao, api);
     }
 
     @Provides

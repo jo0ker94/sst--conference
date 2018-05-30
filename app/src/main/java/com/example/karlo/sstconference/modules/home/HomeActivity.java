@@ -26,6 +26,7 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.modules.committee.CommitteeActivity;
 import com.example.karlo.sstconference.modules.gallery.GalleryActivity;
+import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteActivity;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
@@ -195,6 +196,9 @@ public class HomeActivity extends AppCompatActivity
                 return true;
             case R.id.venue:
                 goToVenue();
+                return true;
+            case R.id.speakers:
+                startActivity(new Intent(HomeActivity.this, KeynoteActivity.class));
                 return true;
             default:
                 return false;

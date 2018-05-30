@@ -2,6 +2,7 @@ package com.example.karlo.sstconference.servertasks.interfaces;
 
 import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
+import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
 import com.example.karlo.sstconference.models.program.Comment;
 
 import java.util.List;
@@ -30,5 +31,8 @@ public interface Api {
 
     @GET("2017/comments/{id}.json")
     Observable<List<Comment>> getComments(@Path("id") int id);
+
+    @GET("2017/keynoteSpeakers.json")
+    Observable<List<KeynoteSpeaker>> getKeynoteSpeakers();
 
 }
