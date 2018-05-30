@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,12 +39,15 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     TextView mForgotPassword;
     @BindView(R.id.create_account)
     TextView mCreateAccount;
+    @BindView(R.id.skip_login_button)
+    Button mSkipLogin;
 
     interface LoginInterface {
         void onLogin(String email, String password);
         void signInWithGoogle();
         void goToRegister();
         void forgotPassword(String email);
+        void skipLogin();
     }
 
     private LoginInterface mListener;
@@ -86,6 +90,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             }
         });
         mForgotPassword.setOnClickListener(view -> showForgotPasswordDialog());
+        mSkipLogin.setOnClickListener(view -> mListener.skipLogin());
+
         TextWatcher textWatcher = new TextWatcher();
         mEmail.getEditText().addTextChangedListener(textWatcher);
         mPassword.getEditText().addTextChangedListener(textWatcher);

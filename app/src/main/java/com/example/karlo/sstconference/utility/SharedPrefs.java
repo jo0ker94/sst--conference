@@ -22,6 +22,9 @@ public class SharedPrefs {
         return sSecureInstance;
     }
 
+
+    @Pref boolean guestMode;
+
     //
     //  Venue places
     //

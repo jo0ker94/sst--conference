@@ -1,9 +1,11 @@
 package com.example.karlo.sstconference.modules.program.fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,9 +31,13 @@ import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
+import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.DateUtility;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,9 +112,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
         inflater.inflate(R.menu.subscribe_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.subscribe);
         mSubscribedCheckBox = (CheckBox) menuItem.getActionView();
-        if (mUser != null) {
-            setUpBookmark();
-        }
+        setUpBookmark();
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -143,16 +147,27 @@ public class TopicDetailsFragment extends BaseProgramFragment
             } else {
                 mLecturers.setVisibility(View.GONE);
             }
-            if (mTopic.getId() != -1) {
-                mViewModel.fetchComments(mTopic.getId());
-                mCommentContainer.setVisibility(View.VISIBLE);
-            } else {
-                mCommentContainer.setVisibility(View.GONE);
-            }
+            mViewModel.fetchComments(mTopic.getId());
+
         } else if (mTopic != null && mTopic.isTrack() && mTrack != null) {
             mTitle.setText(mTopic.getTitle());
             mLecturers.setText(getTimeString());
-            mCommentContainer.setVisibility(View.GONE);
+            mViewModel.fetchComments(mTopic.getId());
+        }
+        mCommentContainer.setVisibility(AppConfig.USER_LOGGED_IN ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean userLoggedIn() {
+        if (AppConfig.USER_LOGGED_IN) {
+            return true;
+        } else {
+            Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                        EasyPrefs.putGuestMode(mActivity, false);
+                        startActivity(new Intent(mActivity, LoginActivity.class));
+                    })
+                    .show();
+            return false;
         }
     }
 
@@ -196,6 +211,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
         mViewModel.getComments().observe(this, comments -> {
             if (comments != null && !comments.isEmpty()) {
+                mComments.clear();
                 mComments.addAll(comments);
                 if (!mUsers.isEmpty()) {
                     showComments(this);
@@ -229,18 +245,22 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private void setUpBookmark() {
-        mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
-        mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked) {
-                mViewModel.subscribeToTopic(mTopic);
-                Date date = DateUtility.stringToIsoDate(mTrack.getStartDate());
-                AlarmUtility.scheduleAlarm(mActivity, DateUtility.getReminderCalendarFromDate(date), mTopic.getId(), EventAlarmReceiver.class);
+        if (mUser != null) {
+            mSubscribedCheckBox.setChecked(mUser.getSubscribedEvents().contains(mTopic.getId()));
+            mSubscribedCheckBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                if (isChecked) {
+                    mViewModel.subscribeToTopic(mTopic);
+                    Date date = DateUtility.stringToIsoDate(mTrack.getStartDate());
+                    AlarmUtility.scheduleAlarm(mActivity, DateUtility.getReminderCalendarFromDate(date), mTopic.getId(), EventAlarmReceiver.class);
 
-            } else {
-                mViewModel.deleteTopicSubscription(mTopic);
-                AlarmUtility.cancelAlarm(mActivity, mTopic.getId(), EventAlarmReceiver.class, null);
-            }
-        });
+                } else {
+                    mViewModel.deleteTopicSubscription(mTopic);
+                    AlarmUtility.cancelAlarm(mActivity, mTopic.getId(), EventAlarmReceiver.class, null);
+                }
+            });
+        } else {
+            mSubscribedCheckBox.setOnClickListener(view -> userLoggedIn());
+        }
     }
 
     public void showComments(CommentsAdapter.OnItemClickListener listener) {

@@ -4,9 +4,15 @@
     <group android:id="@+id/group1"
         android:checkableBehavior="single">
 
+        <item android:id="@+id/login"
+            android:icon="@drawable/ic_key"
+            android:title="@string/login"
+            android:visible="false"/>
+
         <item android:id="@+id/search"
             android:icon="@drawable/ic_search"
             android:title="@string/search"/>
+
     </group>
 
     <group android:id="@+id/group2"

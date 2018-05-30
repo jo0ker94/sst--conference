@@ -120,6 +120,7 @@
     <string name="password_reset_instructions">Password reset instructions sent to email!</string>
     <string name="email_not_found">Email not found!</string>
     <string name="skip_login">Skip login</string>
+    <string name="only_for_logged_in">Only for logged in users!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

@@ -17,9 +17,12 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.LoginRequest;
 import com.example.karlo.sstconference.modules.home.HomeActivity;
+import com.example.karlo.sstconference.utility.AppConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import javax.inject.Inject;
 
@@ -58,11 +61,17 @@ public class LoginActivity extends AppCompatActivity implements
         mPager.setAdapter(mPagerAdapter);
         setUpGoogleClient();
         setUpObservers();
+        if (EasyPrefs.getGuestMode(this)) {
+            AppConfig.USER_LOGGED_IN = false;
+            goToHome();
+        }
     }
 
     private void setUpObservers() {
         mViewModel.getUser().observe(this, user -> {
             if (user != null) {
+                AppConfig.USER_LOGGED_IN = true;
+                EasyPrefs.putGuestMode(this, false);
                 goToHome();
             } else {
                 findViewById(android.R.id.content).setVisibility(View.VISIBLE);
@@ -172,6 +181,13 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void forgotPassword(String email) {
         mViewModel.resetPassword(email);
+    }
+
+    @Override
+    public void skipLogin() {
+        EasyPrefs.putGuestMode(this, true);
+        AppConfig.USER_LOGGED_IN = false;
+        goToHome();
     }
 
     @Override

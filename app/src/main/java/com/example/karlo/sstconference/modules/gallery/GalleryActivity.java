@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +25,12 @@ import android.widget.Toast;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
+import com.example.karlo.sstconference.utility.AppConfig;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,13 +146,31 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
                 finish();
                 return true;
             case R.id.imageUpload:
-                chooseImage();
+                if (userLoggedIn()) {
+                    chooseImage();
+                }
                 return true;
             case R.id.takeImage:
-                takePicture();
+                if (userLoggedIn()) {
+                    takePicture();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private boolean userLoggedIn() {
+        if (AppConfig.USER_LOGGED_IN) {
+            return true;
+        } else {
+            Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                        EasyPrefs.putGuestMode(this, false);
+                        startActivity(new Intent(GalleryActivity.this, LoginActivity.class));
+                    })
+                    .show();
+            return false;
         }
     }
 

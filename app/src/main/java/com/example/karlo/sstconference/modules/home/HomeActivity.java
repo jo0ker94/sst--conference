@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
@@ -34,8 +35,11 @@ import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
+import com.example.karlo.sstconference.utility.AppConfig;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.Calendar;
 import java.util.List;
@@ -165,6 +169,12 @@ public class HomeActivity extends AppCompatActivity
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
+        if (!AppConfig.USER_LOGGED_IN) {
+            navigationView.getMenu().findItem(R.id.login).setVisible(true);
+            navigationView.getMenu().findItem(R.id.login).setChecked(false);
+
+            navigationView.getMenu().findItem(R.id.logout).setVisible(false);
+        }
     }
 
     @Override
@@ -200,6 +210,10 @@ public class HomeActivity extends AppCompatActivity
             case R.id.speakers:
                 startActivity(new Intent(HomeActivity.this, KeynoteActivity.class));
                 return true;
+            case R.id.login:
+                EasyPrefs.putGuestMode(this, false);
+                logOut();
+                return true;
             default:
                 return false;
         }
@@ -219,8 +233,17 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToSubscribed() {
-        Intent intent = new Intent(HomeActivity.this, SubscriptionActivity.class);
-        startActivity(intent);
+        if (AppConfig.USER_LOGGED_IN) {
+            Intent intent = new Intent(HomeActivity.this, SubscriptionActivity.class);
+            startActivity(intent);
+        } else {
+            Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                        EasyPrefs.putGuestMode(this, false);
+                        logOut();
+                    })
+                    .show();
+        }
     }
 
     @Override
