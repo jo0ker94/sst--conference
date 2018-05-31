@@ -3,30 +3,37 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="170dp"
     android:background="@drawable/background"
-    android:padding="20dp">
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/user_image"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:background="@drawable/ic_account"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="start"
+        android:src="@drawable/ic_account"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="3dp"/>
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:text="John Smith"
         android:textColor="@color/select_comment_header_color"
         android:textStyle="bold"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:text="johnsmith@mail.com"
-        android:textColor="@color/select_comment_header_color" />
+        android:textColor="@color/select_comment_header_color"
+        android:layout_marginStart="10dp"/>
 
 </LinearLayout>

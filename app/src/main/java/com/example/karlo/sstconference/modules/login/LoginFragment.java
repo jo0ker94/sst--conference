@@ -2,6 +2,8 @@ package com.example.karlo.sstconference.modules.login;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -91,6 +93,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         });
         mForgotPassword.setOnClickListener(view -> showForgotPasswordDialog());
         mSkipLogin.setOnClickListener(view -> mListener.skipLogin());
+        GradientDrawable drawable = (GradientDrawable) mSigninGoogleButton.getBackground();
+        drawable.setStroke(1, Color.WHITE);
 
         TextWatcher textWatcher = new TextWatcher();
         mEmail.getEditText().addTextChangedListener(textWatcher);

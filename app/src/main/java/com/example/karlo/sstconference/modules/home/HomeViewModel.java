@@ -15,8 +15,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.MaybeObserver;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class HomeViewModel extends BaseViewModel {
@@ -51,13 +53,31 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void fetchUser() {
-        mCompositeDisposable.add(mDataSource.getUser()
+        mDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(user -> {
-                    mUser = user;
-                    mUserData.setValue(user);
-                }));
+                .subscribe(new MaybeObserver<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(User user) {
+                        mUser = user;
+                        mUserData.setValue(user);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mUserData.setValue(null);
+                    }
+                });
     }
 
     public void fetchSubscribedTopics() {

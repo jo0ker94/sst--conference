@@ -1,6 +1,8 @@
 package com.example.karlo.sstconference.modules.login;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -92,6 +94,8 @@ public class RegisterFragment extends android.support.v4.app.Fragment {
         mName.getEditText().addTextChangedListener(textWatcher);
         mSigninGoogleButton.setOnClickListener(view -> mListener.signInWithGoogle());
         mLoginPage.setOnClickListener(view -> mListener.goToLogin());
+        GradientDrawable drawable = (GradientDrawable) mSigninGoogleButton.getBackground();
+        drawable.setStroke(1, Color.WHITE);
     }
 
     private boolean fieldsValid() {

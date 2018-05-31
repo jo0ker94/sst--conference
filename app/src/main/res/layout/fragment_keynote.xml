@@ -54,7 +54,7 @@
                 android:layout_margin="5dp"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:background="@color/button_blue"/>
+                android:src="@color/button_blue"/>
 
             <TextView
                 android:id="@+id/text_title"

@@ -1,14 +1,10 @@
 package com.example.karlo.sstconference.modules.home;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -36,7 +32,7 @@ import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
 import com.example.karlo.sstconference.utility.AppConfig;
-import com.squareup.picasso.Callback;
+import com.example.karlo.sstconference.utility.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import net.globulus.easyprefs.EasyPrefs;
@@ -106,6 +102,9 @@ public class HomeActivity extends AppCompatActivity
                 //if (!user.getSubscribedEvents().isEmpty()) {
                 //    setUpReminders(user.getSubscribedEvents());
                 //}
+            } else {
+                mUserName.setText(R.string.guest);
+                mUserEmail.setText(R.string.empty);
             }
         });
 
@@ -278,22 +277,8 @@ public class HomeActivity extends AppCompatActivity
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.ic_account)
-                .into(mUserImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap imageBitmap = ((BitmapDrawable) mUserImage.getDrawable()).getBitmap();
-                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                        imageDrawable.setCircular(true);
-                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                        mUserImage.setImageDrawable(imageDrawable);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        mUserImage.setImageResource(R.drawable.ic_account);
-
-                    }
-                });
+                .transform(new CircleTransformation())
+                .into(mUserImage);
     }
 
     @Override

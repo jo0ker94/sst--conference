@@ -23,7 +23,7 @@
             android:title="@string/committee"/>
 
         <item android:id="@+id/speakers"
-            android:icon="@drawable/ic_user"
+            android:icon="@drawable/ic_action_people"
             android:title="@string/keynote_speakers"/>
 
         <item android:id="@+id/events"
