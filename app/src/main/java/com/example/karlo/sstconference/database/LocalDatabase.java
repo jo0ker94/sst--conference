@@ -28,7 +28,7 @@ import com.example.karlo.sstconference.models.venue.Venue;
         CommitteeMember.class,
         ConferenceChair.class,
         KeynoteSpeaker.class
-}, version = 1, exportSchema = false)
+}, version = 4, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;

@@ -23,13 +23,24 @@ import java.util.List;
 
 public class ProgramCardFragment extends CardFragment {
 
-    private CardView mCardView;
     private RecyclerView mRecyclerView;
+
+
+    public static ProgramCardFragment newInstance(String[] dates, int position, OnArrowClick listener) {
+        ProgramCardFragment fragment = new ProgramCardFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.DATE, dates[position]);
+        args.putInt(Constants.POSITION, position);
+        args.putInt(Constants.SIZE, dates.length);
+        fragment.setArguments(args);
+        fragment.setListener(listener);
+        return fragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.viewpager_date, container, false);
+        View view = inflater.inflate(R.layout.fragment_program_card, container, false);
 
         mCardView = (CardView) view.findViewById(R.id.cardView);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -69,18 +80,5 @@ public class ProgramCardFragment extends CardFragment {
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(adapter);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        //if (getActivity() instanceof ProgramActivity) {
-        //    mListener = (OnArrowClick) getActivity();
-        //}
-    }
-
-    @Override
-    public CardView getCardView() {
-        return mCardView;
     }
 }

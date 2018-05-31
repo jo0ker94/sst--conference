@@ -34,6 +34,7 @@ import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
 import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.CircleTransformation;
+import com.example.karlo.sstconference.utility.NetworkUtility;
 import com.squareup.picasso.Picasso;
 
 import net.globulus.easyprefs.EasyPrefs;
@@ -232,8 +233,12 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToGallery() {
-        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
-        startActivity(intent);
+        if (NetworkUtility.hasNetworkConnection(this)) {
+            Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
+            startActivity(intent);
+        } else {
+            NetworkUtility.showNoNetworkDialog(this);
+        }
     }
 
     @Override

@@ -75,14 +75,7 @@ public class TrackListFragment extends BaseProgramFragment
         String[] dates = getResources().getStringArray(R.array.conference_dates);
         mCards = new ArrayList<>();
         for (int i = 0; i < dates.length; i++) {
-            ProgramCardFragment cardFragment = new ProgramCardFragment();
-            Bundle args = new Bundle();
-            args.putString(Constants.DATE, dates[i]);
-            args.putInt(Constants.POSITION, i);
-            args.putInt(Constants.SIZE, dates.length);
-            cardFragment.setArguments(args);
-            cardFragment.setListener(this);
-            mCards.add(cardFragment);
+            mCards.add(ProgramCardFragment.newInstance(dates, i, this));
         }
 
         mPagerAdapter = new CardFragmentPagerAdapter<>(getChildFragmentManager(), dpToPixels(2), mCards);

@@ -18,6 +18,7 @@ import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.LoginRequest;
 import com.example.karlo.sstconference.modules.home.HomeActivity;
 import com.example.karlo.sstconference.utility.AppConfig;
+import com.example.karlo.sstconference.utility.NetworkUtility;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -155,17 +156,29 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onLogin(String email, String password) {
-        mViewModel.login(new LoginRequest(email, password));
+        if (NetworkUtility.hasNetworkConnection(this)) {
+            mViewModel.login(new LoginRequest(email, password));
+        } else {
+            NetworkUtility.showNoNetworkDialog(this);
+        }
     }
 
     @Override
     public void onRegister(LoginRequest loginRequest) {
-        mViewModel.signup(loginRequest);
+        if (NetworkUtility.hasNetworkConnection(this)) {
+            mViewModel.signup(loginRequest);
+        } else {
+            NetworkUtility.showNoNetworkDialog(this);
+        }
     }
 
     @Override
     public void signInWithGoogle() {
-        signInGoogle();
+        if (NetworkUtility.hasNetworkConnection(this)) {
+            signInGoogle();
+        } else {
+            NetworkUtility.showNoNetworkDialog(this);
+        }
     }
 
     @Override

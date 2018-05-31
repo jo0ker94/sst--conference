@@ -123,6 +123,8 @@
     <string name="only_for_logged_in">Only for logged in users!</string>
     <string name="guest">Guest</string>
     <string name="empty" />
+    <string name="we_are_sorry">We\'re Sorry</string>
+    <string name="error_check_internet_connection">There was an error loading your content. Please check your internet connection and try again.</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

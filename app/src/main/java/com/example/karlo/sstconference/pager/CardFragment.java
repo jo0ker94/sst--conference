@@ -8,6 +8,8 @@ import com.example.karlo.sstconference.R;
 
 public abstract class CardFragment extends Fragment {
 
+    protected CardView mCardView;
+
     protected int mPosition = 0;
     protected OnArrowClick mListener;
 
@@ -19,7 +21,9 @@ public abstract class CardFragment extends Fragment {
         this.mListener = mListener;
     }
 
-    public abstract CardView getCardView();
+    protected CardView getCardView() {
+        return mCardView;
+    };
 
     public class ArrowClickListener implements View.OnClickListener {
 

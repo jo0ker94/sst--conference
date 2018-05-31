@@ -1,12 +1,14 @@
 package com.example.karlo.sstconference.models.committee;
 
 import android.arch.persistence.room.Entity;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity
-public class CommitteeMember {
+public class CommitteeMember implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -62,4 +64,36 @@ public class CommitteeMember {
     public void setType(String mType) {
         this.mType = mType;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.mId);
+        dest.writeString(this.mName);
+        dest.writeString(this.mFacility);
+        dest.writeString(this.mType);
+    }
+
+    protected CommitteeMember(Parcel in) {
+        this.mId = in.readInt();
+        this.mName = in.readString();
+        this.mFacility = in.readString();
+        this.mType = in.readString();
+    }
+
+    public static final Parcelable.Creator<CommitteeMember> CREATOR = new Parcelable.Creator<CommitteeMember>() {
+        @Override
+        public CommitteeMember createFromParcel(Parcel source) {
+            return new CommitteeMember(source);
+        }
+
+        @Override
+        public CommitteeMember[] newArray(int size) {
+            return new CommitteeMember[size];
+        }
+    };
 }

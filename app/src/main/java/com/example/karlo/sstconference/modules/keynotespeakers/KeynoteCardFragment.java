@@ -21,9 +21,7 @@ import com.squareup.picasso.Picasso;
 
 public class KeynoteCardFragment extends CardFragment {
 
-    private CardView mCardView;
     private RelativeLayout mArrowsContainer;
-
 
     public static KeynoteCardFragment newInstance(KeynoteSpeaker speaker, int position, OnArrowClick listener) {
         KeynoteCardFragment fragment = new KeynoteCardFragment();
@@ -114,10 +112,4 @@ public class KeynoteCardFragment extends CardFragment {
             return view.performClick();
         }
     }
-
-    @Override
-    public CardView getCardView() {
-        return mCardView;
-    }
-
 }
