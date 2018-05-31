@@ -19,7 +19,15 @@
     <color name="orange">#e5ae00</color>
 
     //
-    //  Venue Tab Colors
+    // Home Screen Items
+    //
+    <color name="blue">#4E74F7</color>
+    <color name="yellow">#EAE702</color>
+    <color name="violet">#94048B</color>
+    <color name="green">#10D809</color>
+
+    //
+    //  Venue Tab
     //
     <color name="conference_color">#ca70c2</color>
     <color name="region_color">#777fdf</color>

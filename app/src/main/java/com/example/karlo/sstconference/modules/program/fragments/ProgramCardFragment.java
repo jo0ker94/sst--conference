@@ -26,18 +26,6 @@ public class ProgramCardFragment extends CardFragment {
     private CardView mCardView;
     private RecyclerView mRecyclerView;
 
-    private OnArrowClick mListener;
-
-    private int mPosition;
-
-    interface OnArrowClick {
-        void onArrowClick(int position);
-    }
-
-    public void setListener(OnArrowClick mListener) {
-        this.mListener = mListener;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,20 +82,5 @@ public class ProgramCardFragment extends CardFragment {
     @Override
     public CardView getCardView() {
         return mCardView;
-    }
-
-    private class ArrowClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.left_arrow:
-                    mListener.onArrowClick(mPosition - 1);
-                    break;
-                case R.id.right_arrow:
-                    mListener.onArrowClick(mPosition + 1);
-                    break;
-            }
-        }
     }
 }

@@ -18,6 +18,10 @@
     <group android:id="@+id/group2"
         android:checkableBehavior="single">
 
+        <item android:id="@+id/conference_chairs"
+            android:icon="@drawable/ic_conference_chair"
+            android:title="@string/conference_chairs"/>
+
         <item android:id="@+id/committee"
             android:icon="@drawable/ic_user"
             android:title="@string/committee"/>
@@ -26,20 +30,28 @@
             android:icon="@drawable/ic_action_people"
             android:title="@string/keynote_speakers"/>
 
+    </group>
+
+    <group android:id="@+id/group3"
+        android:checkableBehavior="single">
         <item android:id="@+id/events"
             android:icon="@drawable/venue_conference"
             android:title="@string/conference_program"/>
 
-        <item android:id="@+id/venue"
-            android:icon="@drawable/ic_event"
-            android:title="@string/venue"/>
+        <item android:id="@+id/subscribed_events"
+            android:icon="@drawable/ic_action_bookmark"
+            android:title="@string/subscribed_events"/>
 
         <item android:id="@+id/images"
             android:icon="@drawable/ic_action_image"
             android:title="@string/gallery"/>
+
+        <item android:id="@+id/venue"
+            android:icon="@drawable/venue_region"
+            android:title="@string/venue"/>
     </group>
 
-    <group android:id="@+id/group3"
+    <group android:id="@+id/group4"
         android:checkableBehavior="single">
 
         <item android:id="@+id/settings"

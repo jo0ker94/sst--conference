@@ -12,6 +12,7 @@ import com.example.karlo.sstconference.adapters.TrackAdapter;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
+import com.example.karlo.sstconference.pager.CardFragment;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
 
@@ -22,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TrackListFragment extends BaseProgramFragment
-        implements ProgramCardFragment.OnArrowClick {
+        implements CardFragment.OnArrowClick {
 
     private static final String FIRST_DAY = "18T";
     private static final String SECOND_DAY = "19T";

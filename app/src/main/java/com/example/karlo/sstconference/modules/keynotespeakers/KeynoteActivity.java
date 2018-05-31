@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
+import com.example.karlo.sstconference.pager.CardFragment;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
 
@@ -24,7 +25,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class KeynoteActivity extends AppCompatActivity implements KeynoteView {
+public class KeynoteActivity extends AppCompatActivity
+        implements KeynoteView,
+        CardFragment.OnArrowClick {
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -39,6 +42,7 @@ public class KeynoteActivity extends AppCompatActivity implements KeynoteView {
     private Unbinder mUnbinder;
 
     private CardFragmentPagerAdapter mPagerAdapter;
+    private List<KeynoteCardFragment> mCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +64,19 @@ public class KeynoteActivity extends AppCompatActivity implements KeynoteView {
 
     @Override
     public void showKeynoteSpeakers(List<KeynoteSpeaker> keynoteSpeakers) {
-        List<KeynoteCardFragment> cards = new ArrayList<>();
+        mCards = new ArrayList<>();
+        int i = 0;
         for (KeynoteSpeaker speaker : keynoteSpeakers) {
-            cards.add(KeynoteCardFragment.newInstance(speaker));
+            mCards.add(KeynoteCardFragment.newInstance(speaker, i, this));
+            i++;
         }
-        mPagerAdapter = new CardFragmentPagerAdapter<>(getSupportFragmentManager(), dpToPixels(2), cards);
+        mPagerAdapter = new CardFragmentPagerAdapter<>(getSupportFragmentManager(), dpToPixels(2), mCards);
         ShadowTransformer fragmentCardShadowTransformer = new ShadowTransformer(mViewPager, mPagerAdapter);
         fragmentCardShadowTransformer.enableScaling(true);
 
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.addOnPageChangeListener(new ViewPagerPageChangeListener());
     }
 
     public float dpToPixels(int dp) {
@@ -108,5 +115,29 @@ public class KeynoteActivity extends AppCompatActivity implements KeynoteView {
     @Override
     public void showError(Throwable error) {
         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onArrowClick(int position) {
+        mViewPager.setCurrentItem(position, true);
+    }
+
+
+    private class ViewPagerPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mCards.get(mViewPager.getCurrentItem()).showArrows();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
     }
 }

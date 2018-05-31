@@ -213,9 +213,20 @@ public class HomeActivity extends AppCompatActivity
                 EasyPrefs.putGuestMode(this, false);
                 logOut();
                 return true;
+            case R.id.subscribed_events:
+                goToSubscribed();
+                return true;
+            case R.id.conference_chairs:
+                goToConferenceChairs();
+                return true;
             default:
                 return false;
         }
+    }
+
+    private void goToConferenceChairs() {
+        Intent intent = new Intent(HomeActivity.this, CommitteeActivity.class);
+        startActivity(intent);
     }
 
     @Override
