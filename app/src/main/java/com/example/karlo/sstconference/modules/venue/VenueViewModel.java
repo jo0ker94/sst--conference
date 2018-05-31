@@ -78,7 +78,7 @@ public class VenueViewModel extends BaseViewModel {
         Completable fetchPlaces = type == VenueFragment.VenueType.FOOD ?
                 fetchFoodSection(latLng) : fetchSightsSection(latLng);
 
-        fetchPlaces.delay(1500, TimeUnit.MILLISECONDS)
+        fetchPlaces.delay(2000, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {

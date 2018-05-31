@@ -2,6 +2,7 @@
 <resources>
     <attr name="hintText" format="string" />
     <attr name="titleText" format="string" />
+    <attr name="swChecked" format="boolean" />
     <attr name="expandedTitleText" format="string" />
 
     <declare-styleable name="SearchBarView">
@@ -15,6 +16,7 @@
 
     <declare-styleable name="SwitchButton">
         <attr name="titleText"/>
+        <attr name="swChecked"/>
     </declare-styleable>
 
 </resources>

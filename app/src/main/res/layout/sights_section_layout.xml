@@ -9,7 +9,8 @@
         android:id="@+id/museum_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleText="Museum"/>
+        app:titleText="Museum"
+        app:swChecked="true"/>
 
     <com.example.karlo.sstconference.ui.SwitchButton
         android:id="@+id/church_switch"

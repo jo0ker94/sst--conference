@@ -56,7 +56,6 @@ public class BaseMapFragment extends Fragment
     private boolean mHasLocation = false;
 
     protected MutableLiveData<Boolean> mLocationSet = new MutableLiveData<>();
-    protected MutableLiveData<Boolean> mMapReady = new MutableLiveData<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,7 +124,6 @@ public class BaseMapFragment extends Fragment
             return;
         }
         this.mGoogleMap.setMyLocationEnabled(true);
-        mMapReady.setValue(true);
     }
 
     @Override

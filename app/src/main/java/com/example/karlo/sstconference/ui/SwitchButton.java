@@ -46,10 +46,12 @@ public class SwitchButton extends RelativeLayout {
         mSwitchButton = findViewById(R.id.button_switch);
 
         String titleText = null;
+        boolean switched = false;
         if (attr != null) {
             TypedArray a = getContext().getTheme().obtainStyledAttributes(attr, R.styleable.SwitchButton, 0, 0);
             try {
                 titleText = a.getString(R.styleable.SwitchButton_titleText);
+                switched = a.getBoolean(R.styleable.SwitchButton_swChecked, false);
             } finally {
                 a.recycle();
             }
@@ -59,6 +61,7 @@ public class SwitchButton extends RelativeLayout {
             mTitleView.setText(titleText);
         }
 
+        mSwitchButton.setChecked(switched);
         mSwitchButton.getRootView().setOnClickListener(view -> mSwitchButton.performClick());
     }
 

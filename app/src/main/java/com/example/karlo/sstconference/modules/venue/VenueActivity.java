@@ -70,6 +70,7 @@ public class VenueActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         if(!hasLocationPermission()){
+            loadingData(true);
             requestPermission();
         }
     }
@@ -222,7 +223,10 @@ public class VenueActivity extends AppCompatActivity
                 if (grantResults.length > 0) {
                     if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
                         askForPermission();
+                    } else {
+                        setUpTab();
                     }
+                    loadingData(false);
                 }
         }
     }
