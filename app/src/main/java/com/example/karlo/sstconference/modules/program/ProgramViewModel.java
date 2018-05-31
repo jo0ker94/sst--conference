@@ -133,7 +133,7 @@ public class ProgramViewModel extends BaseViewModel {
                 ));
     }
 
-    public void fetchTracks() {
+    private void fetchTracks() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mProgramDataSource
                 .getTracks()
@@ -173,7 +173,7 @@ public class ProgramViewModel extends BaseViewModel {
                 ));
     }
 
-    public void fetchAllUsers() {
+    private void fetchAllUsers() {
         mCompositeDisposable.add(mUserDataSource
                 .getUsers()
                 .subscribeOn(Schedulers.io())
@@ -190,7 +190,7 @@ public class ProgramViewModel extends BaseViewModel {
                 ));
     }
 
-    public void fetchUser() {
+    private void fetchUser() {
         mCompositeDisposable.add(mUserDataSource
                 .getUser()
                 .subscribeOn(Schedulers.io())

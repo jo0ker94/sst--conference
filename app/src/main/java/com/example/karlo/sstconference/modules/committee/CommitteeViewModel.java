@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
-import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class CommitteeViewModel extends BaseViewModel {
     private MutableLiveData<List<CommitteeMember>> mSteering;
     private MutableLiveData<List<CommitteeMember>> mOrganizing;
     private MutableLiveData<List<CommitteeMember>> mProgram;
-    private MutableLiveData<List<ConferenceChair>> mChairs;
 
     private CommitteeDataSource mCommitteeDataSource;
 
@@ -53,15 +51,7 @@ public class CommitteeViewModel extends BaseViewModel {
         return mProgram;
     }
 
-    public MutableLiveData<List<ConferenceChair>> getChairs() {
-        if (mChairs == null) {
-            mChairs = new MutableLiveData<>();
-            fetchConferenceChairs();
-        }
-        return mChairs;
-    }
-
-    public void fetchSteeringCommittee() {
+    private void fetchSteeringCommittee() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(
                 mCommitteeDataSource.getSteeringCommittee()
@@ -78,7 +68,7 @@ public class CommitteeViewModel extends BaseViewModel {
         );
     }
 
-    public void fetchOrganizingCommittee() {
+    private void fetchOrganizingCommittee() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(
                 mCommitteeDataSource.getOrganizingCommittee()
@@ -95,7 +85,7 @@ public class CommitteeViewModel extends BaseViewModel {
         );
     }
 
-    public void fetchProgramCommittee() {
+    private void fetchProgramCommittee() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(
                 mCommitteeDataSource.getProgramCommittee()
@@ -103,23 +93,6 @@ public class CommitteeViewModel extends BaseViewModel {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(committeeMembers -> {
                                     mProgram.setValue(committeeMembers);
-                                    mStatus.setValue(Status.loading(false));
-                                },
-                                throwable -> {
-                                    mStatus.setValue(Status.error(throwable.getMessage()));
-                                    mStatus.setValue(Status.loading(false));
-                                })
-        );
-    }
-
-    public void fetchConferenceChairs() {
-        mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(
-                mCommitteeDataSource.getConferenceChairs()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(chairs -> {
-                                    mChairs.setValue(chairs);
                                     mStatus.setValue(Status.loading(false));
                                 },
                                 throwable -> {

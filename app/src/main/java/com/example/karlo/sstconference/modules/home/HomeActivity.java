@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.models.User;
+import com.example.karlo.sstconference.modules.chairs.ChairsActivity;
 import com.example.karlo.sstconference.modules.committee.CommitteeActivity;
 import com.example.karlo.sstconference.modules.gallery.GalleryActivity;
 import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteActivity;
@@ -225,7 +226,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void goToConferenceChairs() {
-        Intent intent = new Intent(HomeActivity.this, CommitteeActivity.class);
+        Intent intent = new Intent(HomeActivity.this, ChairsActivity.class);
         startActivity(intent);
     }
 

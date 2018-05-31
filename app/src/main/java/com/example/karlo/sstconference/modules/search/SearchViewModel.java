@@ -43,7 +43,7 @@ public class SearchViewModel extends BaseViewModel {
         return mTopics;
     }
 
-    public void fetchTracks() {
+    private void fetchTracks() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mDataSource
                 .getTracks()
@@ -61,7 +61,7 @@ public class SearchViewModel extends BaseViewModel {
                 ));
     }
 
-    public void fetchTopics() {
+    private void fetchTopics() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mDataSource
                 .getTopics()

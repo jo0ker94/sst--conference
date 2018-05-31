@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.example.karlo.sstconference.database.chairs.ChairsDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.keynote.KeynoteDao;
 import com.example.karlo.sstconference.database.topic.TopicDao;
@@ -58,6 +59,8 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract VenueDao venueModel();
 
     public abstract CommitteeDao committeeModel();
+
+    public abstract ChairsDao chairsModel();
 
     public abstract KeynoteDao keynoteModel();
 }

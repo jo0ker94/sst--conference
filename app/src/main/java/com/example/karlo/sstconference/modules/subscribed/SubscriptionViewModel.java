@@ -49,7 +49,7 @@ public class SubscriptionViewModel extends BaseViewModel {
         return mTopics;
     }
 
-    public void fetchSubscribedTopics() {
+    private void fetchSubscribedTopics() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(mDataSource
                 .getTopics()

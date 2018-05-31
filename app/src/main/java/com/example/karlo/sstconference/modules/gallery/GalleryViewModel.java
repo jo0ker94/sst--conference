@@ -44,7 +44,7 @@ public class GalleryViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void downloadImages() {
+    private void downloadImages() {
         mCompositeDisposable.add(RetrofitUtil.getRetrofit(Constants.FIREBASE_BASE_URL)
                 .create(Api.class)
                 .getImages()

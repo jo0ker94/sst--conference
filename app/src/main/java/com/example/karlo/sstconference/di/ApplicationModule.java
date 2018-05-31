@@ -5,6 +5,9 @@ import android.content.Context;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.database.LocalDatabase;
+import com.example.karlo.sstconference.database.chairs.ChairsDao;
+import com.example.karlo.sstconference.database.chairs.ChairsDataSource;
+import com.example.karlo.sstconference.database.chairs.LocalChairsDataSource;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
 import com.example.karlo.sstconference.database.committee.LocalCommitteeDataSource;
@@ -84,6 +87,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public ChairsDao providesChairsDao() {
+        return LocalDatabase.getDatabase(application).chairsModel();
+    }
+
+    @Provides
+    @Singleton
     public KeynoteDao providesKeynoteDao() {
         return LocalDatabase.getDatabase(application).keynoteModel();
     }
@@ -123,6 +132,13 @@ public class ApplicationModule {
     public CommitteeDataSource providesLocalCommitteeDataSource(CommitteeDao committeeDao, Api api) {
         return new LocalCommitteeDataSource(committeeDao, api);
     }
+
+    @Provides
+    @Singleton
+    public ChairsDataSource providesLocalChairsDataSource(ChairsDao chairsDao, Api api) {
+        return new LocalChairsDataSource(chairsDao, api);
+    }
+
 
     @Provides
     @Singleton

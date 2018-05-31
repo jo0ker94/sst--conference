@@ -42,7 +42,7 @@ public class LoginViewModel extends BaseViewModel {
         this.mDataSource = userDataSource;
     }
 
-    public void checkIfLoggedIn() {
+    private void checkIfLoggedIn() {
         mDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

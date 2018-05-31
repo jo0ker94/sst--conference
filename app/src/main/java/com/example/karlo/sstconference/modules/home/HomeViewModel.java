@@ -52,7 +52,7 @@ public class HomeViewModel extends BaseViewModel {
         return mTopics;
     }
 
-    public void fetchUser() {
+    private void fetchUser() {
         mDataSource.getUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
