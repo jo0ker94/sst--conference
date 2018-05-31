@@ -11,7 +11,6 @@ import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
-import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +37,11 @@ public class ProgramViewModel extends BaseViewModel {
     private User mUser;
     private List<Comment> mComments;
 
-    private Api mApi;
     private UserDataSource mUserDataSource;
     private ProgramDataSource mProgramDataSource;
 
     @Inject
-    public ProgramViewModel(Api api, UserDataSource userDataSource, ProgramDataSource programDataSource) {
-        this.mApi = api;
+    public ProgramViewModel(UserDataSource userDataSource, ProgramDataSource programDataSource) {
         this.mUserDataSource = userDataSource;
         this.mProgramDataSource = programDataSource;
     }
@@ -87,10 +84,10 @@ public class ProgramViewModel extends BaseViewModel {
         return mUsers;
     }
 
-    public void fetchComments(int commentID) {
+    public void fetchComments(int parentId) {
         mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mApi
-                .getComments(commentID)
+        mCompositeDisposable.add(mProgramDataSource
+                .getComments(parentId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(comments -> {
@@ -248,6 +245,8 @@ public class ProgramViewModel extends BaseViewModel {
             DatabaseHelper.getCommentsReference()
                     .child(String.valueOf(comment.getParentId()))
                     .setValue(mComments);
+
+            mProgramDataSource.deleteComment(comment);
         });
     }
 
@@ -255,30 +254,13 @@ public class ProgramViewModel extends BaseViewModel {
         if (mComments == null) {
             mComments = new ArrayList<>();
         }
-        return Completable.fromAction(() -> DatabaseHelper.getCommentsReference()
-                .child(String.valueOf(comment.getParentId()))
-                .child(String.valueOf(mComments.size()))
-                .setValue(comment));
-    }
+        return Completable.fromAction(() -> {
+            DatabaseHelper.getCommentsReference()
+                    .child(String.valueOf(comment.getParentId()))
+                    .child(String.valueOf(mComments.size()))
+                    .setValue(comment);
 
-    public class Response {
-        private List<User> users;
-        private List<Comment> comments;
-
-        public List<User> getUsers() {
-            return users;
-        }
-
-        public void setUsers(List<User> users) {
-            this.users = users;
-        }
-
-        public List<Comment> getComments() {
-            return comments;
-        }
-
-        public void setComments(List<Comment> comments) {
-            this.comments = comments;
-        }
+            mProgramDataSource.insertOrUpdateComment(comment);
+        });
     }
 }

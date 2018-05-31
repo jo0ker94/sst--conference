@@ -29,9 +29,6 @@ public interface Api {
     @GET("2017/images.json")
     Observable<List<String>> getImages();
 
-    @GET("2017/comments/{id}.json")
-    Observable<List<Comment>> getComments(@Path("id") int id);
-
     @GET("2017/keynoteSpeakers.json")
     Observable<List<KeynoteSpeaker>> getKeynoteSpeakers();
 

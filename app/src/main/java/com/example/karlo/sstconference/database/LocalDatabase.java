@@ -6,6 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.karlo.sstconference.database.chairs.ChairsDao;
+import com.example.karlo.sstconference.database.comment.CommentDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.keynote.KeynoteDao;
 import com.example.karlo.sstconference.database.topic.TopicDao;
@@ -16,6 +17,7 @@ import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
+import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.models.venue.Venue;
@@ -24,11 +26,12 @@ import com.example.karlo.sstconference.models.venue.Venue;
         User.class,
         Topic.class,
         Track.class,
+        Comment.class,
         Venue.class,
         CommitteeMember.class,
         ConferenceChair.class,
         KeynoteSpeaker.class
-}, version = 4, exportSchema = false)
+}, version = 1, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
     private static LocalDatabase INSTANCE;
@@ -55,6 +58,8 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract TopicDao topicModel();
 
     public abstract TrackDao trackModel();
+
+    public abstract CommentDao commentModel();
 
     public abstract VenueDao venueModel();
 

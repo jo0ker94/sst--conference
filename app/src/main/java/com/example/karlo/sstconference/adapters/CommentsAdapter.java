@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.karlo.sstconference.R;
-import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.utility.DateUtility;
 
@@ -20,7 +19,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     private Activity mActivity;
 
     private List<Comment> mItems;
-    private List<User> mUsers;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -28,10 +26,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         void onItemLongClick(View view, int position);
     }
 
-    public CommentsAdapter(Activity activity, List<Comment> items, List<User> users, OnItemClickListener listener) {
+    public CommentsAdapter(Activity activity, List<Comment> items, OnItemClickListener listener) {
         mActivity = activity;
         mItems = items;
-        mUsers = users;
         mListener = listener;
     }
 
@@ -46,7 +43,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         Comment comment = this.mItems.get(position);
         holder.mTitle.setText(comment.getText());
         holder.mTimestamp.setText(getPostedTime(comment.getTimestamp()));
-        holder.mUser.setText(getUserName(comment.getUserId()));
+        holder.mUser.setText(comment.getAuthor());
         holder.mTitle.getRootView().setOnClickListener(view -> mListener.onItemClick(holder.itemView, position));
         holder.mTitle.getRootView().setOnLongClickListener(view -> {
             mListener.onItemLongClick(holder.itemView, position);
@@ -74,17 +71,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         } else {
             return timeString;
         }
-    }
-
-    private String getUserName(String userId) {
-        if (mUsers != null && !mUsers.isEmpty()) {
-            for (User user : mUsers) {
-                if (user.getUserId().equals(userId)) {
-                    return user.getDisplayName();
-                }
-            }
-        }
-        return "";
     }
 
     @Override

@@ -67,7 +67,6 @@ public class TopicDetailsFragment extends BaseProgramFragment
     @BindView(R.id.no_comments)
     TextView mNoComments;
 
-    private List<User> mUsers = new ArrayList<>();
     private List<Comment> mComments = new ArrayList<>();
 
     private User mUser;
@@ -124,6 +123,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
                         mCommentEditText.getText().toString(),
                         mUser.getUserId(),
                         mTopic.getId(),
+                        mUser.getDisplayName(),
                         DateUtility.getNowInIsoFormat()
                 );
                 mCompositeDisposable.add(mViewModel.addComment(comment)
@@ -200,22 +200,11 @@ public class TopicDetailsFragment extends BaseProgramFragment
             }
         });
 
-        mViewModel.getUsers().observe(this, users -> {
-            if (users != null && !users.isEmpty()) {
-                mUsers = users;
-                if (!mComments.isEmpty()) {
-                    showComments(this);
-                }
-            }
-        });
-
         mViewModel.getComments().observe(this, comments -> {
             if (comments != null && !comments.isEmpty()) {
                 mComments.clear();
                 mComments.addAll(comments);
-                if (!mUsers.isEmpty()) {
-                    showComments(this);
-                }
+                showComments(this);
             }
         });
 
@@ -267,7 +256,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mRecyclerView.setVisibility(View.VISIBLE);
         mNoComments.setVisibility(View.GONE);
         if (mAdapter == null) {
-            mAdapter = new CommentsAdapter(mActivity, mComments, mUsers, listener);
+            mAdapter = new CommentsAdapter(mActivity, mComments, listener);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));

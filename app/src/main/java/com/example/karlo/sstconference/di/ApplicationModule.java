@@ -8,6 +8,9 @@ import com.example.karlo.sstconference.database.LocalDatabase;
 import com.example.karlo.sstconference.database.chairs.ChairsDao;
 import com.example.karlo.sstconference.database.chairs.ChairsDataSource;
 import com.example.karlo.sstconference.database.chairs.LocalChairsDataSource;
+import com.example.karlo.sstconference.database.comment.CommentDao;
+import com.example.karlo.sstconference.database.comment.CommentDataSource;
+import com.example.karlo.sstconference.database.comment.LocalCommentDataSource;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
 import com.example.karlo.sstconference.database.committee.LocalCommitteeDataSource;
@@ -75,6 +78,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public CommentDao providesCommentDao() {
+        return LocalDatabase.getDatabase(application).commentModel();
+    }
+
+    @Provides
+    @Singleton
     public VenueDao providesVenueDao() {
         return LocalDatabase.getDatabase(application).venueModel();
     }
@@ -117,8 +126,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ProgramDataSource providesLocalProgramDataSource(TopicDataSource topicDataSource, TrackDataSource trackDataSource) {
-        return new LocalProgramDataSource(topicDataSource, trackDataSource);
+    public CommentDataSource providesLocalCommentDataSource(CommentDao commentDao, ProgramApi programApi) {
+        return new LocalCommentDataSource(commentDao, programApi);
+    }
+
+    @Provides
+    @Singleton
+    public ProgramDataSource providesLocalProgramDataSource(TopicDataSource topicDataSource, TrackDataSource trackDataSource, CommentDataSource commentDataSource) {
+        return new LocalProgramDataSource(topicDataSource, trackDataSource, commentDataSource);
     }
 
     @Provides

@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.database.program;
 
+import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
 
@@ -20,4 +21,10 @@ public interface ProgramDataSource {
     void insertOrUpdateTrack(Track track);
 
     void deleteTrack(Track track);
+
+    Observable<List<Comment>> getComments(int parentId);
+
+    void insertOrUpdateComment(Comment comment);
+
+    void deleteComment(Comment comment);
 }
