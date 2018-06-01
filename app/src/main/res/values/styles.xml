@@ -16,7 +16,7 @@
     </style>
 
     <style name="NoActionBarTheme.Launcher">
-        <item name="android:windowBackground">@drawable/sst2017_image</item>
+        <item name="android:windowBackground">@drawable/sst2017_welcome</item>
     </style>
 
     <style name="HorizontalDivider">

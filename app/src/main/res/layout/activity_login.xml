@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/BasicParentLayout"
+    android:id="@+id/fragment_login"
     android:fillViewport="true">
 
     <RelativeLayout
@@ -28,6 +29,7 @@
 
                 <EditText
                     style="@style/EditTextStyle"
+                    android:id="@+id/login_email_et"
                     android:drawableStart="@drawable/ic_mail"
                     android:drawablePadding="10dp"
                     android:inputType="textEmailAddress"/>
@@ -44,6 +46,7 @@
 
                 <EditText
                     style="@style/EditTextStyle"
+                    android:id="@+id/login_password_et"
                     android:drawableStart="@drawable/ic_password"
                     android:drawablePadding="10dp"
                     android:inputType="textPassword"/>

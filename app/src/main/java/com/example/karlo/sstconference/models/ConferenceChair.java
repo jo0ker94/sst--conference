@@ -37,6 +37,16 @@ public class ConferenceChair {
     @Expose
     private String phoneNumber;
 
+    public ConferenceChair(@NonNull int id, String chairTitle, String email, String facility, String imageUrl, String name, String phoneNumber) {
+        this.id = id;
+        this.chairTitle = chairTitle;
+        this.email = email;
+        this.facility = facility;
+        this.imageUrl = imageUrl;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getChairTitle() {
         return chairTitle;
     }

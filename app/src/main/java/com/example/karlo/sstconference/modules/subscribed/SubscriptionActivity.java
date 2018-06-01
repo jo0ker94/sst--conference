@@ -40,7 +40,8 @@ public class SubscriptionActivity extends AppCompatActivity
         implements SubscriptionView,
         SearchBarView.SearchBarListener,
         TopicAdapter.OnItemClickListener,
-        SearchBarView.TextChangedListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+        SearchBarView.TextChangedListener,
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     @BindView(R.id.searchListView)
     RecyclerView mRecyclerView;

@@ -33,7 +33,7 @@ public class ChairsViewModel extends BaseViewModel {
         return mChairs;
     }
 
-    private void fetchConferenceChairs() {
+    public void fetchConferenceChairs() {
         mStatus.setValue(Status.loading(true));
         mCompositeDisposable.add(
                 mDataSource.getConferenceChairs()
