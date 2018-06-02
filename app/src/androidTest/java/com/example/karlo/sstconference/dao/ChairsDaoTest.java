@@ -1,23 +1,17 @@
 package com.example.karlo.sstconference.dao;
 
-import android.support.test.runner.AndroidJUnit4;
-
 import com.example.karlo.sstconference.database.chairs.ChairsDao;
 import com.example.karlo.sstconference.models.ConferenceChair;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
 public class ChairsDaoTest extends BaseDaoTest {
-
-    private static String FORMAT = "%s_%d";
 
     private static String NAME = "Some Name";
     private static String TITLE = "Title";
@@ -108,9 +102,4 @@ public class ChairsDaoTest extends BaseDaoTest {
     private ConferenceChair getConferenceChair() {
         return new ConferenceChair(0, TITLE, MAIL, FACILITY, IMAGE, NAME, NUMBER);
     }
-
-    private String getStringFormat(String field, int position) {
-        return String.format(FORMAT, field, position);
-    }
-
 }

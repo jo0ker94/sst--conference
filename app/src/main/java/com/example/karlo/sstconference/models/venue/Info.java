@@ -30,6 +30,18 @@ public class Info {
     @Expose
     private VenueMarker marker = null;
 
+    public Info() {
+    }
+
+    public Info(Integer id, String description, String imageUrl, String link, String title, VenueMarker marker) {
+        this.id = id;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.link = link;
+        this.title = title;
+        this.marker = marker;
+    }
+
     public String getDescription() {
         return description;
     }

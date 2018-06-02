@@ -21,6 +21,16 @@ public class VenueMarker {
     @Expose
     String snippet;
 
+    public VenueMarker() {
+    }
+
+    public VenueMarker(double lat, double lng, String title, String snippet) {
+        this.lat = lat;
+        this.lng = lng;
+        this.title = title;
+        this.snippet = snippet;
+    }
+
     public double getLat() {
         return lat;
     }

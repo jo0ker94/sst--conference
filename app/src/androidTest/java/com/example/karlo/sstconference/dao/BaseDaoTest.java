@@ -10,6 +10,8 @@ import org.junit.Before;
 
 public class BaseDaoTest {
 
+    private static String FORMAT = "%s_%d";
+
     protected LocalDatabase localDatabase;
 
     @Before
@@ -20,5 +22,9 @@ public class BaseDaoTest {
     @After
     public void closeDb() {
         localDatabase.close();
+    }
+
+    protected String getStringFormat(String field, int position) {
+        return String.format(FORMAT, field, position);
     }
 }
