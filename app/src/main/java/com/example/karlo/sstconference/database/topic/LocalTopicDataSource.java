@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -13,6 +15,7 @@ public class LocalTopicDataSource implements TopicDataSource {
     private TopicDao mTopicDao;
     private ProgramApi mApi;
 
+    @Inject
     public LocalTopicDataSource(TopicDao mTopicDao, ProgramApi mApi) {
         this.mTopicDao = mTopicDao;
         this.mApi = mApi;

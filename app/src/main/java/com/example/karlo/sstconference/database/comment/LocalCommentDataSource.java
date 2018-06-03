@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -13,6 +15,7 @@ public class LocalCommentDataSource implements CommentDataSource {
     private CommentDao mDao;
     private ProgramApi mApi;
 
+    @Inject
     public LocalCommentDataSource(CommentDao dao, ProgramApi api) {
         this.mDao = dao;
         this.mApi = api;

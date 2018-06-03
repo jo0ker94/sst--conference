@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -13,6 +15,7 @@ public class LocalKeynoteDataSource implements KeynoteDataSource {
     private Api mApi;
     private KeynoteDao mDao;
 
+    @Inject
     public LocalKeynoteDataSource(KeynoteDao dao, Api api) {
         this.mDao = dao;
         this.mApi = api;

@@ -6,6 +6,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -14,6 +16,7 @@ public class LocalCommitteeDataSource implements CommitteeDataSource {
     private Api mApi;
     private CommitteeDao mDao;
 
+    @Inject
     public LocalCommitteeDataSource(CommitteeDao mDao, Api mApi) {
         this.mApi = mApi;
         this.mDao = mDao;

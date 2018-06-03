@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -13,6 +15,7 @@ public class LocalTrackDataSource implements TrackDataSource {
     private TrackDao mTrackDao;
     private ProgramApi mApi;
 
+    @Inject
     public LocalTrackDataSource(TrackDao mTrackDao, ProgramApi mApi) {
         this.mTrackDao = mTrackDao;
         this.mApi = mApi;

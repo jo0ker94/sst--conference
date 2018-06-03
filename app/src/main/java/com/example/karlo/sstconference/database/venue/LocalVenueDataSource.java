@@ -3,6 +3,8 @@ package com.example.karlo.sstconference.database.venue;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.servertasks.interfaces.VenueApi;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -11,6 +13,7 @@ public class LocalVenueDataSource implements VenueDataSource {
     private VenueDao mVenueDao;
     private VenueApi mApi;
 
+    @Inject
     public LocalVenueDataSource(VenueDao mVenueDao, VenueApi mApi) {
         this.mVenueDao = mVenueDao;
         this.mApi = mApi;
