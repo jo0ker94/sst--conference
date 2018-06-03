@@ -23,17 +23,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
+import com.example.karlo.sstconference.servertasks.interfaces.Api;
 import com.example.karlo.sstconference.utility.AppConfig;
 
 import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +57,9 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     @BindView(R.id.emptyData)
     TextView mEmptyData;
 
+    @Inject
+    Api mApi;
+
     private GalleryViewModel mViewModel;
     private GalleryFeedAdapter mAdapter;
     private ProgressDialog mProgressDialog;
@@ -68,8 +75,11 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images);
         mUnbinder = ButterKnife.bind(this);
+        ((App) getApplication()).getComponent().inject(this);
         setUpToolbar();
+
         mViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
+        mViewModel.setApi(mApi);
         mProgressDialog = new ProgressDialog(this);
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);

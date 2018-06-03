@@ -13,12 +13,6 @@ import static junit.framework.Assert.assertEquals;
 
 public class CommentDaoTest extends BaseDaoTest {
 
-    private static String TEXT = "This is comment.";
-    private static String USER_ID = "user_id";
-    private static int PARENT_ID = 12;
-    private static String AUTHOR = "Mike Doe";
-    private static String TIMESTAMP = "12/12/2012";
-
     private CommentDao mDao;
 
     @Before
@@ -93,9 +87,5 @@ public class CommentDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(comments -> assertEquals(comments.isEmpty(), true));
-    }
-
-    private Comment getComment() {
-        return new Comment(0, TEXT, USER_ID, PARENT_ID, AUTHOR, TIMESTAMP);
     }
 }

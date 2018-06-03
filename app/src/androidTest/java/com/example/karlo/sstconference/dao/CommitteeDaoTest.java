@@ -13,12 +13,6 @@ import static junit.framework.Assert.assertEquals;
 
 public class CommitteeDaoTest extends BaseDaoTest {
 
-    private static String NAME = "Some Name";
-    private static String FACILITY = "Some Facility";
-    private static String STEERING = "steering";
-    private static String PROGRAM = "program";
-    private static String ORGANIZING = "organizing";
-
     private CommitteeDao mDao;
 
     @Before
@@ -123,17 +117,5 @@ public class CommitteeDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(committeeMembers -> assertEquals(committeeMembers.isEmpty(), true));
-    }
-
-    private CommitteeMember getSteeringCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, STEERING);
-    }
-
-    private CommitteeMember getProgramCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, PROGRAM);
-    }
-
-    private CommitteeMember getOrganizingCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, ORGANIZING);
     }
 }

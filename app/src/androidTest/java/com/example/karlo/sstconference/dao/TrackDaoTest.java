@@ -1,7 +1,6 @@
 package com.example.karlo.sstconference.dao;
 
 import com.example.karlo.sstconference.database.track.TrackDao;
-import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Track;
 
 import org.junit.Before;
@@ -13,13 +12,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 public class TrackDaoTest extends BaseDaoTest {
-
-    private static String TITLE = "Title";
-    private static String START_DATE = "12.12.2012";
-    private static String END_DATE = "15.12.2012";
-    private static int ROOM = 0;
-
-    private static String NAME = "Some Name";
 
     private TrackDao mDao;
 
@@ -54,7 +46,7 @@ public class TrackDaoTest extends BaseDaoTest {
                     getStringFormat(END_DATE, i),
                     i,
                     getStringFormat(TITLE, i),
-                    getListOfChairs());
+                    getListOfPeople());
 
             trackList.add(track);
             mDao.insertTrack(track);
@@ -98,17 +90,5 @@ public class TrackDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(tracks -> assertEquals(tracks.isEmpty(), true));
-    }
-
-    private Track getTrack() {
-        return new Track(0, START_DATE, END_DATE, ROOM, TITLE, getListOfChairs());
-    }
-
-    private List<Person> getListOfChairs() {
-        List<Person> people = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            people.add(new Person(getStringFormat(NAME, i)));
-        }
-        return people;
     }
 }

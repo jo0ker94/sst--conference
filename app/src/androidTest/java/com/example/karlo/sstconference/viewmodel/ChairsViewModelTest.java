@@ -30,7 +30,7 @@ public class ChairsViewModelTest extends BaseViewModelTest {
         List<ConferenceChair> conferenceChairs = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
-            conferenceChairs.add(new ConferenceChair(i, "title", "mail", "facility", "img", "name", "number"));
+            conferenceChairs.add(new ConferenceChair(i, TITLE, MAIL, FACILITY, IMAGE, NAME, NUMBER));
             //conferenceChairs.add(mock(ConferenceChair.class));
         }
         Observer observer = mock(Observer.class);
@@ -38,6 +38,8 @@ public class ChairsViewModelTest extends BaseViewModelTest {
         when(dataSource.getConferenceChairs()).thenReturn(io.reactivex.Observable.just(conferenceChairs));
 
         chairsViewModel.getChairs().observeForever(observer);
+
+        sleep(500);
 
         verify(observer).onChanged(conferenceChairs);
     }

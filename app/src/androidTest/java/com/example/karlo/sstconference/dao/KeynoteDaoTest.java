@@ -13,13 +13,6 @@ import static junit.framework.Assert.assertEquals;
 
 public class KeynoteDaoTest extends BaseDaoTest {
 
-    private static String NAME = "Some Name";
-    private static String TITLE = "Title";
-    private static String MAIL = "mail@email.com";
-    private static String FACILITY = "Some Facility";
-    private static String IMAGE = "http://www.picture.com";
-    private static String ABSTRACT = "So many words!";
-
     private KeynoteDao mDao;
 
     @Before
@@ -97,9 +90,5 @@ public class KeynoteDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(speakers -> assertEquals(speakers.isEmpty(), true));
-    }
-
-    private KeynoteSpeaker getKeynoteSpeaker() {
-        return new KeynoteSpeaker(0, NAME, FACILITY, MAIL, IMAGE, TITLE, ABSTRACT);
     }
 }

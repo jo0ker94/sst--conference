@@ -13,13 +13,6 @@ import static junit.framework.Assert.assertEquals;
 
 public class ChairsDaoTest extends BaseDaoTest {
 
-    private static String NAME = "Some Name";
-    private static String TITLE = "Title";
-    private static String MAIL = "mail@email.com";
-    private static String FACILITY = "Some Facility";
-    private static String IMAGE = "http://www.picture.com";
-    private static String NUMBER = "0123456789";
-
     private ChairsDao mDao;
 
     @Before
@@ -97,9 +90,5 @@ public class ChairsDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(chairs -> assertEquals(chairs.isEmpty(), true));
-    }
-
-    private ConferenceChair getConferenceChair() {
-        return new ConferenceChair(0, TITLE, MAIL, FACILITY, IMAGE, NAME, NUMBER);
     }
 }

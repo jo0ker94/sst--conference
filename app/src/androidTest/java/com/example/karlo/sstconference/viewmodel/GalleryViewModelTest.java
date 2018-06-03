@@ -1,0 +1,44 @@
+package com.example.karlo.sstconference.viewmodel;
+
+import android.arch.lifecycle.Observer;
+
+import com.example.karlo.sstconference.modules.gallery.GalleryViewModel;
+import com.example.karlo.sstconference.servertasks.interfaces.Api;
+
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+public class GalleryViewModelTest extends BaseViewModelTest {
+
+    @Mock
+    private Api api;
+
+    @InjectMocks
+    private GalleryViewModel galleryViewModel;
+
+    @Test
+    public void testGetImages() {
+        List<String> links = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            links.add(getStringFormat(IMAGE, i));
+        }
+        Observer observer = mock(Observer.class);
+
+        when(api.getImages()).thenReturn(io.reactivex.Observable.just(links));
+
+        galleryViewModel.getImages().observeForever(observer);
+
+        sleep(500);
+
+        verify(observer).onChanged(links);
+    }
+}

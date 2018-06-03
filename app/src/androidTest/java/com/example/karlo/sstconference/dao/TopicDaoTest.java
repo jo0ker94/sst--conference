@@ -1,7 +1,6 @@
 package com.example.karlo.sstconference.dao;
 
 import com.example.karlo.sstconference.database.topic.TopicDao;
-import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Topic;
 
 import org.junit.Before;
@@ -13,11 +12,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 public class TopicDaoTest extends BaseDaoTest {
-
-    private static int PARENT_ID = 0;
-    private static String TITLE = "Title";
-    private static String NAME = "Some Name";
-    private static int TYPE = 0;
 
     private TopicDao mDao;
 
@@ -49,7 +43,7 @@ public class TopicDaoTest extends BaseDaoTest {
             Topic topic = new Topic(i,
                     PARENT_ID,
                     getStringFormat(TITLE, i),
-                    getListOfLecturers(),
+                    getListOfPeople(),
                     i);
 
             topics.add(topic);
@@ -92,17 +86,5 @@ public class TopicDaoTest extends BaseDaoTest {
                 .flatMap(io.reactivex.Observable::fromIterable)
                 .toList()
                 .subscribe(topics -> assertEquals(topics.isEmpty(), true));
-    }
-
-    private Topic getTopic() {
-        return new Topic(0, PARENT_ID, TITLE, getListOfLecturers(), TYPE);
-    }
-
-    private List<Person> getListOfLecturers() {
-        List<Person> people = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            people.add(new Person(getStringFormat(NAME, i)));
-        }
-        return people;
     }
 }

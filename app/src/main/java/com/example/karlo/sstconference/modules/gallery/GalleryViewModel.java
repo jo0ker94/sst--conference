@@ -13,7 +13,6 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
-import com.example.karlo.sstconference.servertasks.RetrofitUtil;
 import com.example.karlo.sstconference.servertasks.interfaces.Api;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,13 +39,18 @@ public class GalleryViewModel extends AndroidViewModel {
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    private Api mApi;
+
     public GalleryViewModel(@NonNull Application application) {
         super(application);
     }
 
-    private void downloadImages() {
-        mCompositeDisposable.add(RetrofitUtil.getRetrofit(Constants.FIREBASE_BASE_URL)
-                .create(Api.class)
+    public void setApi(Api mApi) {
+        this.mApi = mApi;
+    }
+
+    public void downloadImages() {
+        mCompositeDisposable.add(mApi
                 .getImages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
