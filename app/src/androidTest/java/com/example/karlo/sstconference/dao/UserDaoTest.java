@@ -21,7 +21,7 @@ public class UserDaoTest  extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertUser(getUser());
 
         mDao.getUser()
@@ -34,8 +34,12 @@ public class UserDaoTest  extends BaseDaoTest {
                 });
     }
 
+    public void testInsertAndGetMany() {
+
+    }
+
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         User user = getUser();
         mDao.insertUser(user);
 

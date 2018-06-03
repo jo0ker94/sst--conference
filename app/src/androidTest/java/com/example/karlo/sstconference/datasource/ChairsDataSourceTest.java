@@ -1,17 +1,13 @@
 package com.example.karlo.sstconference.datasource;
 
 import com.example.karlo.sstconference.database.chairs.ChairsDao;
-import com.example.karlo.sstconference.database.chairs.ChairsDataSource;
 import com.example.karlo.sstconference.database.chairs.LocalChairsDataSource;
 import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ChairsDataSourceTest {
+public class ChairsDataSourceTest extends BaseDataSourceTest {
 
     @Mock
     private ChairsDao dao;
@@ -32,32 +28,36 @@ public class ChairsDataSourceTest {
     private Api api;
 
     @InjectMocks
-    private ChairsDataSource chairsDataSource = new LocalChairsDataSource(dao, api);
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+    private LocalChairsDataSource chairsDataSource;
 
     @Test
-    public void testGetAndSave() {
+    public void testGetSaveAndDelete() {
         List<ConferenceChair> conferenceChairs = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
-            conferenceChairs.add(new ConferenceChair(i, "title", "mail", "facility", "img", "name", "number"));
-            //conferenceChairs.add(mock(ConferenceChair.class));
+            conferenceChairs.add(new ConferenceChair(i,
+                    getStringFormat(NAME, i),
+                    getStringFormat(MAIL, i),
+                    getStringFormat(FACILITY, i),
+                    getStringFormat(IMAGE, i),
+                    getStringFormat(NAME, i),
+                    getStringFormat(NUMBER,i)));
         }
 
         List<ConferenceChair> apiChairs = new ArrayList<>(conferenceChairs);
-        ConferenceChair chair = new ConferenceChair(122, "title", "mail", "facility", "img", "name", "number");
-        ConferenceChair apiChair = new ConferenceChair(123, "title", "mail", "facility", "img", "name", "number");
-        apiChairs.add(apiChair);
+        ConferenceChair chair = getConferenceChair(123);
+        apiChairs.add(chair);
 
         when(dao.getConferenceChairs()).thenReturn(Maybe.just(conferenceChairs));
         when(api.getChairs()).thenReturn(Observable.just(apiChairs));
 
         chairsDataSource.insertConferenceChair(chair);
         verify(dao).insertConferenceChair(chair);
+        //conferenceChairs.add(chair);
+
         chairsDataSource.deleteConferenceChair(conferenceChairs.get(0));
         verify(dao).deleteConferenceChair(conferenceChairs.get(0));
+        //conferenceChairs.remove(conferenceChairs.get(0));
 
         chairsDataSource.getConferenceChairs();
         verify(dao).getConferenceChairs();

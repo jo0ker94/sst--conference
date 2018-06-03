@@ -21,7 +21,7 @@ public class CommitteeDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertCommitteeMember(getSteeringCommitteeMember());
         mDao.insertCommitteeMember(getOrganizingCommitteeMember());
         mDao.insertCommitteeMember(getProgramCommitteeMember());
@@ -58,7 +58,7 @@ public class CommitteeDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<CommitteeMember> steeringMembers = new ArrayList<>();
         List<CommitteeMember> programMembers = new ArrayList<>();
 
@@ -96,7 +96,7 @@ public class CommitteeDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         CommitteeMember committeeMember = getProgramCommitteeMember();
         mDao.insertCommitteeMember(committeeMember);
 

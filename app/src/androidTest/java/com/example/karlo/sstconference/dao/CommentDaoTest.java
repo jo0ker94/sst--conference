@@ -21,7 +21,7 @@ public class CommentDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertComment(getComment());
 
         mDao.getComments(PARENT_ID)
@@ -37,7 +37,7 @@ public class CommentDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<Comment> commentList = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -65,7 +65,7 @@ public class CommentDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         Comment comment = getComment();
         mDao.insertComment(comment);
 

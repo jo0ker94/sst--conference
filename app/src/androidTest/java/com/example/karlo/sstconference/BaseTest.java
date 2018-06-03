@@ -75,7 +75,9 @@ public class BaseTest {
     protected void sleep(int length) {
         try {
             Thread.sleep(length);
-        } catch (InterruptedException e) {  e.printStackTrace();}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     protected String getStringFormat(String field, int position) {
@@ -83,11 +85,19 @@ public class BaseTest {
     }
 
     protected ConferenceChair getConferenceChair() {
-        return new ConferenceChair(0, TITLE, MAIL, FACILITY, IMAGE, NAME, NUMBER);
+        return getConferenceChair(0);
+    }
+
+    protected ConferenceChair getConferenceChair(int id) {
+        return new ConferenceChair(id, TITLE, MAIL, FACILITY, IMAGE, NAME, NUMBER);
     }
 
     protected Comment getComment() {
-        return new Comment(0, TEXT, USER_ID, PARENT_ID, AUTHOR, TIMESTAMP);
+        return getComment(0);
+    }
+
+    protected Comment getComment(int id) {
+        return new Comment(id, TEXT, USER_ID, PARENT_ID, AUTHOR, TIMESTAMP);
     }
 
     protected CommitteeMember getSteeringCommitteeMember() {
@@ -95,7 +105,11 @@ public class BaseTest {
     }
 
     protected CommitteeMember getProgramCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, PROGRAM);
+        return getProgramCommitteeMember(0);
+    }
+
+    protected CommitteeMember getProgramCommitteeMember(int id) {
+        return new CommitteeMember(id, NAME, FACILITY, PROGRAM);
     }
 
     protected CommitteeMember getOrganizingCommitteeMember() {
@@ -103,15 +117,27 @@ public class BaseTest {
     }
 
     protected KeynoteSpeaker getKeynoteSpeaker() {
-        return new KeynoteSpeaker(0, NAME, FACILITY, MAIL, IMAGE, TITLE, ABSTRACT);
+        return getKeynoteSpeaker(0);
+    }
+
+    protected KeynoteSpeaker getKeynoteSpeaker(int id) {
+        return new KeynoteSpeaker(id, NAME, FACILITY, MAIL, IMAGE, TITLE, ABSTRACT);
     }
 
     protected Topic getTopic() {
-        return new Topic(0, PARENT_ID, TITLE, getListOfPeople(), TYPE);
+        return getTopic(0);
+    }
+
+    protected Topic getTopic(int id) {
+        return new Topic(id, PARENT_ID, TITLE, getListOfPeople(), TYPE);
     }
 
     protected Track getTrack() {
-        return new Track(0, START_DATE, END_DATE, ROOM, TITLE, getListOfPeople());
+        return getTrack(0);
+    }
+
+    protected Track getTrack(int id) {
+        return new Track(id, START_DATE, END_DATE, ROOM, TITLE, getListOfPeople());
     }
 
     protected User getUser() {
@@ -123,7 +149,11 @@ public class BaseTest {
     }
 
     protected Image getImage() {
-        return new Image(0, IMAGE);
+        return getImage(0);
+    }
+
+    protected Image getImage(int id) {
+        return new Image(id, IMAGE);
     }
 
     protected List<Info> getInfoList(String type) {

@@ -21,7 +21,7 @@ public class GalleryDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertImage(getImage());
 
         mDao.getImages()
@@ -32,7 +32,7 @@ public class GalleryDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<Image> images = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -52,7 +52,7 @@ public class GalleryDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         Image image = getImage();
         mDao.insertImage(image);
 

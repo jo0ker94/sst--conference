@@ -21,7 +21,7 @@ public class TrackDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertTrack(getTrack());
 
         mDao.getTracks()
@@ -37,7 +37,7 @@ public class TrackDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<Track> trackList = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -68,7 +68,7 @@ public class TrackDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         Track track = getTrack();
         mDao.insertTrack(track);
 

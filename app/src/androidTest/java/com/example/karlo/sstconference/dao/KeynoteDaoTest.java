@@ -21,7 +21,7 @@ public class KeynoteDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertKeynoteSpeaker(getKeynoteSpeaker());
 
         mDao.getKeynoteSpeakers()
@@ -38,7 +38,7 @@ public class KeynoteDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<KeynoteSpeaker> keynoteSpeakers = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -67,7 +67,7 @@ public class KeynoteDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         KeynoteSpeaker keynoteSpeaker = getKeynoteSpeaker();
         mDao.insertKeynoteSpeaker(keynoteSpeaker);
 

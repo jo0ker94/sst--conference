@@ -21,7 +21,7 @@ public class TopicDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertTopic(getTopic());
 
         mDao.getTopics()
@@ -36,7 +36,7 @@ public class TopicDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<Topic> topics = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -65,7 +65,7 @@ public class TopicDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         Topic topic = getTopic();
         mDao.insertTopic(topic);
 

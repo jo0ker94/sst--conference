@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.UserApi;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -14,6 +16,7 @@ public class LocalUserDataSource implements UserDataSource {
     private final UserApi mApi;
     private final UserDao mUserDao;
 
+    @Inject
     public LocalUserDataSource(UserDao userDao, UserApi userApi) {
         mUserDao = userDao;
         mApi = userApi;

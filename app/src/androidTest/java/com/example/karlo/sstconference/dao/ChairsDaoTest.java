@@ -21,7 +21,7 @@ public class ChairsDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertConferenceChair(getConferenceChair());
 
         mDao.getConferenceChairs()
@@ -38,7 +38,7 @@ public class ChairsDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetMany() {
+    public void testInsertAndGetMany() {
         List<ConferenceChair> chairList = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -67,7 +67,7 @@ public class ChairsDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         ConferenceChair conferenceChair = getConferenceChair();
         mDao.insertConferenceChair(conferenceChair);
 

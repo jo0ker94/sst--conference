@@ -21,7 +21,7 @@ public class VenueDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void insertAndGetOne() {
+    public void testInsertAndGetOne() {
         mDao.insertVenue(getVenue());
 
         mDao.getVenue()
@@ -33,8 +33,12 @@ public class VenueDaoTest extends BaseDaoTest {
                 });
     }
 
+    public void testInsertAndGetMany() {
+
+    }
+
     @Test
-    public void deleteItem() {
+    public void testDeleteItem() {
         Venue venue = getVenue();
         mDao.insertVenue(venue);
 

@@ -5,6 +5,8 @@ import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -13,6 +15,7 @@ public class LocalChairsDataSource implements ChairsDataSource {
     private ChairsDao mDao;
     private Api mApi;
 
+    @Inject
     public LocalChairsDataSource(ChairsDao dao, Api api) {
         this.mDao = dao;
         this.mApi = api;
