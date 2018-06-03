@@ -14,6 +14,9 @@ import com.example.karlo.sstconference.database.comment.LocalCommentDataSource;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDataSource;
 import com.example.karlo.sstconference.database.committee.LocalCommitteeDataSource;
+import com.example.karlo.sstconference.database.gallery.GalleryDao;
+import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
+import com.example.karlo.sstconference.database.gallery.LocalGalleryDataSource;
 import com.example.karlo.sstconference.database.keynote.KeynoteDao;
 import com.example.karlo.sstconference.database.keynote.KeynoteDataSource;
 import com.example.karlo.sstconference.database.keynote.LocalKeynoteDataSource;
@@ -108,6 +111,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public GalleryDao providesGalleryDao() {
+        return LocalDatabase.getDatabase(application).galleryModel();
+    }
+
+    @Provides
+    @Singleton
     public UserDataSource providesLocalUserDataSource(UserDao userDao, UserApi userApi) {
         return new LocalUserDataSource(userDao, userApi);
     }
@@ -154,11 +163,16 @@ public class ApplicationModule {
         return new LocalChairsDataSource(chairsDao, api);
     }
 
-
     @Provides
     @Singleton
     public KeynoteDataSource providesLocalKeynoteDataSource(KeynoteDao keynoteDao, Api api) {
         return new LocalKeynoteDataSource(keynoteDao, api);
+    }
+
+    @Provides
+    @Singleton
+    public GalleryDataSource providesLocalGalleryDataSource(GalleryDao galleryDao, Api api) {
+        return new LocalGalleryDataSource(galleryDao, api);
     }
 
     @Provides

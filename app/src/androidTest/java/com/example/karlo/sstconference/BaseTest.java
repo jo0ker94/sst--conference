@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 
 import com.example.karlo.sstconference.models.ConferenceChair;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
@@ -119,6 +120,10 @@ public class BaseTest {
 
     protected Venue getVenue() {
         return new Venue(0, getInfoList(FACULTY), getInfoList(REGION), getInfoList(HOTEL));
+    }
+
+    protected Image getImage() {
+        return new Image(0, IMAGE);
     }
 
     protected List<Info> getInfoList(String type) {

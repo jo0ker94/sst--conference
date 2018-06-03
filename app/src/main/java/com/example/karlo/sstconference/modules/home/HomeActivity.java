@@ -233,12 +233,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToGallery() {
-        if (NetworkUtility.hasNetworkConnection(this)) {
-            Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
-            startActivity(intent);
-        } else {
-            NetworkUtility.showNoNetworkDialog(this);
-        }
+        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
+        startActivity(intent);
     }
 
     @Override

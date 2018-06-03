@@ -26,11 +26,13 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.database.gallery.LocalGalleryDataSource;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
-import com.example.karlo.sstconference.servertasks.interfaces.Api;
 import com.example.karlo.sstconference.utility.AppConfig;
+import com.example.karlo.sstconference.utility.NetworkUtility;
 
 import net.globulus.easyprefs.EasyPrefs;
 
@@ -58,14 +60,14 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     TextView mEmptyData;
 
     @Inject
-    Api mApi;
+    LocalGalleryDataSource mDataSource;
 
     private GalleryViewModel mViewModel;
     private GalleryFeedAdapter mAdapter;
     private ProgressDialog mProgressDialog;
 
     private Uri filePath;
-    private List<String> mItems = new ArrayList<>();
+    private List<Image> mItems = new ArrayList<>();
 
     Unbinder mUnbinder;
     CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -79,7 +81,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         setUpToolbar();
 
         mViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
-        mViewModel.setApi(mApi);
+        mViewModel.setDataSource(mDataSource);
         mProgressDialog = new ProgressDialog(this);
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);
@@ -94,6 +96,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
                 mItems.clear();
                 mItems.addAll(strings);
                 showImages(hasData);
+                mEmptyData.setVisibility(View.GONE);
             } else {
                 mEmptyData.setVisibility(View.VISIBLE);
                 mEmptyData.setOnClickListener(view -> takePicture());
@@ -156,12 +159,12 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
                 finish();
                 return true;
             case R.id.imageUpload:
-                if (userLoggedIn()) {
+                if (hasNetworkConnection() && userLoggedIn()) {
                     chooseImage();
                 }
                 return true;
             case R.id.takeImage:
-                if (userLoggedIn()) {
+                if (hasNetworkConnection() && userLoggedIn()) {
                     takePicture();
                 }
                 return true;
@@ -180,6 +183,15 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
                         startActivity(new Intent(GalleryActivity.this, LoginActivity.class));
                     })
                     .show();
+            return false;
+        }
+    }
+
+    private boolean hasNetworkConnection() {
+        if (NetworkUtility.hasNetworkConnection(this)) {
+            return true;
+        } else {
+            NetworkUtility.showNoNetworkDialog(this);
             return false;
         }
     }
@@ -240,7 +252,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         for (int i = 0; i < mItems.size(); i++) {
             GalleryCardFragment cardFragment = new GalleryCardFragment();
             Bundle args = new Bundle();
-            args.putString(Constants.URI, mItems.get(i));
+            args.putParcelable(Constants.DATA, mItems.get(i));
             cardFragment.setArguments(args);
             cards.add(cardFragment);
         }

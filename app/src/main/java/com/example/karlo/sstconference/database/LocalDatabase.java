@@ -8,12 +8,14 @@ import android.content.Context;
 import com.example.karlo.sstconference.database.chairs.ChairsDao;
 import com.example.karlo.sstconference.database.comment.CommentDao;
 import com.example.karlo.sstconference.database.committee.CommitteeDao;
+import com.example.karlo.sstconference.database.gallery.GalleryDao;
 import com.example.karlo.sstconference.database.keynote.KeynoteDao;
 import com.example.karlo.sstconference.database.topic.TopicDao;
 import com.example.karlo.sstconference.database.track.TrackDao;
 import com.example.karlo.sstconference.database.user.UserDao;
 import com.example.karlo.sstconference.database.venue.VenueDao;
 import com.example.karlo.sstconference.models.ConferenceChair;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
@@ -30,7 +32,8 @@ import com.example.karlo.sstconference.models.venue.Venue;
         Venue.class,
         CommitteeMember.class,
         ConferenceChair.class,
-        KeynoteSpeaker.class
+        KeynoteSpeaker.class,
+        Image.class
 }, version = 1, exportSchema = false)
 public abstract class LocalDatabase extends RoomDatabase {
 
@@ -68,4 +71,6 @@ public abstract class LocalDatabase extends RoomDatabase {
     public abstract ChairsDao chairsModel();
 
     public abstract KeynoteDao keynoteModel();
+
+    public abstract GalleryDao galleryModel();
 }

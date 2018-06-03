@@ -12,8 +12,9 @@ import android.support.annotation.NonNull;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
+import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
-import com.example.karlo.sstconference.servertasks.interfaces.Api;
+import com.example.karlo.sstconference.models.Image;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -31,30 +32,31 @@ import io.reactivex.schedulers.Schedulers;
 public class GalleryViewModel extends AndroidViewModel {
 
     private MutableLiveData<Status> mStatus = new MutableLiveData<>();
-    private MutableLiveData<List<String>> mImageUrl;
-    private List<String> mImages = new ArrayList<>();
+    private MutableLiveData<List<Image>> mImageUrl;
+    private List<Image> mImages = new ArrayList<>();
 
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private StorageReference mStorageReference = mStorage.getReference();
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private Api mApi;
+    private GalleryDataSource mDataSource;
 
     public GalleryViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public void setApi(Api mApi) {
-        this.mApi = mApi;
+    public void setDataSource(GalleryDataSource dataSource) {
+        this.mDataSource = dataSource;
     }
 
     public void downloadImages() {
-        mCompositeDisposable.add(mApi
+        mCompositeDisposable.add(mDataSource
                 .getImages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(strings -> {
+                            mImages.clear();
                             mImages.addAll(strings);
                             mImageUrl.setValue(strings);
                         },
@@ -65,7 +67,7 @@ public class GalleryViewModel extends AndroidViewModel {
         return mStatus;
     }
 
-    public LiveData<List<String>> getImages() {
+    public LiveData<List<Image>> getImages() {
         if (mImageUrl == null) {
             mImageUrl = new MutableLiveData<>();
             downloadImages();
@@ -110,11 +112,13 @@ public class GalleryViewModel extends AndroidViewModel {
                 Constants.IMAGES_ENDPOINT,
                 name);
 
+        Image image = new Image(mImages.size(), path);
+
         DatabaseHelper.getImagesReference()
                 .child(String.valueOf(mImages.size()))
-                .setValue(path);
+                .setValue(image);
 
-        mImages.add(path);
+        mImages.add(image);
         mImageUrl.setValue(mImages);
     }
 

@@ -2,8 +2,9 @@ package com.example.karlo.sstconference.viewmodel;
 
 import android.arch.lifecycle.Observer;
 
+import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.modules.gallery.GalleryViewModel;
-import com.example.karlo.sstconference.servertasks.interfaces.Api;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,21 +20,22 @@ import static org.mockito.Mockito.when;
 public class GalleryViewModelTest extends BaseViewModelTest {
 
     @Mock
-    private Api api;
+    private GalleryDataSource dataSource;
 
     @InjectMocks
     private GalleryViewModel galleryViewModel;
 
     @Test
     public void testGetImages() {
-        List<String> links = new ArrayList<>();
+        List<Image> links = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
-            links.add(getStringFormat(IMAGE, i));
+            links.add(new Image(i,
+                    getStringFormat(IMAGE, i)));
         }
         Observer observer = mock(Observer.class);
 
-        when(api.getImages()).thenReturn(io.reactivex.Observable.just(links));
+        when(dataSource.getImages()).thenReturn(io.reactivex.Observable.just(links));
 
         galleryViewModel.getImages().observeForever(observer);
 

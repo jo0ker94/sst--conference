@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.pager.CardAdapter;
 import com.example.karlo.sstconference.pager.CardFragment;
 import com.squareup.picasso.Picasso;
@@ -33,7 +34,9 @@ public class GalleryCardFragment extends CardFragment {
         mImageCard = (ImageView) view.findViewById(R.id.imageCard);
         mShareButton = (ImageView) view.findViewById(R.id.shareButton);
 
-        Uri uri = Uri.parse(getArguments().getString(Constants.URI));
+        Image image = (Image) getArguments().getParcelable(Constants.DATA);
+
+        Uri uri = Uri.parse(image.getImageUrl());
 
         mCardView.setMaxCardElevation(mCardView.getCardElevation() * CardAdapter.MAX_ELEVATION_FACTOR);
 

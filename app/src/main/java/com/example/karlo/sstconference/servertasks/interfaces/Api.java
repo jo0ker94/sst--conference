@@ -1,9 +1,9 @@
 package com.example.karlo.sstconference.servertasks.interfaces;
 
 import com.example.karlo.sstconference.models.ConferenceChair;
+import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
-import com.example.karlo.sstconference.models.program.Comment;
 
 import java.util.List;
 
@@ -17,9 +17,6 @@ import retrofit2.http.Path;
 
 public interface Api {
 
-    @GET("strings.json")
-    Observable<List<String>> getStrings();
-
     @GET("2017/conferenceChairs.json")
     Observable<List<ConferenceChair>> getChairs();
 
@@ -27,7 +24,7 @@ public interface Api {
     Observable<List<CommitteeMember>> getCommittee(@Path("type") String type);
 
     @GET("2017/images.json")
-    Observable<List<String>> getImages();
+    Observable<List<Image>> getImages();
 
     @GET("2017/keynoteSpeakers.json")
     Observable<List<KeynoteSpeaker>> getKeynoteSpeakers();

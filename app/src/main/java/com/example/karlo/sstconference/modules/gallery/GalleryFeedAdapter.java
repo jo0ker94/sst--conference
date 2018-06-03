@@ -7,20 +7,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.models.Image;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class GalleryFeedAdapter extends  RecyclerView.Adapter<GalleryFeedAdapter.ViewHolder> {
 
-    private List<String> mItems;
+    private List<Image> mItems;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
 
-    public GalleryFeedAdapter(List<String> items, OnItemClickListener listener) {
+    public GalleryFeedAdapter(List<Image> items, OnItemClickListener listener) {
         mItems = items;
         mListener = listener;
     }
@@ -34,7 +35,7 @@ public class GalleryFeedAdapter extends  RecyclerView.Adapter<GalleryFeedAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Picasso.get()
-                .load(mItems.get(position))
+                .load(mItems.get(position).getImageUrl())
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.no_img)
