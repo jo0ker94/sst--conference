@@ -10,14 +10,10 @@ import android.view.Gravity;
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Status;
-import com.example.karlo.sstconference.database.LocalDatabase;
-import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.modules.home.HomeViewModel;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.login.LoginViewModel;
-
-import net.globulus.easyprefs.EasyPrefs;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -27,10 +23,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
-import io.reactivex.Maybe;
-
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -50,9 +43,6 @@ public class LoginActivityTest extends BaseTest {
     @Inject
     HomeViewModel homeViewModel;
 
-    @Inject
-    UserDataSource userDataSource;
-
     @Rule
     public final ActivityTestRule<LoginActivity> mRule = new ActivityTestRule<>(LoginActivity.class, false, false);
 
@@ -62,7 +52,6 @@ public class LoginActivityTest extends BaseTest {
     @Before
     public void init() {
         getApp().getComponent().inject(this);
-        when(userDataSource.getUser()).thenReturn(Maybe.empty());
         when(loginViewModel.getUser()).thenReturn(userData);
         when(loginViewModel.getStatus()).thenReturn(status);
         when(homeViewModel.getUser()).thenReturn(userData);
@@ -133,10 +122,15 @@ public class LoginActivityTest extends BaseTest {
     public void testGuestModeLink() {
         userData.postValue(null);
 
+        //
+        //  Oreo shows dialog for remembering password
+        //  Try to click on login button if it fails that means dialog is covering button
+        //  Click on fragment view to dismiss dialog, and then try to click on login button again
+        //
         try {
             onView(withId(R.id.skip_login_button)).perform(click());
         } catch (Exception e) {
-            pressBack();
+            onView(withId(R.id.fragment_login)).perform(click());
             sleep(500);
             onView(withId(R.id.skip_login_button)).perform(click());
         }
@@ -167,16 +161,22 @@ public class LoginActivityTest extends BaseTest {
         onView(withId(R.id.user_email)).check(matches(withText(MAIL)));
     }
 
+    @Test
+    public void testErrorMessage() {
+        userData.postValue(null);
+        status.postValue(Status.error(TEST_MESSAGE));
+
+        sleep(500);
+
+        onView(withText(TEST_MESSAGE)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
     private void clickOnLoginButton() {
         onView(withId(R.id.login_button)).perform(click());
     }
 
     private void clickOnRegisterButton() {
         onView(withId(R.id.signup_button)).perform(click());
-    }
-
-    private void clearDatabaseAndPrefs() {
-        EasyPrefs.clearAll(getApp());
-        LocalDatabase.getDatabase(getApp()).clearAllTables();
     }
 }

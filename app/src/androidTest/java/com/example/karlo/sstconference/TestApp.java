@@ -23,8 +23,4 @@ public class TestApp extends App {
     public MockApplicationComponent getComponent() {
         return component;
     }
-
-    public void setComponent(MockApplicationComponent component) {
-        this.component = component;
-    }
 }

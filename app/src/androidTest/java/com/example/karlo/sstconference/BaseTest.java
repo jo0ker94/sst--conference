@@ -2,8 +2,12 @@ package com.example.karlo.sstconference;
 
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Root;
+import android.view.WindowManager;
 
+import com.example.karlo.sstconference.database.LocalDatabase;
 import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.models.User;
@@ -17,6 +21,10 @@ import com.example.karlo.sstconference.models.venue.Info;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.models.venue.VenueMarker;
 
+import net.globulus.easyprefs.EasyPrefs;
+
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -37,15 +45,18 @@ public class BaseTest {
     protected static String PASSWORD = "test123";
 
     protected static String DISPLAY_NAME = "Display Name";
+    protected static String GUEST = "Guest";
     protected static String TEXT = "This is comment.";
     protected static String USER_ID = "user_id";
     protected static String AUTHOR = "Mike Doe";
     protected static String TIMESTAMP = "12/12/2012";
+    protected static String EMPTY = "";
 
     protected static String STEERING = "steering";
     protected static String PROGRAM = "program";
     protected static String ORGANIZING = "organizing";
     protected static String ABSTRACT = "So many words!";
+    protected static String TEST_MESSAGE = "Test error message!";
 
     protected static String SNIPPET = "Snippet";
     protected static String LINK = "link";
@@ -69,7 +80,7 @@ public class BaseTest {
     private Resources mResources;
 
     public BaseTest() {
-        mResources = InstrumentationRegistry.getContext().getResources();
+        mResources = getApp().getResources();
     }
 
     protected String getString(int resId) {
@@ -91,6 +102,11 @@ public class BaseTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void clearDatabaseAndPrefs() {
+        EasyPrefs.clearAll(getApp());
+        LocalDatabase.getDatabase(getApp()).clearAllTables();
     }
 
     protected String getStringFormat(String field, int position) {
@@ -202,5 +218,24 @@ public class BaseTest {
         events.add(22);
         events.add(14);
         return events;
+    }
+
+    public class ToastMatcher extends TypeSafeMatcher<Root> {
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("is toast");
+        }
+
+        @Override
+        public boolean matchesSafely(Root root) {
+            int type = root.getWindowLayoutParams().get().type;
+            if (type == WindowManager.LayoutParams.TYPE_TOAST) {
+                IBinder windowToken = root.getDecorView().getWindowToken();
+                IBinder appToken = root.getDecorView().getApplicationWindowToken();
+                return windowToken == appToken;
+            }
+            return false;
+        }
     }
 }

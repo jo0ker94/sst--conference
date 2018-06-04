@@ -104,10 +104,13 @@ public class HomeActivity extends AppCompatActivity
                 //if (!user.getSubscribedEvents().isEmpty()) {
                 //    setUpReminders(user.getSubscribedEvents());
                 //}
+                EasyPrefs.putGuestMode(this, false);
             } else {
                 mUserName.setText(R.string.guest);
                 mUserEmail.setText(R.string.empty);
+                EasyPrefs.putGuestMode(this, true);
             }
+            onResume();
         });
 
         mViewModel.getStatus().observe(this, status -> {
@@ -170,7 +173,7 @@ public class HomeActivity extends AppCompatActivity
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
-        if (!AppConfig.USER_LOGGED_IN) {
+        if (EasyPrefs.getGuestMode(this)) {
             navigationView.getMenu().findItem(R.id.login).setVisible(true);
             navigationView.getMenu().findItem(R.id.login).setChecked(false);
 
@@ -245,7 +248,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToSubscribed() {
-        if (AppConfig.USER_LOGGED_IN) {
+        if (!EasyPrefs.getGuestMode(this)) {
             Intent intent = new Intent(HomeActivity.this, SubscriptionActivity.class);
             startActivity(intent);
         } else {
