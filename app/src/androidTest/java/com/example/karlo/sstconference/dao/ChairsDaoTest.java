@@ -91,4 +91,26 @@ public class ChairsDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(chairs -> assertEquals(chairs.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        ConferenceChair conferenceChair = getConferenceChair();
+        mDao.insertConferenceChair(conferenceChair);
+
+        conferenceChair.setName(DISPLAY_NAME);
+        mDao.insertConferenceChair(conferenceChair);
+
+        mDao.getConferenceChairs()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(chair -> {
+                    assertEquals(chair.getId(), 0);
+                    assertEquals(chair.getName(), DISPLAY_NAME);
+                    assertEquals(chair.getChairTitle(), TITLE);
+                    assertEquals(chair.getEmail(), MAIL);
+                    assertEquals(chair.getFacility(), FACILITY);
+                    assertEquals(chair.getPhoneNumber(), NUMBER);
+                });
+    }
 }

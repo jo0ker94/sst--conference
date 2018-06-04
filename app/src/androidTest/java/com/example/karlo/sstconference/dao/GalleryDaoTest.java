@@ -70,4 +70,22 @@ public class GalleryDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(images -> assertEquals(images.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        Image image = getImage();
+        mDao.insertImage(image);
+
+        image.setImageUrl(getStringFormat(IMAGE, 2));
+        mDao.insertImage(image);
+
+        mDao.getImages()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(responseImage -> {
+                    assertEquals(responseImage.getId(), 0);
+                    assertEquals(responseImage.getImageUrl(), getStringFormat(IMAGE, 2));
+                });
+    }
 }

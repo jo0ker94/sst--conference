@@ -87,4 +87,24 @@ public class TopicDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(topics -> assertEquals(topics.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        Topic topic = getTopic();
+        mDao.insertTopic(topic);
+
+        topic.setTitle(DISPLAY_NAME);
+        mDao.insertTopic(topic);
+
+        mDao.getTopics()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(responseTopic -> {
+                    assertEquals(responseTopic.getId(), 0);
+                    assertEquals(responseTopic.getTitle(), DISPLAY_NAME);
+                    assertEquals(responseTopic.getParentId(), PARENT_ID);
+                    assertEquals(responseTopic.getType(), TYPE);
+                });
+    }
 }

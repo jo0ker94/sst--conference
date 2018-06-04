@@ -118,4 +118,24 @@ public class CommitteeDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(committeeMembers -> assertEquals(committeeMembers.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        CommitteeMember committeeMember = getSteeringCommitteeMember();
+        mDao.insertCommitteeMember(committeeMember);
+
+        committeeMember.setName(DISPLAY_NAME);
+        mDao.insertCommitteeMember(committeeMember);
+
+        mDao.getSteeringCommittee()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(committee -> {
+                    assertEquals(committee.getId(), 0);
+                    assertEquals(committee.getName(), DISPLAY_NAME);
+                    assertEquals(committee.getFacility(), FACILITY);
+                    assertEquals(committee.getType(), STEERING);
+                });
+    }
 }

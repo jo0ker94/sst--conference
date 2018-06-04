@@ -91,4 +91,25 @@ public class TrackDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(tracks -> assertEquals(tracks.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        Track track = getTrack();
+        mDao.insertTrack(track);
+
+        track.setTitle(DISPLAY_NAME);
+        mDao.insertTrack(track);
+
+        mDao.getTracks()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(responseTrack -> {
+                    assertEquals(responseTrack.getId(), 0);
+                    assertEquals(responseTrack.getTitle(), DISPLAY_NAME);
+                    assertEquals(responseTrack.getStartDate(), START_DATE);
+                    assertEquals(responseTrack.getEndDate(), END_DATE);
+                    assertEquals(responseTrack.getRoom(), ROOM);
+                });
+    }
 }

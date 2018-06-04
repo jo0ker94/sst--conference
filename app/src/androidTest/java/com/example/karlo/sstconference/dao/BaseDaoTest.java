@@ -31,4 +31,6 @@ public abstract class BaseDaoTest extends BaseTest {
 
     abstract public void testDeleteItem();
 
+    abstract public void testUpdateItem();
+
 }

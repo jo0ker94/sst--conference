@@ -88,4 +88,25 @@ public class CommentDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(comments -> assertEquals(comments.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        Comment comment = getComment();
+        mDao.insertComment(comment);
+
+        comment.setAuthor(NAME);
+        mDao.insertComment(comment);
+
+        mDao.getComments(PARENT_ID)
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(responseComment -> {
+                    assertEquals(responseComment.getId(), 0);
+                    assertEquals(responseComment.getText(), TEXT);
+                    assertEquals(responseComment.getParentId(), PARENT_ID);
+                    assertEquals(responseComment.getAuthor(), NAME);
+                    assertEquals(responseComment.getTimestamp(), TIMESTAMP);
+                });
+    }
 }

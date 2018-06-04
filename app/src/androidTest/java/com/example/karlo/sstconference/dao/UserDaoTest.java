@@ -77,4 +77,23 @@ public class UserDaoTest  extends BaseDaoTest {
                     }
                 });
     }
+
+    @Test
+    public void testUpdateItem() {
+        User user = getUser();
+        mDao.insertUser(user);
+
+        user.setDisplayName(NAME);
+        mDao.insertUser(user);
+
+        mDao.getUser()
+                .toObservable()
+                .subscribe(responseUser -> {
+                    assertEquals(responseUser.getUserId(), USER_ID);
+                    assertEquals(responseUser.getDisplayName(), NAME);
+                    assertEquals(responseUser.getImageUrl(), IMAGE);
+                    assertEquals(responseUser.getMail(), MAIL);
+                    assertEquals(responseUser.getUserId(), USER_ID);
+                });
+    }
 }

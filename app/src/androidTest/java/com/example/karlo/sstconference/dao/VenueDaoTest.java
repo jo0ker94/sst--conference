@@ -75,4 +75,22 @@ public class VenueDaoTest extends BaseDaoTest {
                     }
                 });
     }
+
+    @Test
+    public void testUpdateItem() {
+        Venue venue = getVenue();
+        mDao.insertVenue(venue);
+
+        venue.getFaculty().get(0).setDescription(DISPLAY_NAME);
+        mDao.insertVenue(venue);
+
+        mDao.getVenue()
+                .toObservable()
+                .subscribe(responseVenue -> {
+                    assertEquals(responseVenue.getId(), 0);
+                    assertEquals(responseVenue.getFaculty().get(0).getDescription(), DISPLAY_NAME);
+                    assertEquals(responseVenue.getHotel().get(0).getDescription(), HOTEL);
+                    assertEquals(responseVenue.getRegion().get(0).getDescription(), REGION);
+                });
+    }
 }

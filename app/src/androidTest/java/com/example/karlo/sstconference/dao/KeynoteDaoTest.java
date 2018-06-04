@@ -91,4 +91,26 @@ public class KeynoteDaoTest extends BaseDaoTest {
                 .toList()
                 .subscribe(speakers -> assertEquals(speakers.isEmpty(), true));
     }
+
+    @Test
+    public void testUpdateItem() {
+        KeynoteSpeaker keynoteSpeaker = getKeynoteSpeaker();
+        mDao.insertKeynoteSpeaker(keynoteSpeaker);
+
+        keynoteSpeaker.setName(DISPLAY_NAME);
+        mDao.insertKeynoteSpeaker(keynoteSpeaker);
+
+        mDao.getKeynoteSpeakers()
+                .toObservable()
+                .flatMap(io.reactivex.Observable::fromIterable)
+                .firstElement()
+                .subscribe(speaker -> {
+                    assertEquals(speaker.getId(), 0);
+                    assertEquals(speaker.getName(), DISPLAY_NAME);
+                    assertEquals(speaker.getTitle(), TITLE);
+                    assertEquals(speaker.getEmail(), MAIL);
+                    assertEquals(speaker.getFacility(), FACILITY);
+                    assertEquals(speaker.getAbstractText(), ABSTRACT);
+                });
+    }
 }
