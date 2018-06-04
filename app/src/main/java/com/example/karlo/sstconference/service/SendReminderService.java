@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -18,7 +19,7 @@ import com.example.karlo.sstconference.database.LocalDatabase;
 import com.example.karlo.sstconference.database.topic.LocalTopicDataSource;
 import com.example.karlo.sstconference.database.topic.TopicDataSource;
 import com.example.karlo.sstconference.models.program.Topic;
-import com.example.karlo.sstconference.modules.login.LoginActivity;
+import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.servertasks.RetrofitUtil;
 import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 
@@ -62,25 +63,24 @@ public class SendReminderService extends IntentService {
                     .firstElement()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::postNotification));
+                    .subscribe(this::handleTopic));
         }
     }
 
-    private void postNotification(Topic topic) {
+    private void handleTopic(Topic topic) {
         //if (isAppInForeground()) {
-        //    android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
-        //            .setTitle(topic.getTitle())
-        //            .setMessage(getString(R.string.topic_starting_in_fifteen_minutes))
-        //            .setPositiveButton(R.string.ok, null)
-        //            .create();
-        //    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        //    dialog.show();
-        //
+        //    //Intent intent = new Intent(SendReminderService.this, ReminderDialog.class);
+        //    //intent.putExtra(Constants.DATA, topic);
+        //    //startActivity(intent);
         //} else {
-        //      postNotification(topic);
+            postNotification(topic);
         //}
-        Intent notificationIntent = new Intent(this, LoginActivity.class);
-        //notificationIntent.setAction(IntentConstants.INTENT_ACTION_REMINDER);
+    }
+
+    private void postNotification(Topic topic) {
+        Intent notificationIntent = new Intent(SendReminderService.this, ProgramActivity.class);
+        notificationIntent.putExtra(Constants.INTENT_TOPIC_DETAILS, true);
+        notificationIntent.putExtra(Constants.DATA, topic);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -98,12 +98,14 @@ public class SendReminderService extends IntentService {
         }
 
         Notification notification = new NotificationCompat.Builder(this, channelId)
-                .setContentIntent(contentIntent)
                 .setContentTitle(topic.getTitle())
                 .setContentText(getString(R.string.topic_starting_in_fifteen_minutes))
-                .setSmallIcon(android.R.drawable.sym_def_app_icon)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setSmallIcon(R.mipmap.sst_icon_2017)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                        R.mipmap.sst_icon_2017))
                 .setAutoCancel(true)
+                .setContentIntent(contentIntent)
                 .build();
 
         notificationManager.notify(0, notification);
@@ -112,8 +114,8 @@ public class SendReminderService extends IntentService {
     private boolean isAppInForeground() {
         ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
         ActivityManager.getMyMemoryState(appProcessInfo);
-        if (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE)
-        {
+        if (appProcessInfo.importance == IMPORTANCE_FOREGROUND
+                || appProcessInfo.importance == IMPORTANCE_VISIBLE) {
             return true;
         }
 
