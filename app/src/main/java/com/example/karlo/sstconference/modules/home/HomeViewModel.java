@@ -9,6 +9,7 @@ import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Topic;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -35,12 +36,12 @@ public class HomeViewModel extends BaseViewModel {
     public HomeViewModel(UserDataSource dataSource, ProgramDataSource programDataSource) {
         this.mDataSource = dataSource;
         this.mProgramDataSource = programDataSource;
-        fetchUser();
     }
 
     public LiveData<User> getUser() {
         if (mUserData == null) {
             mUserData = new MutableLiveData<>();
+            fetchUser();
         }
         return mUserData;
     }
@@ -103,6 +104,7 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void signOut() {
+        FirebaseAuth.getInstance().signOut();
         mCompositeDisposable.add( Completable.fromAction(() -> mDataSource.deleteUser(mUser))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

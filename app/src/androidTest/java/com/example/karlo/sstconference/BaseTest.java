@@ -17,6 +17,10 @@ import com.example.karlo.sstconference.models.venue.Info;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.models.venue.VenueMarker;
 
+import org.junit.Rule;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,7 @@ public class BaseTest {
     protected static String FACILITY = "Some Facility";
     protected static String IMAGE = "http://www.picture.com";
     protected static String NUMBER = "0123456789";
+    protected static String PASSWORD = "test123";
 
     protected static String DISPLAY_NAME = "Display Name";
     protected static String TEXT = "This is comment.";
@@ -58,6 +63,9 @@ public class BaseTest {
     protected static double LAT = 124.123;
     protected static double LNG = 21.532;
 
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
+
     private Resources mResources;
 
     public BaseTest() {
@@ -70,6 +78,11 @@ public class BaseTest {
 
     protected String getQuantityString(int resId, int quantity) {
         return mResources.getQuantityString(resId, quantity);
+    }
+
+    protected TestApp getApp() {
+        return (TestApp) InstrumentationRegistry.getInstrumentation()
+                .getTargetContext().getApplicationContext();
     }
 
     protected void sleep(int length) {

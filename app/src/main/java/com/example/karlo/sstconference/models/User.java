@@ -9,6 +9,7 @@ import com.example.karlo.sstconference.models.converters.IntegerListConverter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
@@ -92,7 +93,11 @@ public class User {
     }
 
     public List<Integer> getSubscribedEvents() {
-        return subscribedEvents;
+        if (subscribedEvents == null) {
+            return new ArrayList<>();
+        } else {
+            return subscribedEvents;
+        }
     }
 
     public void setSubscribedEvents(List<Integer> subscribedEvents) {
