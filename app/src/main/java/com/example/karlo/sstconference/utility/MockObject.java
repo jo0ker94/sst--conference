@@ -170,4 +170,16 @@ public class MockObject {
         events.add(14);
         return events;
     }
+
+    protected List<Topic> getTopics(int count) {
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            topics.add(new Topic(i,
+                    PARENT_ID,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople(),
+                    i));
+        }
+        return topics;
+    }
 }

@@ -1,13 +1,23 @@
 package com.example.karlo.sstconference.ui;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.support.test.rule.ActivityTestRule;
 
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.commons.Status;
+import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
+import com.example.karlo.sstconference.modules.search.SearchViewModel;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -21,51 +31,72 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.mockito.Mockito.when;
 
 public class SearchActivityTest extends BaseTest {
 
+    @Inject
+    SearchViewModel viewModel;
+
     @Rule
-    public final ActivityTestRule<SearchActivity> mRule = new ActivityTestRule<>(SearchActivity.class);
+    public final ActivityTestRule<SearchActivity> mRule = new ActivityTestRule<>(SearchActivity.class, false, false);
+
+    private MutableLiveData<List<Topic>> topics = new MutableLiveData<>();
+    private MutableLiveData<Status> status = new MutableLiveData<>();
+
+    @Before
+    public void init() {
+        getApp().getComponent().inject(this);
+        when(viewModel.getTopics()).thenReturn(topics);
+        when(viewModel.getStatus()).thenReturn(status);
+        mRule.launchActivity(null);
+        clearDatabaseAndPrefs();
+    }
+
+    @After
+    public void clearData() {
+        clearDatabaseAndPrefs();
+    }
 
     @Test
     public void testEverythingIsDisplayed() {
-        sleep(1000);
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, "Temporal");
-        onView(withId(R.id.searchListView)).perform(scrollToPosition(50));
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 46, "Induction Motor");
+        topics.postValue(getTopics(20));
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
+        onView(withId(R.id.searchListView)).perform(scrollToPosition(10));
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 10, getStringFormat(TITLE, 10));
     }
 
     @Test
     public void testSearch() {
-        sleep(2000);
+        topics.postValue(getTopics(20));
         onView(withContentDescription(R.string.search)).perform(click());
 
         onView(allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
-                .perform(replaceText("Petri"), closeSoftKeyboard());
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, "Petri Net Modelling");
+                .perform(replaceText("0"), closeSoftKeyboard());
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 1, getStringFormat(TITLE, 10));
 
 
         onView(allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
-                .perform(replaceText("Detection"), closeSoftKeyboard());
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, "Detection of Faults");
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 1, "Spam Detection Based");
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 2, "Real-time Audio and Video Artifacts");
+                .perform(replaceText("2"), closeSoftKeyboard());
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 2));
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 1, getStringFormat(TITLE, 12));
     }
 
     @Test
     public void testClickOnItem() {
-        sleep(1000);
+        topics.postValue(getTopics(5));
         onView(withContentDescription(R.string.search)).perform(click());
 
         onView(allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
-                .perform(replaceText("Petri"), closeSoftKeyboard());
-        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, "Petri Net Modelling");
+                .perform(replaceText("0"), closeSoftKeyboard());
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
         getRecyclerViewItem(R.id.searchListView, 0).perform(click());
 
         sleep(1000);
         onView(allOf(withId(R.id.topic_title), isDescendantOfA(withId(R.id.topic_container))))
-                .check(matches(withText(containsString("Petri"))));
+                .check(matches(withText(getStringFormat(TITLE, 0))));
         onView(allOf(withId(R.id.topic_lecturers), isDescendantOfA(withId(R.id.topic_container))))
-                .check(matches(withText(containsString("Hanife"))));
+                .check(matches(withText(containsString(getStringFormat(NAME, 0)))));
     }
 }
