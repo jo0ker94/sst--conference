@@ -127,6 +127,7 @@
     <string name="error_check_internet_connection">There was an error loading your content. Please check your internet connection and try again.</string>
     <string name="show_notifications">Show notifications</string>
     <string name="change_map_radius">Change map radius</string>
+    <string name="ferit_organized_and_sponsored">Organized and sponsored by the Faculty of Electrical Engineering, Computer Science and Information Technology Osijek, J. J. Strossmayer University of Osijek</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

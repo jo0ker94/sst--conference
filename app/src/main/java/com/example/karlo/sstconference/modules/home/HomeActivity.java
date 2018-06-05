@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.User;
+import com.example.karlo.sstconference.modules.about.AboutActivity;
 import com.example.karlo.sstconference.modules.chairs.ChairsActivity;
 import com.example.karlo.sstconference.modules.committee.CommitteeActivity;
 import com.example.karlo.sstconference.modules.gallery.GalleryActivity;
@@ -33,9 +35,7 @@ import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
-import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.CircleTransformation;
-import com.example.karlo.sstconference.utility.NetworkUtility;
 import com.squareup.picasso.Picasso;
 
 import net.globulus.easyprefs.EasyPrefs;
@@ -201,7 +201,7 @@ public class HomeActivity extends AppCompatActivity
                 mViewModel.signOut();
                 return true;
             case R.id.committee:
-                startActivity(new Intent(HomeActivity.this, CommitteeActivity.class));
+                startActivity(CommitteeActivity.class);
                 return true;
             case R.id.images:
                 goToGallery();
@@ -213,7 +213,7 @@ public class HomeActivity extends AppCompatActivity
                 goToVenue();
                 return true;
             case R.id.speakers:
-                startActivity(new Intent(HomeActivity.this, KeynoteActivity.class));
+                startActivity(KeynoteActivity.class);
                 return true;
             case R.id.login:
                 EasyPrefs.putGuestMode(this, false);
@@ -223,38 +223,33 @@ public class HomeActivity extends AppCompatActivity
                 goToSubscribed();
                 return true;
             case R.id.conference_chairs:
-                goToConferenceChairs();
+                startActivity(ChairsActivity.class);
                 return true;
             case R.id.settings:
-                startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                startActivity(SettingsActivity.class);
+                return true;
+            case R.id.about:
+                startActivity(AboutActivity.class);
                 return true;
             default:
                 return false;
         }
     }
 
-    private void goToConferenceChairs() {
-        Intent intent = new Intent(HomeActivity.this, ChairsActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public void goToGallery() {
-        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
-        startActivity(intent);
+        startActivity(GalleryActivity.class);
     }
 
     @Override
     public void goToProgram() {
-        Intent intent = new Intent(HomeActivity.this, ProgramActivity.class);
-        startActivity(intent);
+        startActivity(ProgramActivity.class);
     }
 
     @Override
     public void goToSubscribed() {
         if (!EasyPrefs.getGuestMode(this)) {
-            Intent intent = new Intent(HomeActivity.this, SubscriptionActivity.class);
-            startActivity(intent);
+            startActivity(SubscriptionActivity.class);
         } else {
             Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.login).toUpperCase(), view -> {
@@ -267,20 +262,22 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToVenue() {
-        Intent intent = new Intent(HomeActivity.this, VenueActivity.class);
-        startActivity(intent);
+        startActivity(VenueActivity.class);
     }
 
     @Override
     public void goToSearch() {
-        Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-        startActivity(intent);
+        startActivity(SearchActivity.class);
     }
 
     @Override
     public void logOut() {
-        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+        startActivity(LoginActivity.class);
         finish();
+    }
+
+    public void startActivity(Class activity) {
+        startActivity(new Intent(HomeActivity.this, activity));
     }
 
     @Override
