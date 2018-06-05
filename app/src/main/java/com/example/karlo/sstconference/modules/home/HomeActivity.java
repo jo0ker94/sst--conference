@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
-import com.example.karlo.sstconference.models.ConferenceChair;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.modules.about.AboutActivity;
 import com.example.karlo.sstconference.modules.chairs.ChairsActivity;
@@ -35,6 +34,7 @@ import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
+import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
@@ -226,7 +226,9 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(ChairsActivity.class);
                 return true;
             case R.id.settings:
-                startActivity(SettingsActivity.class);
+                if (userLoggedIn()) {
+                    startActivity(SettingsActivity.class);
+                }
                 return true;
             case R.id.about:
                 startActivity(AboutActivity.class);
@@ -248,15 +250,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void goToSubscribed() {
-        if (!EasyPrefs.getGuestMode(this)) {
+        if (userLoggedIn()) {
             startActivity(SubscriptionActivity.class);
-        } else {
-            Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.login).toUpperCase(), view -> {
-                        EasyPrefs.putGuestMode(this, false);
-                        logOut();
-                    })
-                    .show();
         }
     }
 
@@ -320,5 +315,19 @@ public class HomeActivity extends AppCompatActivity
                 .setPositiveButton(R.string.yes, (dialogInterface, i) -> finish())
                 .setNegativeButton(R.string.no, null)
                 .show();
+    }
+
+    private boolean userLoggedIn() {
+        if (AppConfig.USER_LOGGED_IN) {
+            return true;
+        } else {
+            Snackbar.make(mLinkToSubscribed.getRootView(), R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                        EasyPrefs.putGuestMode(this, false);
+                        logOut();
+                    })
+                    .show();
+            return false;
+        }
     }
 }

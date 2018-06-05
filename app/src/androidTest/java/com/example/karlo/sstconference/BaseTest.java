@@ -4,7 +4,12 @@ import android.content.res.Resources;
 import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Root;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.matcher.ViewMatchers;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.NumberPicker;
 
 import com.example.karlo.sstconference.database.LocalDatabase;
 import com.example.karlo.sstconference.utility.MockObject;
@@ -12,6 +17,7 @@ import com.example.karlo.sstconference.utility.MockObject;
 import net.globulus.easyprefs.EasyPrefs;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.mockito.junit.MockitoJUnit;
@@ -71,5 +77,25 @@ public class BaseTest extends MockObject {
             }
             return false;
         }
+    }
+
+    protected ViewAction setNumberPickerValue(final int value) {
+
+        return new ViewAction() {
+            @Override
+            public Matcher getConstraints() {
+                return ViewMatchers.isAssignableFrom(NumberPicker.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Set the value of a NumberPicker";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                ((NumberPicker)view).setValue(value);
+            }
+        };
     }
 }
