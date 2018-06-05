@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Root;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,6 +23,14 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class BaseTest extends MockObject {
 
@@ -97,5 +106,20 @@ public class BaseTest extends MockObject {
                 ((NumberPicker)view).setValue(value);
             }
         };
+    }
+
+    private static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+        return new RecyclerViewMatcher(recyclerViewId);
+    }
+
+    protected static ViewInteraction getRecyclerViewItem(int recyclerViewId, int position) {
+        onView(withId(recyclerViewId)).perform(scrollToPosition(position));
+        return onView(withRecyclerView(recyclerViewId).atPosition(position));
+    }
+
+    protected static void checkIfRecyclerViewItemHasText(int recyclerViewId, int position, String text) {
+        onView(withId(recyclerViewId)).perform(scrollToPosition(position));
+        onView(withRecyclerView(recyclerViewId).atPosition(position)).
+                check(matches(hasDescendant(withText(containsString(text)))));
     }
 }
