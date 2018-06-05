@@ -109,7 +109,7 @@
     <string name="restaurant">Restaurant</string>
     <string name="hall_1st">Hall – 1st fl.</string>
     <string name="no_comments">There are no comments on this event, be the first one to comment!</string>
-    <string name="search_radius">Search radius</string>
+    <string name="search_radius">Change search radius - (%dm)</string>
     <string name="topic_starting_in_fifteen_minutes">Topic is starting in 15 minutes!</string>
     <string name="no_email_error">Please enter email to proceed!</string>
     <string name="no_password_error">Please enter password to proceed!</string>
@@ -125,6 +125,8 @@
     <string name="empty" />
     <string name="we_are_sorry">We\'re Sorry</string>
     <string name="error_check_internet_connection">There was an error loading your content. Please check your internet connection and try again.</string>
+    <string name="show_notifications">Show notifications</string>
+    <string name="change_map_radius">Change map radius</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

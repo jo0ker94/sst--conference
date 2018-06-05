@@ -15,12 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.utility.AppConfig;
+import com.example.karlo.sstconference.utility.RadiusPickerUtility;
 
 import net.globulus.easyprefs.EasyPrefs;
 
@@ -29,7 +29,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class VenueActivity extends AppCompatActivity
-        implements VenueView {
+        implements VenueView,
+        RadiusPickerUtility.RadiusPickerListener {
 
     private static final int REQUEST_LOCATION_PERMISSION = 10;
 
@@ -38,11 +39,6 @@ public class VenueActivity extends AppCompatActivity
     private static final int FOOD_POSITION = 2;
     private static final int SIGHTS_POSITION = 3;
     private static final int FACULTY_POSITION = 4;
-
-    private static final String KILOMETERS = "kilometers";
-    private static final String METERS = "meters";
-    private static final String MILES = "miles";
-    private static final String FEET = "feet";
 
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
@@ -89,59 +85,11 @@ public class VenueActivity extends AppCompatActivity
                 finish();
                 return true;
             case R.id.search_icon:
-                changeRadiusDialog();
+                RadiusPickerUtility.changeRadiusDialog(this, this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void changeRadiusDialog() {
-        View view = getLayoutInflater().inflate(R.layout.radius_picker_dialog, null);
-        NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.radius_picker);
-        NumberPicker unitsPicker = (NumberPicker) view.findViewById(R.id.units_picker);
-
-        String[] arrayString= new String[]{KILOMETERS, METERS, MILES, FEET};
-
-        unitsPicker.setMinValue(0);
-        unitsPicker.setMaxValue(arrayString.length - 1);
-        unitsPicker.setDisplayedValues(arrayString);
-
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(1000);
-
-        new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle)
-                .setTitle(R.string.search_radius)
-                .setView(view)
-                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                    long radius = getMetersFromSelection(numberPicker.getValue(), arrayString[unitsPicker.getValue()]);
-                    EasyPrefs.putMapRadius(this, radius);
-                    AppConfig.MAP_RADIUS = radius;
-                    notifyFragmentsRadiusHasChanged();
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    private long getMetersFromSelection(int number, String units) {
-        switch (units) {
-            case KILOMETERS:
-                return number * 1000;
-
-            case MILES:
-                return number * 1609;
-
-            case FEET:
-                return (long) (number * 0.3048);
-
-            default:
-                return number;
-        }
-    }
-
-    private void notifyFragmentsRadiusHasChanged() {
-        mVenuePagerAdapter.getFragmentByPosition(FOOD_POSITION).radiusChanged();
-        mVenuePagerAdapter.getFragmentByPosition(SIGHTS_POSITION).radiusChanged();
     }
 
     private void setUpToolbar() {
@@ -248,5 +196,11 @@ public class VenueActivity extends AppCompatActivity
                     dialog.dismiss();
                 })
                 .show();
+    }
+
+    @Override
+    public void onRadiusChanged() {
+        mVenuePagerAdapter.getFragmentByPosition(FOOD_POSITION).radiusChanged();
+        mVenuePagerAdapter.getFragmentByPosition(SIGHTS_POSITION).radiusChanged();
     }
 }

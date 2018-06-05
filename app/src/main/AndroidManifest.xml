@@ -65,7 +65,8 @@
 
         <service android:name=".service.SendReminderService" />
 
-        <activity android:name=".modules.chairs.ChairsActivity"></activity>
+        <activity android:name=".modules.chairs.ChairsActivity" />
+        <activity android:name=".modules.settings.SettingsActivity"></activity>
     </application>
 
 </manifest>

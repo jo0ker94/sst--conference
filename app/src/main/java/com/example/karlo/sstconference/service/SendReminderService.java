@@ -23,6 +23,8 @@ import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.servertasks.RetrofitUtil;
 import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
 
+import net.globulus.easyprefs.EasyPrefs;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -73,7 +75,9 @@ public class SendReminderService extends IntentService {
         //    //intent.putExtra(Constants.DATA, topic);
         //    //startActivity(intent);
         //} else {
+        if (EasyPrefs.getShowNotifications(this)) {
             postNotification(topic);
+        }
         //}
     }
 

@@ -5,26 +5,26 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/museum_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="Museum"
         app:swChecked="true"/>
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/church_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="Church"/>
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/library_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="Library"/>
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/zoo_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

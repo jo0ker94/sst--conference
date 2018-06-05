@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/BasicParentLayout">
+
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <com.example.karlo.sstconference.ui.FunctionalButton
+        android:id="@+id/show_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/show_notifications"/>
+
+    <com.example.karlo.sstconference.ui.FunctionalButton
+        android:id="@+id/change_map_radius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleText="@string/change_map_radius"
+        app:type="button"/>
+
+</LinearLayout>

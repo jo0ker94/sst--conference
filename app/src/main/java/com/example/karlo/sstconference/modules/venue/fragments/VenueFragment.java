@@ -21,7 +21,7 @@ import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.models.venue.VenueMarker;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.ui.HeaderView;
-import com.example.karlo.sstconference.ui.SwitchButton;
+import com.example.karlo.sstconference.ui.FunctionalButton;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -189,9 +189,9 @@ public class VenueFragment extends BaseMapFragment {
         content.setTitle(getString(R.string.type_of_places));
         View foodSection = LayoutInflater.from(getContext()).inflate(R.layout.food_sections_layout, null);
 
-        SwitchButton restaurantsSwitch = foodSection.findViewById(R.id.restaurants_switch);
-        SwitchButton cafeSwitch = foodSection.findViewById(R.id.cafe_switch);
-        SwitchButton barSwitch = foodSection.findViewById(R.id.bar_switch);
+        FunctionalButton restaurantsSwitch = foodSection.findViewById(R.id.restaurants_switch);
+        FunctionalButton cafeSwitch = foodSection.findViewById(R.id.cafe_switch);
+        FunctionalButton barSwitch = foodSection.findViewById(R.id.bar_switch);
 
         restaurantsSwitch.setChecked(EasyPrefs.getShowRestaurants(mActivity));
         cafeSwitch.setChecked(EasyPrefs.getShowCafe(mActivity));
@@ -211,10 +211,10 @@ public class VenueFragment extends BaseMapFragment {
         content.setTitle(getString(R.string.type_of_places));
         View sightsSection = LayoutInflater.from(getContext()).inflate(R.layout.sights_section_layout, null);
 
-        SwitchButton museumSwitch = sightsSection.findViewById(R.id.museum_switch);
-        SwitchButton librarySwitch = sightsSection.findViewById(R.id.library_switch);
-        SwitchButton churchSwitch = sightsSection.findViewById(R.id.church_switch);
-        SwitchButton zooSwitch = sightsSection.findViewById(R.id.zoo_switch);
+        FunctionalButton museumSwitch = sightsSection.findViewById(R.id.museum_switch);
+        FunctionalButton librarySwitch = sightsSection.findViewById(R.id.library_switch);
+        FunctionalButton churchSwitch = sightsSection.findViewById(R.id.church_switch);
+        FunctionalButton zooSwitch = sightsSection.findViewById(R.id.zoo_switch);
 
         museumSwitch.setChecked(EasyPrefs.getShowMuseums(mActivity));
         librarySwitch.setChecked(EasyPrefs.getShowLibrary(mActivity));

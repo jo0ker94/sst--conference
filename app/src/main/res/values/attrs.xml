@@ -14,9 +14,13 @@
         <attr name="expandedTitleText"/>
     </declare-styleable>
 
-    <declare-styleable name="SwitchButton">
+    <declare-styleable name="FunctionalButton">
         <attr name="titleText"/>
         <attr name="swChecked"/>
+        <attr name="type" format="enum">
+            <enum name="button" value="0"/>
+            <enum name="_switch" value="1"/>
+        </attr>
     </declare-styleable>
 
 </resources>

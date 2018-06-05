@@ -33,6 +33,17 @@
             android:paddingStart="16dp"
             android:paddingEnd="4dp"/>
 
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="16dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/ic_action_arrow_right"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <View style="@style/HorizontalDivider"

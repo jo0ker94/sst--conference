@@ -28,6 +28,7 @@ import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteActivity;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
+import com.example.karlo.sstconference.modules.settings.SettingsActivity;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionActivity;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
@@ -223,6 +224,9 @@ public class HomeActivity extends AppCompatActivity
                 return true;
             case R.id.conference_chairs:
                 goToConferenceChairs();
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
                 return true;
             default:
                 return false;

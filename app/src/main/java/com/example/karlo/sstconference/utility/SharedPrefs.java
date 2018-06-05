@@ -24,6 +24,7 @@ public class SharedPrefs {
 
 
     @Pref boolean guestMode;
+    @Pref final boolean showNotifications = true;
 
     //
     //  Venue places

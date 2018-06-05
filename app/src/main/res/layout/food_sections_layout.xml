@@ -5,20 +5,20 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/restaurants_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="@string/restaurants"
         app:swChecked="true"/>
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/cafe_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleText="@string/cafe"/>
 
-    <com.example.karlo.sstconference.ui.SwitchButton
+    <com.example.karlo.sstconference.ui.FunctionalButton
         android:id="@+id/bar_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
