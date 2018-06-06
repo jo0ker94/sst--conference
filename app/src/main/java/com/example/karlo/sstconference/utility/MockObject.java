@@ -210,4 +210,15 @@ public class MockObject {
         }
         return conferenceChairs;
     }
+
+    protected List<CommitteeMember> getCommitteeMembers(String type, int count) {
+        List<CommitteeMember> committeeMembers = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            committeeMembers.add(new CommitteeMember(i,
+                    getStringFormat(NAME, i),
+                    getStringFormat(FACILITY, i),
+                    type));
+        }
+        return committeeMembers;
+    }
 }

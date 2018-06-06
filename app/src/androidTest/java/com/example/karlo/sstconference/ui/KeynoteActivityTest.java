@@ -60,15 +60,15 @@ public class KeynoteActivityTest extends BaseTest {
     public void testFirstPage() {
         speakers.postValue(getKeynoteSpeakers(3));
 
-        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.speaker_0))))
+        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(NAME, 0))));
-        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.speaker_0))))
+        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(MAIL, 0))));
-        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.speaker_0))))
+        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(FACILITY, 0))));
-        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.speaker_0))))
+        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(TITLE, 0))));
-        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.speaker_0))))
+        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(ABSTRACT, 0))));
     }
 
@@ -76,17 +76,17 @@ public class KeynoteActivityTest extends BaseTest {
     public void testSecondPage() {
         speakers.postValue(getKeynoteSpeakers(3));
 
-        onView(withId(R.id.speaker_0)).perform(swipeLeft());
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
 
-        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.speaker_1))))
+        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.fragment_1))))
                 .check(matches(withText(getStringFormat(NAME, 1))));
-        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.speaker_1))))
+        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.fragment_1))))
                 .check(matches(withText(getStringFormat(MAIL, 1))));
-        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.speaker_1))))
+        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.fragment_1))))
                 .check(matches(withText(getStringFormat(FACILITY, 1))));
-        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.speaker_1))))
+        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.fragment_1))))
                 .check(matches(withText(getStringFormat(TITLE, 1))));
-        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.speaker_1))))
+        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.fragment_1))))
                 .check(matches(withText(getStringFormat(ABSTRACT, 1))));
     }
 
@@ -94,18 +94,18 @@ public class KeynoteActivityTest extends BaseTest {
     public void testThirdPage() {
         speakers.postValue(getKeynoteSpeakers(3));
 
-        onView(withId(R.id.speaker_0)).perform(swipeLeft());
-        onView(withId(R.id.speaker_1)).perform(swipeLeft());
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
+        onView(withId(R.id.fragment_1)).perform(swipeLeft());
 
-        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.speaker_2))))
+        onView(allOf(withId(R.id.text_name), isDescendantOfA(withId(R.id.fragment_2))))
                 .check(matches(withText(getStringFormat(NAME, 2))));
-        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.speaker_2))))
+        onView(allOf(withId(R.id.text_email), isDescendantOfA(withId(R.id.fragment_2))))
                 .check(matches(withText(getStringFormat(MAIL, 2))));
-        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.speaker_2))))
+        onView(allOf(withId(R.id.text_facility), isDescendantOfA(withId(R.id.fragment_2))))
                 .check(matches(withText(getStringFormat(FACILITY, 2))));
-        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.speaker_2))))
+        onView(allOf(withId(R.id.text_title), isDescendantOfA(withId(R.id.fragment_2))))
                 .check(matches(withText(getStringFormat(TITLE, 2))));
-        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.speaker_2))))
+        onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.fragment_2))))
                 .check(matches(withText(getStringFormat(ABSTRACT, 2))));
     }
 

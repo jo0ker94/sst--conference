@@ -89,13 +89,13 @@ public class KeynoteCardFragment extends CardFragment {
 
         switch (mPosition) {
             case 1:
-                rootView.setId(R.id.speaker_1);
+                rootView.setId(R.id.fragment_1);
                 break;
             case 2:
-                rootView.setId(R.id.speaker_2);
+                rootView.setId(R.id.fragment_2);
                 break;
             default:
-                rootView.setId(R.id.speaker_0);
+                rootView.setId(R.id.fragment_0);
                 break;
 
         }

@@ -67,6 +67,18 @@ public class CommitteeCardFragment extends CardFragment {
 
         mRecyclerView.setOnTouchListener(new TouchListener());
 
+        switch (mPosition) {
+            case 1:
+                view.setId(R.id.fragment_1);
+                break;
+            case 2:
+                view.setId(R.id.fragment_2);
+                break;
+            default:
+                view.setId(R.id.fragment_0);
+                break;
+        }
+
         return view;
     }
 

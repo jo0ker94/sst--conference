@@ -88,6 +88,7 @@ public class SubscribedActivityTest extends BaseTest {
         sleep(500);
         onView(withText(getString(R.string.deleted_successfully))).check(matches(isDisplayed()));
         onView(withText(getString(R.string.undo).toUpperCase())).perform(click());
+        sleep(300);
         onView(withText(getString(R.string.event_restored))).check(matches(isDisplayed()));
 
         checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
