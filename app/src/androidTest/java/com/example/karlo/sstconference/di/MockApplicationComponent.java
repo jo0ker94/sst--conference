@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.di;
 
+import com.example.karlo.sstconference.ui.ChairsActivityTest;
 import com.example.karlo.sstconference.ui.HomeActivityTest;
 import com.example.karlo.sstconference.ui.KeynoteActivityTest;
 import com.example.karlo.sstconference.ui.LoginActivityTest;
@@ -19,5 +20,6 @@ public interface MockApplicationComponent extends ApplicationComponent {
     void inject(SearchActivityTest target);
     void inject(SubscribedActivityTest target);
     void inject(KeynoteActivityTest target);
+    void inject(ChairsActivityTest target);
 
 }

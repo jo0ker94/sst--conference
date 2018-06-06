@@ -59,6 +59,16 @@ public class ChairsActivity extends AppCompatActivity
 
     private void setUpObservers() {
         mViewModel.getChairs().observe(this, this::showConferenceChairs);
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+            }
+        });
     }
 
     @Override

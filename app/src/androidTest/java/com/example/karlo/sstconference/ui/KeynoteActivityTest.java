@@ -132,5 +132,4 @@ public class KeynoteActivityTest extends BaseTest {
         onView(Matchers.allOf(withId(R.id.progress_bar), isDescendantOfA(withId(R.id.main_content))))
                 .check(matches(not(isDisplayed())));
     }
-
 }

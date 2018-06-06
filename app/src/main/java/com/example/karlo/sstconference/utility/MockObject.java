@@ -196,4 +196,18 @@ public class MockObject {
         }
         return speakers;
     }
+
+    protected List<ConferenceChair> getConferenceChairs(int count) {
+        List<ConferenceChair> conferenceChairs = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            conferenceChairs.add(new ConferenceChair(i,
+                    getStringFormat(TITLE, i),
+                    getStringFormat(MAIL, i),
+                    getStringFormat(FACILITY, i),
+                    getStringFormat(IMAGE, i),
+                    getStringFormat(NAME, i),
+                    getStringFormat(NUMBER, i)));
+        }
+        return conferenceChairs;
+    }
 }
