@@ -2,6 +2,7 @@ package com.example.karlo.sstconference.di;
 
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.modules.home.HomeViewModel;
+import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteViewModel;
 import com.example.karlo.sstconference.modules.login.LoginViewModel;
 import com.example.karlo.sstconference.modules.search.SearchViewModel;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionViewModel;
@@ -42,5 +43,11 @@ public class MockApplicationModule extends ApplicationModule {
     @Singleton
     public SubscriptionViewModel provideSubscriptionViewModel() {
         return Mockito.mock(SubscriptionViewModel.class);
+    }
+
+    @Provides
+    @Singleton
+    public KeynoteViewModel provideKeynoteViewModel() {
+        return Mockito.mock(KeynoteViewModel.class);
     }
 }

@@ -60,6 +60,16 @@ public class KeynoteActivity extends AppCompatActivity
                 showKeynoteSpeakers(keynoteSpeakers);
             }
         });
+        mViewModel.getStatus().observe(this, status -> {
+            switch(status.getResponse()) {
+                case LOADING:
+                    loadingData(status.getState());
+                    break;
+                case ERROR:
+                    showError(new Throwable(status.getMessage()));
+                    break;
+            }
+        });
     }
 
     @Override

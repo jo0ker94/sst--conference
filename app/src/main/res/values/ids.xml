@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="speaker_0" type="id"/>
+    <item name="speaker_1" type="id"/>
+    <item name="speaker_2" type="id"/>
+</resources>

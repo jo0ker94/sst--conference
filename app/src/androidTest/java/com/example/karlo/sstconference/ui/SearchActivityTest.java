@@ -10,6 +10,7 @@ import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
 import com.example.karlo.sstconference.modules.search.SearchViewModel;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,10 +27,12 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Mockito.when;
 
@@ -98,5 +101,28 @@ public class SearchActivityTest extends BaseTest {
                 .check(matches(withText(getStringFormat(TITLE, 0))));
         onView(allOf(withId(R.id.topic_lecturers), isDescendantOfA(withId(R.id.topic_container))))
                 .check(matches(withText(containsString(getStringFormat(NAME, 0)))));
+    }
+
+    @Test
+    public void testErrorMessage() {
+        status.postValue(Status.error(TEST_MESSAGE));
+
+        sleep(500);
+
+        onView(withText(TEST_MESSAGE)).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testProgressBar() {
+        status.postValue(Status.loading(true));
+        sleep(500);
+        onView(Matchers.allOf(withId(R.id.progress_bar), isDescendantOfA(withId(R.id.search_root_container))))
+                .check(matches(isDisplayed()));
+
+        status.postValue(Status.loading(false));
+        sleep(500);
+        onView(Matchers.allOf(withId(R.id.progress_bar), isDescendantOfA(withId(R.id.search_root_container))))
+                .check(matches(not(isDisplayed())));
     }
 }

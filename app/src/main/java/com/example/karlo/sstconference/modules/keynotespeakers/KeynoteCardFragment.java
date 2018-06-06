@@ -87,6 +87,19 @@ public class KeynoteCardFragment extends CardFragment {
 
         scrollView.setOnTouchListener(new TouchListener());
 
+        switch (mPosition) {
+            case 1:
+                rootView.setId(R.id.speaker_1);
+                break;
+            case 2:
+                rootView.setId(R.id.speaker_2);
+                break;
+            default:
+                rootView.setId(R.id.speaker_0);
+                break;
+
+        }
+
         return rootView;
     }
 

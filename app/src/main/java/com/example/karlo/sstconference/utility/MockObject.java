@@ -182,4 +182,18 @@ public class MockObject {
         }
         return topics;
     }
+
+    protected List<KeynoteSpeaker> getKeynoteSpeakers(int count) {
+        List<KeynoteSpeaker> speakers = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            speakers.add(new KeynoteSpeaker(i,
+                    getStringFormat(NAME, i),
+                    getStringFormat(FACILITY, i),
+                    getStringFormat(MAIL, i),
+                    getStringFormat(IMAGE, i),
+                    getStringFormat(TITLE, i),
+                    getStringFormat(ABSTRACT, i)));
+        }
+        return speakers;
+    }
 }
