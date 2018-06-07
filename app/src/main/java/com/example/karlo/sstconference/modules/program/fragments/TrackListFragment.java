@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.TrackAdapter;
-import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.pager.CardFragment;
@@ -25,10 +24,6 @@ import butterknife.ButterKnife;
 public class TrackListFragment extends BaseProgramFragment
         implements CardFragment.OnArrowClick {
 
-    private static final String FIRST_DAY = "18T";
-    private static final String SECOND_DAY = "19T";
-    private static final String THIRD_DAY = "20T";
-
     @BindView(R.id.program_pager)
     ViewPager mViewPager;
 
@@ -36,6 +31,7 @@ public class TrackListFragment extends BaseProgramFragment
     private CardFragmentPagerAdapter mPagerAdapter;
     private List<Track> mTracks = new ArrayList<>();
     private List<Track> mFilteredTracks = new ArrayList<>();
+    private List<String> mDays;
 
     @Nullable
     @Override
@@ -99,29 +95,39 @@ public class TrackListFragment extends BaseProgramFragment
 
     private List<Track> filteredTracks(int position) {
         List<Track> filtered = new ArrayList<>();
-        String date = FIRST_DAY;
-        switch (position) {
-            case 0:
-                date = FIRST_DAY;
-                break;
-            case 1:
-                date = SECOND_DAY;
-                break;
-            case 2:
-                date = THIRD_DAY;
-                break;
-
-        }
         for (Track track : mTracks) {
-            if (track.getStartDate().contains(date)) {
+            if (track.getStartDate().contains(getDate(position))) {
                 filtered.add(track);
             }
         }
-
         mFilteredTracks.clear();
         mFilteredTracks.addAll(filtered);
 
         return filtered;
+    }
+
+    private String getDate(int position) {
+        if (mDays == null) {
+            mDays = new ArrayList<>();
+        }
+        if (mDays.isEmpty()) {
+            String[] dates = getResources().getStringArray(R.array.conference_dates);
+            for (String string : dates) {
+                String start = string.split(" ")[0];
+                if (!start.isEmpty() && !mDays.contains(start)) {
+                    mDays.add(start);
+                }
+            }
+        }
+        switch (position) {
+            case 0:
+                return String.format("%sT", mDays.get(0));
+            case 1:
+                return String.format("%sT", mDays.get(1));
+            case 2:
+                return String.format("%sT", mDays.get(2));
+        }
+        return "";
     }
 
     @Override

@@ -50,8 +50,8 @@ public class MockObject {
     protected static String HOTEL = "hotel";
     protected static String REGION = "region";
 
-    protected static String START_DATE = "12.12.2012";
-    protected static String END_DATE = "15.12.2012";
+    protected static String START_DATE = "2017-10-18T11:25:00+02:00";
+    protected static String END_DATE = "2017-10-18T11:25:00+02:00";
 
     protected static int PARENT_ID = 12;
     protected static int ROOM = 0;
@@ -229,5 +229,31 @@ public class MockObject {
                     getStringFormat(IMAGE, i)));
         }
         return images;
+    }
+
+    protected List<Track> getTracks(int count) {
+        List<Track> tracks = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            tracks.add(new Track(i,
+                    getStringFormat(START_DATE, i),
+                    getStringFormat(END_DATE, i),
+                    i,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople()));
+        }
+        return tracks;
+    }
+
+    protected List<Comment> getComments(int count) {
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            comments.add(new Comment(i,
+                    getStringFormat(TEXT, i),
+                    getStringFormat(USER_ID, i),
+                    PARENT_ID,
+                    getStringFormat(AUTHOR, i),
+                    getStringFormat(TIMESTAMP, i)));
+        }
+        return comments;
     }
 }

@@ -5,6 +5,7 @@ import com.example.karlo.sstconference.ui.CommitteeActivityTest;
 import com.example.karlo.sstconference.ui.HomeActivityTest;
 import com.example.karlo.sstconference.ui.KeynoteActivityTest;
 import com.example.karlo.sstconference.ui.LoginActivityTest;
+import com.example.karlo.sstconference.ui.ProgramActivityTest;
 import com.example.karlo.sstconference.ui.SearchActivityTest;
 import com.example.karlo.sstconference.ui.SubscribedActivityTest;
 import com.example.karlo.sstconference.ui.VenueActivityTest;
@@ -25,5 +26,6 @@ public interface MockApplicationComponent extends ApplicationComponent {
     void inject(ChairsActivityTest target);
     void inject(CommitteeActivityTest target);
     void inject(VenueActivityTest target);
+    void inject(ProgramActivityTest target);
 
 }

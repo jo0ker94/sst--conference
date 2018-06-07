@@ -38,9 +38,6 @@
             android:name=".modules.home.HomeActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".modules.calendar.CalendarActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".modules.search.SearchActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -53,6 +50,9 @@
         <activity android:name=".modules.venue.VenueActivity" />
         <activity android:name=".modules.committee.CommitteeActivity" />
         <activity android:name=".modules.keynotespeakers.KeynoteActivity" />
+        <activity android:name=".modules.chairs.ChairsActivity" />
+        <activity android:name=".modules.settings.SettingsActivity" />
+        <activity android:name=".modules.about.AboutActivity" />
 
         <receiver android:name=".receivers.EventAlarmReceiver" />
 
@@ -65,9 +65,6 @@
 
         <service android:name=".service.SendReminderService" />
 
-        <activity android:name=".modules.chairs.ChairsActivity" />
-        <activity android:name=".modules.settings.SettingsActivity" />
-        <activity android:name=".modules.about.AboutActivity"></activity>
     </application>
 
 </manifest>
