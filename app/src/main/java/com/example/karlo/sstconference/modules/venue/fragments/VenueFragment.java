@@ -137,6 +137,7 @@ public class VenueFragment extends BaseMapFragment {
 
             case CONFERENCE:
                 setTitle(getString(R.string.conference));
+                mBaseLayout.setId(R.id.fragment_0);
                 if (mVenue != null) {
                     populateSection(mVenue.getHotel());
                 } else {
@@ -149,6 +150,7 @@ public class VenueFragment extends BaseMapFragment {
 
             case REGION:
                 setTitle(getString(R.string.region));
+                mBaseLayout.setId(R.id.fragment_1);
                 if (mVenue != null) {
                     populateSection(mVenue.getRegion());
                 } else {
@@ -161,16 +163,19 @@ public class VenueFragment extends BaseMapFragment {
 
             case FOOD:
                 setTitle(getString(R.string.food));
+                mBaseLayout.setId(R.id.fragment_2);
                 addFoodSwitchSection();
                 break;
 
             case SIGHTS:
                 setTitle(getString(R.string.sights));
+                mBaseLayout.setId(R.id.fragment_3);
                 addSightsSwitchSection();
                 break;
 
             case FACULTY:
                 setTitle(getString(R.string.faculty));
+                mBaseLayout.setId(R.id.fragment_4);
                 if (mVenue != null) {
                     populateSection(mVenue.getFaculty());
                 } else {

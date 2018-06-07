@@ -9,6 +9,7 @@ import com.example.karlo.sstconference.modules.keynotespeakers.KeynoteViewModel;
 import com.example.karlo.sstconference.modules.login.LoginViewModel;
 import com.example.karlo.sstconference.modules.search.SearchViewModel;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionViewModel;
+import com.example.karlo.sstconference.modules.venue.VenueViewModel;
 
 import org.mockito.Mockito;
 
@@ -70,5 +71,11 @@ public class MockApplicationModule extends ApplicationModule {
     @Singleton
     public GalleryViewModel provideGalleryViewModel() {
         return Mockito.mock(GalleryViewModel.class);
+    }
+
+    @Provides
+    @Singleton
+    public VenueViewModel provideVenueViewModel() {
+        return Mockito.mock(VenueViewModel.class);
     }
 }

@@ -3,4 +3,6 @@
     <item name="fragment_0" type="id"/>
     <item name="fragment_1" type="id"/>
     <item name="fragment_2" type="id"/>
+    <item name="fragment_3" type="id"/>
+    <item name="fragment_4" type="id"/>
 </resources>
