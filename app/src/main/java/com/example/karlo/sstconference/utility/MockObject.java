@@ -57,8 +57,8 @@ public class MockObject {
     protected static int ROOM = 0;
     protected static int TYPE = 0;
 
-    protected static double LAT = 124.123;
-    protected static double LNG = 21.532;
+    protected static double LAT = 45.56214079999999;
+    protected static double LNG = 18.67980280000006;
 
     protected ConferenceChair getConferenceChair() {
         return getConferenceChair(0);

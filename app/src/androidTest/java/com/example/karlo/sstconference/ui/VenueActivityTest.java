@@ -2,10 +2,15 @@ package com.example.karlo.sstconference.ui;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Status;
+import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.modules.venue.VenueViewModel;
@@ -18,6 +23,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
@@ -39,6 +45,7 @@ public class VenueActivityTest extends BaseTest {
     public final ActivityTestRule<VenueActivity> mRule = new ActivityTestRule<>(VenueActivity.class, false, false);
 
     private MutableLiveData<Venue> venue = new MutableLiveData<>();
+    private MutableLiveData<MarkersGroup> markers = new MutableLiveData<>();
     private MutableLiveData<Status> status = new MutableLiveData<>();
 
     @Before
@@ -46,7 +53,7 @@ public class VenueActivityTest extends BaseTest {
         getApp().getComponent().inject(this);
         when(viewModel.getVenueDetails()).thenReturn(venue);
         when(viewModel.getStatus()).thenReturn(status);
-        when(viewModel.getMarkerGroup()).thenReturn(new MutableLiveData<>());
+        when(viewModel.getMarkerGroup()).thenReturn(markers);
         mRule.launchActivity(null);
         clearDatabaseAndPrefs();
     }
@@ -54,6 +61,19 @@ public class VenueActivityTest extends BaseTest {
     @After
     public void clearData() {
         clearDatabaseAndPrefs();
+    }
+
+    @Test
+    public void testMapMarkerShowing() throws UiObjectNotFoundException {
+        venue.postValue(getVenue());
+
+        onView(allOf(withText(getString(R.string.show_map)), isDescendantOfA(withId(R.id.fragment_0)))).check(matches(isDisplayed()));
+        onView(allOf(withText(getString(R.string.show_map)), isDescendantOfA(withId(R.id.fragment_0)))).perform(click());
+        onView(allOf(withText(getString(R.string.hide_map)), isDescendantOfA(withId(R.id.fragment_0)))).check(matches(isDisplayed()));
+
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        UiObject marker = device.findObject(new UiSelector().descriptionContains(TITLE));
+        marker.click();
     }
 
     @Test
