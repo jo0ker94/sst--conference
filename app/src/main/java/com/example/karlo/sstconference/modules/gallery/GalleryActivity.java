@@ -89,12 +89,12 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         }
 
     private void setUpObservers() {
-        mViewModel.getImages().observe(this, strings -> {
+        mViewModel.getImages().observe(this, images -> {
             mProgressBar.setVisibility(View.GONE);
-            if (strings != null && !strings.isEmpty()) {
+            if (images != null && !images.isEmpty()) {
                 boolean hasData = !mItems.isEmpty();
                 mItems.clear();
-                mItems.addAll(strings);
+                mItems.addAll(images);
                 showImages(hasData);
                 mEmptyData.setVisibility(View.GONE);
             } else {

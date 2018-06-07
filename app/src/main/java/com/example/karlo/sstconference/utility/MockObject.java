@@ -221,4 +221,13 @@ public class MockObject {
         }
         return committeeMembers;
     }
+
+    protected List<Image> getImages(int count) {
+        List<Image> images = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            images.add(new Image(i,
+                    getStringFormat(IMAGE, i)));
+        }
+        return images;
+    }
 }

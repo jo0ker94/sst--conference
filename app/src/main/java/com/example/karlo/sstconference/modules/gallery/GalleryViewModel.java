@@ -50,7 +50,7 @@ public class GalleryViewModel extends AndroidViewModel {
         this.mDataSource = dataSource;
     }
 
-    public void downloadImages() {
+    private void downloadImages() {
         mCompositeDisposable.add(mDataSource
                 .getImages()
                 .subscribeOn(Schedulers.io())
