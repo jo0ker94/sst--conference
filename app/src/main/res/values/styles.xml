@@ -158,4 +158,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ProgressBar" parent="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

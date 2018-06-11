@@ -42,9 +42,5 @@
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:progressBarStyleLarge"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        style="@style/ProgressBar"/>
 </RelativeLayout>
