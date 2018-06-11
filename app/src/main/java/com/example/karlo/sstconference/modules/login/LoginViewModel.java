@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
@@ -34,12 +35,15 @@ public class LoginViewModel extends BaseViewModel {
     private static final String TAG = "LoginViewModel";
     private MutableLiveData<User> mUser;
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mFirebaseDatabase;
     private UserDataSource mDataSource;
 
     @Inject
-    public LoginViewModel(UserDataSource userDataSource) {
+    public LoginViewModel(UserDataSource userDataSource, FirebaseAuth firebaseAuth, FirebaseDatabase firebaseDatabase) {
         this.mDataSource = userDataSource;
+        this.mAuth = firebaseAuth;
+        this.mFirebaseDatabase = firebaseDatabase;
     }
 
     private void checkIfLoggedIn() {
@@ -165,7 +169,7 @@ public class LoginViewModel extends BaseViewModel {
     }
 
     private void pushUserToServer(FirebaseUser firebaseUser, String displayName) {
-        DatabaseHelper.getUserReference()
+        DatabaseHelper.getUserReference(mFirebaseDatabase)
                 .child(firebaseUser.getUid())
                 .setValue(new User(
                         firebaseUser.getUid(),

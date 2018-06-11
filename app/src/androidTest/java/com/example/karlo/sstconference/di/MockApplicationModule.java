@@ -11,6 +11,9 @@ import com.example.karlo.sstconference.modules.program.ProgramViewModel;
 import com.example.karlo.sstconference.modules.search.SearchViewModel;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionViewModel;
 import com.example.karlo.sstconference.modules.venue.VenueViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import org.mockito.Mockito;
 
@@ -84,5 +87,23 @@ public class MockApplicationModule extends ApplicationModule {
     @Singleton
     public ProgramViewModel provideProgramViewModel() {
         return Mockito.mock(ProgramViewModel.class);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseAuth provideFirebaseAuth() {
+        return Mockito.mock(FirebaseAuth.class);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseStorage provideFirebaseStorage() {
+        return Mockito.mock(FirebaseStorage.class);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseDatabase provideFirebaseDatabase() {
+        return Mockito.mock(FirebaseDatabase.class);
     }
 }

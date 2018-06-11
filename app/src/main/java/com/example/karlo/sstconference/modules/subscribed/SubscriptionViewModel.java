@@ -9,6 +9,7 @@ import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Topic;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -25,11 +26,13 @@ public class SubscriptionViewModel extends BaseViewModel {
     private User mUser;
     private UserDataSource mUserDataSource;
     private ProgramDataSource mDataSource;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Inject
-    public SubscriptionViewModel(UserDataSource userDataSource, ProgramDataSource topicDataSource) {
+    public SubscriptionViewModel(UserDataSource userDataSource, ProgramDataSource topicDataSource, FirebaseDatabase firebaseDatabase) {
         this.mDataSource = topicDataSource;
         this.mUserDataSource = userDataSource;
+        this.mFirebaseDatabase = firebaseDatabase;
     }
 
     public void getUserAndFetchEvents() {
@@ -77,7 +80,7 @@ public class SubscriptionViewModel extends BaseViewModel {
             events.remove((Integer) topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference()
+            DatabaseHelper.getUserReference(mFirebaseDatabase)
                     .child(mUser.getUserId())
                     .setValue(mUser);
 

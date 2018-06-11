@@ -33,6 +33,8 @@ import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
 import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.NetworkUtility;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import net.globulus.easyprefs.EasyPrefs;
 
@@ -61,6 +63,10 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
 
     @Inject
     LocalGalleryDataSource mDataSource;
+    @Inject
+    FirebaseStorage mFirebaseStorage;
+    @Inject
+    FirebaseDatabase mFirebaseDatabase;
 
     private GalleryViewModel mViewModel;
     private GalleryFeedAdapter mAdapter;
@@ -81,7 +87,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         setUpToolbar();
 
         mViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
-        mViewModel.setDataSource(mDataSource);
+        mViewModel.setDataSource(mDataSource, mFirebaseStorage, mFirebaseDatabase);
         mProgressDialog = new ProgressDialog(this);
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);

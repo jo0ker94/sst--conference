@@ -9,17 +9,27 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class DatabaseHelper {
 
-    private final static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static FirebaseDatabase INSTANCE = null;
 
-    public static DatabaseReference getUserReference() {
-        return database.getReference("users");
+    private static FirebaseDatabase getDatabaseHelper(FirebaseDatabase firebaseDatabase) {
+        if (INSTANCE == null) {
+            INSTANCE = firebaseDatabase;
+        }
+        return INSTANCE;
     }
 
-    public static DatabaseReference getImagesReference() {
-        return database.getReference("2017/images/");
+    public static DatabaseReference getUserReference(FirebaseDatabase firebaseDatabase) {
+        return getDatabaseHelper(firebaseDatabase)
+                .getReference("users");
     }
 
-    public static DatabaseReference getCommentsReference() {
-        return database.getReference("2017/comments/");
+    public static DatabaseReference getImagesReference(FirebaseDatabase firebaseDatabase) {
+        return getDatabaseHelper(firebaseDatabase)
+                .getReference("2017/images/");
+    }
+
+    public static DatabaseReference getCommentsReference(FirebaseDatabase firebaseDatabase) {
+        return getDatabaseHelper(firebaseDatabase)
+                .getReference("2017/comments/");
     }
 }

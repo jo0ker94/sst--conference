@@ -11,6 +11,7 @@ import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,13 @@ public class ProgramViewModel extends BaseViewModel {
 
     private UserDataSource mUserDataSource;
     private ProgramDataSource mProgramDataSource;
+    private FirebaseDatabase mFirebaseDatabase;
 
     @Inject
-    public ProgramViewModel(UserDataSource userDataSource, ProgramDataSource programDataSource) {
+    public ProgramViewModel(UserDataSource userDataSource, ProgramDataSource programDataSource, FirebaseDatabase firebaseDatabase) {
         this.mUserDataSource = userDataSource;
         this.mProgramDataSource = programDataSource;
+        this.mFirebaseDatabase = firebaseDatabase;
     }
 
     public MutableLiveData<List<Track>> getTracks() {
@@ -205,7 +208,7 @@ public class ProgramViewModel extends BaseViewModel {
             events.add(topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference()
+            DatabaseHelper.getUserReference(mFirebaseDatabase)
                     .child(mUser.getUserId())
                     .setValue(mUser);
 
@@ -225,7 +228,7 @@ public class ProgramViewModel extends BaseViewModel {
             events.remove((Integer) topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference()
+            DatabaseHelper.getUserReference(mFirebaseDatabase)
                     .child(mUser.getUserId())
                     .setValue(mUser);
 
@@ -242,7 +245,7 @@ public class ProgramViewModel extends BaseViewModel {
     public Completable deleteComment(Comment comment) {
         return Completable.fromAction(() -> {
             mComments.remove(comment);
-            DatabaseHelper.getCommentsReference()
+            DatabaseHelper.getCommentsReference(mFirebaseDatabase)
                     .child(String.valueOf(comment.getParentId()))
                     .setValue(mComments);
 
@@ -255,7 +258,7 @@ public class ProgramViewModel extends BaseViewModel {
             mComments = new ArrayList<>();
         }
         return Completable.fromAction(() -> {
-            DatabaseHelper.getCommentsReference()
+            DatabaseHelper.getCommentsReference(mFirebaseDatabase)
                     .child(String.valueOf(comment.getParentId()))
                     .child(String.valueOf(mComments.size()))
                     .setValue(comment);

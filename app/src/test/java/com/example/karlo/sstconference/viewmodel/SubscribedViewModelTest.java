@@ -7,10 +7,13 @@ import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.subscribed.SubscriptionViewModel;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,9 @@ public class SubscribedViewModelTest extends BaseViewModelTest {
 
     @Mock
     private UserDataSource userDataSource;
+
+    @Mock
+    private FirebaseDatabase firebaseDatabase;
 
     @InjectMocks
     private SubscriptionViewModel viewModel;
@@ -82,10 +88,13 @@ public class SubscribedViewModelTest extends BaseViewModelTest {
         }
 
         Observer observer = mock(Observer.class);
+        DatabaseReference reference = Mockito.mock(DatabaseReference.class);
 
         when(userDataSource.getUser()).thenReturn(Maybe.just(user));
         when(userDataSource.insertOrUpdateUser(user)).thenReturn(Completable.complete());
         when(dataSource.getTopics()).thenReturn(Observable.just(topics));
+        when(firebaseDatabase.getReference("users")).thenReturn(reference);
+        when(firebaseDatabase.getReference("users").child(USER_ID)).thenReturn(reference);
 
         viewModel.getSubscribedTopics().observeForever(observer);
         viewModel.getUserAndFetchEvents();

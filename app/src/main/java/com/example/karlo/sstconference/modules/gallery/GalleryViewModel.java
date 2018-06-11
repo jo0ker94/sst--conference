@@ -15,6 +15,7 @@ import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.models.Image;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -35,8 +36,8 @@ public class GalleryViewModel extends AndroidViewModel {
     private MutableLiveData<List<Image>> mImageUrl;
     private List<Image> mImages = new ArrayList<>();
 
-    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
-    private StorageReference mStorageReference = mStorage.getReference();
+    private StorageReference mStorageReference;
+    private FirebaseDatabase mFirebaseDatabase;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -46,8 +47,10 @@ public class GalleryViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void setDataSource(GalleryDataSource dataSource) {
+    public void setDataSource(GalleryDataSource dataSource, FirebaseStorage storage, FirebaseDatabase firebaseDatabase) {
         this.mDataSource = dataSource;
+        this.mStorageReference = storage.getReference();
+        this.mFirebaseDatabase = firebaseDatabase;
     }
 
     private void downloadImages() {
@@ -114,7 +117,7 @@ public class GalleryViewModel extends AndroidViewModel {
 
         Image image = new Image(mImages.size(), path);
 
-        DatabaseHelper.getImagesReference()
+        DatabaseHelper.getImagesReference(mFirebaseDatabase)
                 .child(String.valueOf(mImages.size()))
                 .setValue(image);
 
