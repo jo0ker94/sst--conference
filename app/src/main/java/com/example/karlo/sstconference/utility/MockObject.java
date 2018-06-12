@@ -81,7 +81,11 @@ public class MockObject {
     }
 
     protected CommitteeMember getSteeringCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, STEERING);
+        return getSteeringCommitteeMember(0);
+    }
+
+    protected CommitteeMember getSteeringCommitteeMember(int id) {
+        return new CommitteeMember(id, NAME, FACILITY, STEERING);
     }
 
     protected CommitteeMember getProgramCommitteeMember() {
@@ -93,7 +97,11 @@ public class MockObject {
     }
 
     protected CommitteeMember getOrganizingCommitteeMember() {
-        return new CommitteeMember(0, NAME, FACILITY, ORGANIZING);
+        return getOrganizingCommitteeMember(0);
+    }
+
+    protected CommitteeMember getOrganizingCommitteeMember(int id) {
+        return new CommitteeMember(id, NAME, FACILITY, ORGANIZING);
     }
 
     protected KeynoteSpeaker getKeynoteSpeaker() {
@@ -255,5 +263,17 @@ public class MockObject {
                     getStringFormat(TIMESTAMP, i)));
         }
         return comments;
+    }
+
+    protected List<User> getUsers(int count) {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            users.add(new User(getStringFormat(USER_ID, i),
+                    getStringFormat(MAIL, i),
+                    getStringFormat(DISPLAY_NAME, i),
+                    Uri.parse(getStringFormat(IMAGE, i)),
+                    getSubscribedEvents()));
+        }
+        return users;
     }
 }
