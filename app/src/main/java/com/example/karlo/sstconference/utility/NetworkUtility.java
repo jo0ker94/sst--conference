@@ -28,10 +28,14 @@ public class NetworkUtility {
     }
 
     public static void showNoNetworkDialog(Context context) {
+        showNoNetworkDialog(context, R.string.error_check_internet_connection);
+    }
+
+    public static void showNoNetworkDialog(Context context, int messageRes) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.we_are_sorry)
                 .setCancelable(false)
-                .setMessage(R.string.error_check_internet_connection)
+                .setMessage(messageRes)
                 .setPositiveButton(R.string.ok, null)
                 .show();
     }

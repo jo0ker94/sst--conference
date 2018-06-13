@@ -125,6 +125,7 @@
     <string name="empty" />
     <string name="we_are_sorry">We\'re Sorry</string>
     <string name="error_check_internet_connection">There was an error loading your content. Please check your internet connection and try again.</string>
+    <string name="error_check_internet_connection_maps">There was an error loading content for Google Maps. Please check your internet connection and try again. Or continue without Google Places. </string>
     <string name="show_notifications">Show notifications</string>
     <string name="change_map_radius">Change map radius</string>
     <string name="ferit_organized_and_sponsored">Organized and sponsored by the Faculty of Electrical Engineering, Computer Science and Information Technology Osijek, J. J. Strossmayer University of Osijek</string>

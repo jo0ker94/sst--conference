@@ -321,7 +321,7 @@ public class HomeActivity extends AppCompatActivity
         if (AppConfig.USER_LOGGED_IN) {
             return true;
         } else {
-            Snackbar.make(mLinkToSubscribed.getRootView(), R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
+            Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.login).toUpperCase(), view -> {
                         EasyPrefs.putGuestMode(this, false);
                         logOut();

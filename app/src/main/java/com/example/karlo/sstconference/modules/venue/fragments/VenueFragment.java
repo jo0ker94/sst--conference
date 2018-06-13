@@ -20,8 +20,9 @@ import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.models.venue.VenueMarker;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
-import com.example.karlo.sstconference.ui.HeaderView;
 import com.example.karlo.sstconference.ui.FunctionalButton;
+import com.example.karlo.sstconference.ui.HeaderView;
+import com.example.karlo.sstconference.utility.NetworkUtility;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,7 +45,7 @@ public class VenueFragment extends BaseMapFragment {
     private VenueActivity mActivity;
     private VenueType mType;
 
-    LinearLayout mBaseLayout;
+    private LinearLayout mBaseLayout;
 
     private Venue mVenue;
     private MarkersGroup mMarkersGroup;
@@ -85,7 +86,9 @@ public class VenueFragment extends BaseMapFragment {
     private void setUpObserver() {
         mLocationSet.observe(this, hasLocation -> {
             if (hasLocation != null && hasLocation && (mType == VenueType.FOOD || mType == VenueType.SIGHTS)) {
-                mViewModel.fetchAllPlaces(mType, mCurrentLocation);
+                if (hasNetworkConnection()) {
+                    mViewModel.fetchAllPlaces(mType, mCurrentLocation);
+                }
             }
         });
         mViewModel.getMarkerGroup().observe(this, markers -> {
@@ -280,6 +283,15 @@ public class VenueFragment extends BaseMapFragment {
         List<MarkerOptions> markerOptions = new ArrayList<>();
         markerOptions.add(options);
         showMarkers(markerOptions);
+    }
+
+    private boolean hasNetworkConnection() {
+        if (NetworkUtility.hasNetworkConnection(mActivity)) {
+            return true;
+        } else {
+            NetworkUtility.showNoNetworkDialog(mActivity, R.string.error_check_internet_connection_maps);
+            return false;
+        }
     }
 
     @Override
