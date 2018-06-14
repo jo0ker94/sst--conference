@@ -137,11 +137,11 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void setUpReminders(List<Integer> subscribedEvents) {
-        for (Integer integer : subscribedEvents) {
-            AlarmUtility.scheduleAlarm(this, Calendar.getInstance(), integer, EventAlarmReceiver.class);
-        }
-    }
+    //private void setUpReminders(List<Integer> subscribedEvents) {
+    //    for (Integer integer : subscribedEvents) {
+    //        AlarmUtility.scheduleAlarm(this, Calendar.getInstance(), integer, EventAlarmReceiver.class);
+    //    }
+    //}
 
     private void setUpListeners() {
         mLinkToGallery.setOnClickListener(view -> goToGallery());
@@ -319,7 +319,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private boolean userLoggedIn() {
-        if (AppConfig.USER_LOGGED_IN) {
+        if (!EasyPrefs.getGuestMode(this)) {
             return true;
         } else {
             Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)

@@ -7,6 +7,7 @@ import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.helpers.DatabaseHelper;
+import com.example.karlo.sstconference.mock.MockUtility;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
@@ -203,6 +204,9 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public void subscribeToTopic(Topic topic) {
+        if (MockUtility.isRunningTest()) {
+            return;
+        }
         List<Integer> events = mUser.getSubscribedEvents();
         if (!events.contains(topic.getId())) {
             events.add(topic.getId());

@@ -7,6 +7,7 @@ import android.support.test.espresso.Root;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.uiautomator.UiDevice;
 import android.view.View;
@@ -32,6 +33,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -75,7 +78,8 @@ public class BaseTest extends MockObject {
 
     protected void pressBack() {
         try {
-            onView(withId(android.R.id.home)).perform(click());
+            //onView(withContentDescription("Navigate up")).perform(click());
+            onView(isRoot()).perform(ViewActions.pressMenuKey());
         } catch (Exception e) {
             UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             device.pressBack();

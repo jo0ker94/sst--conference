@@ -39,7 +39,7 @@ android {
         sourceCompatibility 1.8
     }
     testOptions {
-        animationsDisabled true
+        animationsDisabled = true
         unitTests.returnDefaultValues = true
     }
     lintOptions {

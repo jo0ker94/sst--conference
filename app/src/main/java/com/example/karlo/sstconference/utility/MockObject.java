@@ -53,7 +53,7 @@ public class MockObject {
     protected static String REGION = "region";
 
     protected static String START_DATE = "2017-10-18T11:25:00+02:00";
-    protected static String END_DATE = "2017-10-18T11:25:00+02:00";
+    protected static String END_DATE = "2017-10-18T14:25:00+02:00";
 
     protected static int PARENT_ID = 12;
     protected static int ROOM = 0;

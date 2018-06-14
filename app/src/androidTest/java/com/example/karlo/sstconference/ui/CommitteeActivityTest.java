@@ -22,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -119,6 +120,7 @@ public class CommitteeActivityTest extends BaseTest {
         onView(withId(R.id.fragment_1)).perform(swipeLeft());
         onView(withId(R.id.fragment_2)).perform(swipeRight());
         try {
+            onView(withId(R.id.fragment_1)).perform(click());
             onView(allOf(withId(R.id.left_arrow), isDescendantOfA(withId(R.id.fragment_1)))).perform(swipeRight());
 
         } catch (Exception e) {

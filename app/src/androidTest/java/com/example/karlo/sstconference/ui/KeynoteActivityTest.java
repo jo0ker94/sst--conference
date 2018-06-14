@@ -70,6 +70,7 @@ public class KeynoteActivityTest extends BaseTest {
                 .check(matches(withText(getStringFormat(TITLE, 0))));
         onView(allOf(withId(R.id.text_abstract), isDescendantOfA(withId(R.id.fragment_0))))
                 .check(matches(withText(getStringFormat(ABSTRACT, 0))));
+        pressBack();
     }
 
     @Test

@@ -32,6 +32,7 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
@@ -133,6 +134,14 @@ public class VenueActivityTest extends BaseTest {
         markersGroup.setLibrary(getMarkersOptions(4));
         markersGroup.setMuseum(getMarkersOptions(3));
 
+        EasyPrefs.putShowRestaurants(mRule.getActivity(), true);
+        EasyPrefs.putShowCafe(mRule.getActivity(), true);
+        EasyPrefs.putShowBars(mRule.getActivity(), true);
+        EasyPrefs.putShowMuseums(mRule.getActivity(), true);
+        EasyPrefs.putShowLibrary(mRule.getActivity(), true);
+        EasyPrefs.putShowChurch(mRule.getActivity(), true);
+        EasyPrefs.putShowZoo(mRule.getActivity(), true);
+
         markers.postValue(markersGroup);
 
         onView(withId(R.id.fragment_0)).perform(swipeLeft());
@@ -196,6 +205,21 @@ public class VenueActivityTest extends BaseTest {
         assertEquals(EasyPrefs.getShowChurch(mRule.getActivity()), true);
         onView(withText(getString(R.string.zoo))).perform(click());
         assertEquals(EasyPrefs.getShowZoo(mRule.getActivity()), true);
+    }
+
+    @Test
+    public void testMapRadius() {
+        venue.postValue(getVenue());
+        onView(withContentDescription(R.string.search)).perform(click());
+
+        onView(withText(String.format(getString(R.string.search_radius), 2000))).check(matches(isDisplayed()));
+
+        onView(withId(R.id.radius_picker)).perform(setNumberPickerValue(650));
+        onView(withId(R.id.units_picker)).perform(setNumberPickerValue(1));
+
+        onView(withText(getString(R.string.ok))).perform(click());
+
+        assertEquals(EasyPrefs.getMapRadius(mRule.getActivity()), 650);
     }
 
     @Test

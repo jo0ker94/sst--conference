@@ -3,6 +3,8 @@ package com.example.karlo.sstconference.ui;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
+import android.view.KeyEvent;
+import android.widget.CheckBox;
 
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
@@ -16,26 +18,44 @@ import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.program.ProgramViewModel;
 import com.example.karlo.sstconference.utility.DateUtility;
 
+import net.globulus.easyprefs.EasyPrefs;
+
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
+import static android.support.test.espresso.action.ViewActions.pressKey;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -110,6 +130,43 @@ public class ProgramActivityTest extends BaseTest {
     }
 
     @Test
+    public void testSwipe() {
+        launchProgramActivity();
+        List<Track> trackList = getTracks(15);
+        trackList.get(1).setStartDate("2017-10-19T11:25:00+02:00");
+        trackList.get(2).setStartDate("2017-10-20T11:25:00+02:00");
+        tracks.postValue(trackList);
+
+        onView(withText(getStringFormat(TITLE, 0))).check(matches(isDisplayed()));
+        onView(withChild(withText(getStringFormat(TITLE, 0)))).perform(swipeLeft());
+        sleep(500);
+        onView(withText(getStringFormat(TITLE, 1))).check(matches(isDisplayed()));
+        onView(withChild(withText(getStringFormat(TITLE, 1)))).perform(swipeLeft());
+        sleep(500);
+        onView(withText(getStringFormat(TITLE, 2))).check(matches(isDisplayed()));
+        onView(withChild(withText(getStringFormat(TITLE, 2)))).perform(swipeLeft());
+        sleep(500);
+    }
+
+    @Test
+    public void testOneTopicIsDisplayed() {
+        launchProgramActivity();
+        tracks.postValue(getTracks(15));
+        topics.postValue(getTopics(1));
+        comments.postValue(getComments(5));
+
+        onView(withText(getStringFormat(TITLE, 0))).perform(click());
+
+        sleep(1000);
+
+        onView(withId(R.id.topic_title)).check(matches(withText(getStringFormat(TITLE, 0))));
+        onView(withId(R.id.topic_lecturers)).check(matches(withText(containsString(getStringFormat(NAME, 0)))));
+
+        getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(getStringFormat(TEXT, 0)))));
+        getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(getStringFormat(AUTHOR, 0)))));
+    }
+
+    @Test
     public void testTopicDetails() {
         launchTopicDetails();
         List<Comment> commentList = getComments(10);
@@ -172,6 +229,41 @@ public class ProgramActivityTest extends BaseTest {
     }
 
     @Test
+    public void testUsersCommentsDelete() {
+        launchTopicDetails();
+        Comment userComment = getComment();
+        Comment otherComment = getComment(1);
+        otherComment.setUserId(getStringFormat(USER_ID, 1));
+        otherComment.setAuthor(getStringFormat(AUTHOR, 1));
+        otherComment.setText(getStringFormat(TEST_MESSAGE, 1));
+        List<Comment> commentList = new ArrayList<>();
+        commentList.add(userComment);
+        commentList.add(otherComment);
+
+        comments.postValue(commentList);
+        user.postValue(getUser());
+        when(viewModel.deleteComment(userComment)).thenReturn(Completable.complete());
+
+        sleep(1000);
+
+        onView(withId(R.id.topic_title)).check(matches(withText(TITLE)));
+        onView(withId(R.id.topic_lecturers)).check(matches(withText(containsString(getStringFormat(NAME, 0)))));
+
+        getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(TEXT))));
+        getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(AUTHOR))));
+        getRecyclerViewItem(R.id.recycler_view, 1).check(matches(hasDescendant(withText(getStringFormat(TEST_MESSAGE, 1)))));
+        getRecyclerViewItem(R.id.recycler_view, 1).check(matches(hasDescendant(withText(getStringFormat(AUTHOR, 1)))));
+
+        getRecyclerViewItem(R.id.recycler_view, 1).perform(click());
+        onView(withText(getStringFormat(USER_ID, 1))).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+
+        getRecyclerViewItem(R.id.recycler_view, 0).perform(longClick());
+        onView(withText(getString(R.string.delete_comment_message))).check(matches(isDisplayed()));
+        onView(withText(getString(R.string.yes))).perform(click());
+    }
+
+    @Test
     public void testFlow() {
         launchProgramActivity();
         tracks.postValue(getTracks(3));
@@ -199,6 +291,106 @@ public class ProgramActivityTest extends BaseTest {
     }
 
     @Test
+    public void testTrackAsTopic() {
+        launchProgramActivity();
+        Topic topic = getTopic();
+        topic.setType(1);
+        List<Topic> topicList = new ArrayList<>();
+        topicList.add(topic);
+        Track track = getTrack();
+        List<Track> trackList = new ArrayList<>();
+        trackList.add(track);
+        tracks.postValue(trackList);
+        topics.postValue(topicList);
+        comments.postValue(getComments(5));
+
+        sleep(1000);
+
+        onView(withText(TITLE)).check(matches(isDisplayed()));
+        onView(withText(TITLE)).perform(click());
+
+        sleep(1000);
+
+        onView(withId(R.id.topic_title)).check(matches(withText(TITLE)));
+        onView(withId(R.id.topic_lecturers)).check(matches(withText(getTimeString())));
+    }
+
+    @Test
+    public void testCommentDelete() {
+        launchProgramActivity();
+        Topic topic = getTopic();
+        topic.setType(1);
+        List<Topic> topicList = new ArrayList<>();
+        topicList.add(topic);
+        Track track = getTrack();
+        List<Track> trackList = new ArrayList<>();
+        trackList.add(track);
+        tracks.postValue(trackList);
+        topics.postValue(topicList);
+        comments.postValue(getComments(5));
+
+        sleep(1000);
+
+        onView(withText(TITLE)).check(matches(isDisplayed()));
+        onView(withText(TITLE)).perform(click());
+
+        sleep(1000);
+
+        onView(withId(R.id.topic_title)).check(matches(withText(TITLE)));
+        onView(withId(R.id.topic_lecturers)).check(matches(withText(getTimeString())));
+    }
+
+    @Test
+    public void testSubscribe() {
+        launchTopicDetails();
+        comments.postValue(getComments(3));
+        user.postValue(getUser());
+        tracks.postValue(getTracks(1));
+        EasyPrefs.putGuestMode(mRule.getActivity(), false);
+        sleep(500);
+
+        onView(withId(R.id.subscribe)).perform(click());
+
+        sleep(500);
+
+        status.postValue(Status.message("Subscribed!"));
+        sleep(500);
+        onView(withText("Subscribed!")).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testAddComment() {
+        launchTopicDetails();
+        comments.postValue(getComments(6));
+        user.postValue(getUser());
+        when(viewModel.addComment(getComment())).thenReturn(Completable.complete());
+
+        onView(withId(R.id.recycler_view)).perform(swipeUp());
+        onView(withId(R.id.recycler_view)).perform(swipeDown());
+
+        //onView(withId(R.id.et_comment)).perform(typeTextIntoFocusedView(TEST_MESSAGE), pressImeActionButton());
+        //onView(withId(R.id.recycler_view)).perform(swipeDown());
+
+        sleep(1000);
+    }
+
+    @Test
+    public void testSubscribeForGuest() {
+        launchTopicDetails();
+        comments.postValue(getComments(3));
+        EasyPrefs.putGuestMode(mRule.getActivity(), true);
+
+        sleep(500);
+
+        onView(withId(R.id.subscribe)).perform(click());
+
+        sleep(500);
+
+        onView(withText(getString(R.string.only_for_logged_in))).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testErrorMessage() {
         launchProgramActivity();
         status.postValue(Status.error(TEST_MESSAGE));
@@ -207,6 +399,17 @@ public class ProgramActivityTest extends BaseTest {
 
         onView(withText(TEST_MESSAGE)).inRoot(new ToastMatcher())
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testNoDataMessage() {
+        launchTopicDetails();
+        user.postValue(getUser());
+        status.postValue(Status.noData(true));
+
+        sleep(500);
+
+        onView(withId(R.id.no_comments)).check(matches(withText(getString(R.string.no_comments))));
     }
 
     @Test
@@ -225,13 +428,14 @@ public class ProgramActivityTest extends BaseTest {
 
     private void checkToolbarTitle() {
         onView(allOf(withText(getStringFormat(TITLE, 0)),
-                childAtPosition(
-                        allOf(withId(R.id.toolbar),
-                                childAtPosition(
-                                        withId(R.id.program_container),
-                                        0)),
-                        0),
+                childAtPosition(withId(R.id.toolbar),0),
                 isDisplayed()))
                 .check(matches(withText(getStringFormat(TITLE, 0))));
+    }
+
+    private String getTimeString() {
+        String sTime = DateUtility.getTimeFromIsoDate(START_DATE);
+        String eTime = DateUtility.getTimeFromIsoDate(END_DATE);
+        return String.format(getString(R.string.time_format), sTime, eTime);
     }
 }

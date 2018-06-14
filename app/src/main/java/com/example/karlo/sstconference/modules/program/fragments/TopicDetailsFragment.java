@@ -160,7 +160,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     }
 
     private boolean userLoggedIn() {
-        if (AppConfig.USER_LOGGED_IN) {
+        if (!EasyPrefs.getGuestMode(mActivity)) {
             return true;
         } else {
             Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
