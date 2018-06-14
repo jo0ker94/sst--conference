@@ -1,5 +1,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +24,6 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="Prof. Jon Doe"
                 android:textSize="20sp"/>
 
             <TextView
@@ -35,7 +35,6 @@
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/button_blue"
-                android:text="mail@email.com"
                 android:textSize="14sp"/>
 
             <TextView
@@ -46,10 +45,10 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="University"
                 android:textSize="14sp"/>
 
             <ImageView
+                tools:ignore="ContentDescription"
                 android:id="@+id/image_view"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
@@ -65,7 +64,6 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="Title"
                 android:textSize="20sp"/>
 
             <TextView
@@ -76,7 +74,6 @@
                 android:fontFamily="sans-serif"
                 android:gravity="start"
                 android:layout_gravity="start"
-                android:text="Abstract"
                 android:textSize="14sp"/>
 
         </LinearLayout>
@@ -91,6 +88,7 @@
         android:visibility="gone">
 
         <ImageView
+            tools:ignore="ContentDescription"
             android:id="@+id/left_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,6 +98,7 @@
             android:padding="20dp"/>
 
         <ImageView
+            tools:ignore="ContentDescription"
             android:id="@+id/right_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

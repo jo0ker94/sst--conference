@@ -16,8 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:textSize="15sp"
-            android:layout_margin="10dp"
-            android:text="9:45h - 11:25h"/>
+            android:layout_margin="10dp"/>
 
         <TextView
             android:id="@+id/track_title"
@@ -28,7 +27,6 @@
             android:layout_margin="10dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:text="Title"
             android:textSize="20sp" />
 
         <TextView
@@ -37,11 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@id/track_time"
             android:gravity="start"
             android:textSize="15sp"
             android:textColor="@color/button_blue"
-            android:layout_margin="10dp"
-            android:text="Room"/>
+            android:layout_margin="10dp"/>
 
 
     </RelativeLayout>

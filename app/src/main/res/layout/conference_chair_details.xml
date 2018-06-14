@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,6 +13,7 @@
         android:layout_marginTop="10dp">
 
         <ImageView
+            tools:ignore="ContentDescription"
             android:id="@+id/chairImageView"
             android:layout_width="120dp"
             android:layout_height="150dp"
@@ -29,7 +31,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="2dp"
-                android:text="Title"
                 android:textColor="@color/algorithm_gray"
                 android:textSize="18sp" />
 
@@ -38,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="2dp"
-                android:text="Name"
                 android:textSize="16sp"
                 android:scrollbars = "vertical"
                 android:layout_marginBottom="5dp"/>
@@ -49,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:padding="2dp"
                 android:scrollbars="vertical"
-                android:text="Email"
                 android:textColor="@color/material_blue"
                 android:textSize="14sp"
                 android:layout_marginBottom="5dp" />
@@ -60,7 +59,6 @@
                 android:layout_height="wrap_content"
                 android:padding="2dp"
                 android:scrollbars="vertical"
-                android:text="Phone"
                 android:textColor="@color/material_blue"
                 android:textSize="14sp" />
 
@@ -74,7 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:scrollbars="vertical"
-        android:text="Facility"
         android:textSize="14sp" />
 
 </LinearLayout>

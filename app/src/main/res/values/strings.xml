@@ -116,6 +116,7 @@
     <string name="show_notifications">Show notifications</string>
     <string name="change_map_radius">Change map radius</string>
     <string name="ferit_organized_and_sponsored">Organized and sponsored by the Faculty of Electrical Engineering, Computer Science and Information Technology Osijek, J. J. Strossmayer University of Osijek</string>
+    <string name="display_name">Display Name</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>

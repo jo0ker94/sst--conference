@@ -20,13 +20,13 @@
         android:id="@+id/user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/timestamp"
         android:layout_alignParentStart="true"
         android:gravity="center"
         android:textSize="14sp"
         android:layout_margin="10dp"
         android:textColor="@color/button_blue"
-        android:textStyle="bold"
-        android:text="User Name"/>
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/title"
@@ -34,11 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_below="@+id/timestamp"
-        android:gravity="left"
+        android:gravity="start"
         android:textSize="16sp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="Title"/>
+        android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

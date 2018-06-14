@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/BasicParentLayout"
     android:id="@+id/fragment_login"
     android:fillViewport="true">
@@ -16,6 +17,7 @@
             android:orientation="vertical">
 
             <ImageView
+                tools:ignore="ContentDescription"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:background="@drawable/people"
@@ -28,6 +30,7 @@
                 android:hint="@string/email_address">
 
                 <EditText
+                    tools:ignore="LabelFor"
                     style="@style/EditTextStyle"
                     android:id="@+id/login_email_et"
                     android:drawableStart="@drawable/ic_mail"
@@ -45,6 +48,7 @@
                 android:layout_marginBottom="10dp">
 
                 <EditText
+                    tools:ignore="LabelFor"
                     style="@style/EditTextStyle"
                     android:id="@+id/login_password_et"
                     android:drawableStart="@drawable/ic_password"
