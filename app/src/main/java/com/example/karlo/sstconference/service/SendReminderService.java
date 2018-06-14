@@ -1,8 +1,6 @@
 package com.example.karlo.sstconference.service;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
-import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,25 +11,23 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
-import com.example.karlo.sstconference.database.LocalDatabase;
-import com.example.karlo.sstconference.database.topic.LocalTopicDataSource;
 import com.example.karlo.sstconference.database.topic.TopicDataSource;
+import com.example.karlo.sstconference.mock.MockUtility;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
-import com.example.karlo.sstconference.servertasks.RetrofitUtil;
-import com.example.karlo.sstconference.servertasks.interfaces.ProgramApi;
+import com.example.karlo.sstconference.utility.MockObject;
 
 import net.globulus.easyprefs.EasyPrefs;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 
 public class SendReminderService extends IntentService {
 
@@ -39,24 +35,25 @@ public class SendReminderService extends IntentService {
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private TopicDataSource mDataSource;
+    @Inject
+    TopicDataSource mDataSource;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((App) getApplication()).getComponent().inject(this);
+    }
 
     public SendReminderService() {
         super("SendReminderService");
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        mDataSource = new LocalTopicDataSource(
-                LocalDatabase.getDatabase(this)
-                        .topicModel(),
-                RetrofitUtil.getRetrofit(Constants.FIREBASE_BASE_URL)
-                        .create(ProgramApi.class));
-    }
-
-    @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        if (MockUtility.isRunningTest()) {
+            handleTopic(new Topic(0, 0, "Title", null, 0));
+            return;
+        }
         if (intent != null && intent.getExtras() != null) {
             String eventId = intent.getExtras().getString(Constants.ID);
             mCompositeDisposable.add(mDataSource.getTopics()
@@ -70,15 +67,9 @@ public class SendReminderService extends IntentService {
     }
 
     private void handleTopic(Topic topic) {
-        //if (isAppInForeground()) {
-        //    //Intent intent = new Intent(SendReminderService.this, ReminderDialog.class);
-        //    //intent.putExtra(Constants.DATA, topic);
-        //    //startActivity(intent);
-        //} else {
         if (EasyPrefs.getShowNotifications(this)) {
             postNotification(topic);
         }
-        //}
     }
 
     private void postNotification(Topic topic) {
@@ -113,24 +104,5 @@ public class SendReminderService extends IntentService {
                 .build();
 
         notificationManager.notify(0, notification);
-    }
-
-    private boolean isAppInForeground() {
-        ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
-        ActivityManager.getMyMemoryState(appProcessInfo);
-        if (appProcessInfo.importance == IMPORTANCE_FOREGROUND
-                || appProcessInfo.importance == IMPORTANCE_VISIBLE) {
-            return true;
-        }
-
-        KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        // App is foreground, but screen is locked, so show notification
-        return km.inKeyguardRestrictedInputMode();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //mCompositeDisposable.clear();
     }
 }

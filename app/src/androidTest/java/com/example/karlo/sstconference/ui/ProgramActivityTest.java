@@ -14,6 +14,7 @@ import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.program.ProgramViewModel;
+import com.example.karlo.sstconference.utility.DateUtility;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -21,6 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -109,7 +112,37 @@ public class ProgramActivityTest extends BaseTest {
     @Test
     public void testTopicDetails() {
         launchTopicDetails();
-        comments.postValue(getComments(10));
+        List<Comment> commentList = getComments(10);
+        Date now = DateUtility.getNowInGMT();
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(now);
+        calendar.add(Calendar.MINUTE, 5);
+        Date minutes = calendar.getTime();
+
+        calendar.setTime(now);
+        calendar.add(Calendar.HOUR, 5);
+        Date hour = calendar.getTime();
+
+        calendar.setTime(now);
+        calendar.add(Calendar.DATE, 5);
+        Date day = calendar.getTime();
+
+        calendar.setTime(now);
+        calendar.add(Calendar.MONTH, 5);
+        Date month = calendar.getTime();
+
+        calendar.setTime(now);
+        calendar.add(Calendar.YEAR, 1);
+        Date year = calendar.getTime();
+
+        commentList.get(0).setTimestamp(DateUtility.getDateInIsoFormat(minutes));
+        commentList.get(1).setTimestamp(DateUtility.getDateInIsoFormat(hour));
+        commentList.get(2).setTimestamp(DateUtility.getDateInIsoFormat(day));
+        commentList.get(3).setTimestamp(DateUtility.getDateInIsoFormat(month));
+        commentList.get(4).setTimestamp(DateUtility.getDateInIsoFormat(year));
+
+        comments.postValue(commentList);
 
         sleep(1000);
 
@@ -162,6 +195,7 @@ public class ProgramActivityTest extends BaseTest {
 
         getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(getStringFormat(TEXT, 0)))));
         getRecyclerViewItem(R.id.recycler_view, 0).check(matches(hasDescendant(withText(getStringFormat(AUTHOR, 0)))));
+        pressBack();
     }
 
     @Test

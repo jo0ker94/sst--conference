@@ -5,7 +5,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
-import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 
 import com.example.karlo.sstconference.BaseTest;
@@ -15,6 +14,8 @@ import com.example.karlo.sstconference.models.venue.MarkersGroup;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.modules.venue.VenueActivity;
 import com.example.karlo.sstconference.modules.venue.VenueViewModel;
+
+import net.globulus.easyprefs.EasyPrefs;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
@@ -33,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
@@ -67,7 +69,7 @@ public class VenueActivityTest extends BaseTest {
     }
 
     @Test
-    public void testMapMarkerShowing() throws UiObjectNotFoundException {
+    public void testMapMarkerShowing() {
         venue.postValue(getVenue());
 
         onView(allOf(withText(getString(R.string.show_map)), isDescendantOfA(withId(R.id.fragment_0)))).check(matches(isDisplayed()));
@@ -75,7 +77,7 @@ public class VenueActivityTest extends BaseTest {
         onView(allOf(withText(getString(R.string.hide_map)), isDescendantOfA(withId(R.id.fragment_0)))).check(matches(isDisplayed()));
 
         UiDevice device = UiDevice.getInstance(getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains(TITLE));
+        UiObject marker = device.findObject(new UiSelector().descriptionContains(getStringFormat(TITLE, 0)));
         try {
             marker.click();
         } catch (Exception e) {
@@ -118,6 +120,82 @@ public class VenueActivityTest extends BaseTest {
         onView(allOf(withText(TITLE), isDescendantOfA(withId(R.id.fragment_4)))).perform(click());
         onView(allOf(withId(R.id.text_view), isDescendantOfA(withId(R.id.fragment_4))))
                 .check(matches(withText(FACULTY)));
+    }
+
+    @Test
+    public void testMarkersShowing() {
+        MarkersGroup markersGroup = new MarkersGroup();
+        markersGroup.setRestaurants(getMarkersOptions(4));
+        markersGroup.setBars(getMarkersOptions(2));
+        markersGroup.setCafe(getMarkersOptions(3));
+        markersGroup.setZoo(getMarkersOptions(1));
+        markersGroup.setChurch(getMarkersOptions(5));
+        markersGroup.setLibrary(getMarkersOptions(4));
+        markersGroup.setMuseum(getMarkersOptions(3));
+
+        markers.postValue(markersGroup);
+
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
+        sleep(300);
+        onView(withId(R.id.fragment_1)).perform(swipeLeft());
+        sleep(300);
+
+        onView(allOf(withText(getString(R.string.show_map)), isDescendantOfA(withId(R.id.fragment_2)))).perform(click());
+        onView(allOf(withText(getString(R.string.hide_map)), isDescendantOfA(withId(R.id.fragment_2)))).check(matches(isDisplayed()));
+
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        UiObject marker = device.findObject(new UiSelector().descriptionContains(getStringFormat(TITLE, 0)));
+        try {
+            marker.click();
+        } catch (Exception e) {
+            /*If emulator has location enabled it will zoom to his location, hence marker will not be seen*/
+        }
+
+        pressBack();
+    }
+
+    @Test
+    public void testFoodSwitches() {
+        venue.postValue(getVenue());
+
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
+        sleep(300);
+        onView(withId(R.id.fragment_1)).perform(swipeLeft());
+        sleep(300);
+
+        onView(allOf(withText(getString(R.string.type_of_places)), isDescendantOfA(withId(R.id.fragment_2)))).perform(click());
+
+        onView(withText(getString(R.string.restaurants))).perform(click());
+        assertEquals(EasyPrefs.getShowRestaurants(mRule.getActivity()), false);
+        onView(withText(getString(R.string.cafe))).perform(click());
+        assertEquals(EasyPrefs.getShowCafe(mRule.getActivity()), true);
+        onView(withText(getString(R.string.bars))).perform(click());
+        assertEquals(EasyPrefs.getShowBars(mRule.getActivity()), true);
+
+        onView(allOf(withText(getString(R.string.type_of_places)), isDescendantOfA(withId(R.id.fragment_2)))).perform(click());
+    }
+
+    @Test
+    public void testSightsSwitches() {
+        venue.postValue(getVenue());
+
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
+        sleep(300);
+        onView(withId(R.id.fragment_1)).perform(swipeLeft());
+        sleep(300);
+        onView(withId(R.id.fragment_2)).perform(swipeLeft());
+        sleep(300);
+
+        onView(allOf(withText(getString(R.string.type_of_places)), isDescendantOfA(withId(R.id.fragment_3)))).perform(click());
+
+        onView(withText(getString(R.string.museum))).perform(click());
+        assertEquals(EasyPrefs.getShowMuseums(mRule.getActivity()), false);
+        onView(withText(getString(R.string.library))).perform(click());
+        assertEquals(EasyPrefs.getShowLibrary(mRule.getActivity()), true);
+        onView(withText(getString(R.string.church))).perform(click());
+        assertEquals(EasyPrefs.getShowChurch(mRule.getActivity()), true);
+        onView(withText(getString(R.string.zoo))).perform(click());
+        assertEquals(EasyPrefs.getShowZoo(mRule.getActivity()), true);
     }
 
     @Test

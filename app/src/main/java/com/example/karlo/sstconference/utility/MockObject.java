@@ -14,6 +14,8 @@ import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.models.venue.Info;
 import com.example.karlo.sstconference.models.venue.Venue;
 import com.example.karlo.sstconference.models.venue.VenueMarker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -275,5 +277,15 @@ public class MockObject {
                     getSubscribedEvents()));
         }
         return users;
+    }
+
+    protected List<MarkerOptions> getMarkersOptions(int count) {
+        List<MarkerOptions> markers = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            markers.add(new MarkerOptions()
+                    .position(new LatLng(LAT, LNG))
+                    .title(getStringFormat(TITLE, i)));
+        }
+        return markers;
     }
 }

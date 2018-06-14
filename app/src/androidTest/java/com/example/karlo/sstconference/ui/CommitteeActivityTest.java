@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -106,6 +107,29 @@ public class CommitteeActivityTest extends BaseTest {
         getCardViewAtPosition(3).check(matches(hasDescendant(withText(getStringFormat(NAME, 3)))));
         getCardViewAtPosition(4).check(matches(hasDescendant(withText(getStringFormat(NAME, 4)))));
         getCardViewAtPosition(5).check(matches(hasDescendant(withText(getStringFormat(NAME, 5)))));
+    }
+
+    @Test
+    public void testSwitchingFragments() {
+        organizingCommittee.postValue(getCommitteeMembers(ORGANIZING,6));
+        steeringCommittee.postValue(getCommitteeMembers(STEERING,4));
+        programCommittee.postValue(getCommitteeMembers(PROGRAM,6));
+
+        onView(withId(R.id.fragment_0)).perform(swipeLeft());
+        onView(withId(R.id.fragment_1)).perform(swipeLeft());
+        onView(withId(R.id.fragment_2)).perform(swipeRight());
+        try {
+            onView(allOf(withId(R.id.left_arrow), isDescendantOfA(withId(R.id.fragment_1)))).perform(swipeRight());
+
+        } catch (Exception e) {
+            onView(withId(R.id.fragment_1)).perform(swipeRight());
+
+        }
+
+        getCardViewAtPosition(0).check(matches(hasDescendant(withText(getStringFormat(NAME, 0)))));
+        getCardViewAtPosition(1).check(matches(hasDescendant(withText(getStringFormat(NAME, 1)))));
+
+        pressBack();
     }
 
     @Test

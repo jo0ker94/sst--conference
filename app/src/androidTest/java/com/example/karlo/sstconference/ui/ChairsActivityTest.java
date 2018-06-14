@@ -1,7 +1,10 @@
 package com.example.karlo.sstconference.ui;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
 
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
@@ -28,6 +31,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Mockito.when;
 
 public class ChairsActivityTest extends BaseTest {
@@ -78,6 +82,21 @@ public class ChairsActivityTest extends BaseTest {
         onView(withId(R.id.tvEmail)).check(matches(withText(getStringFormat(MAIL, 0))));
         onView(withId(R.id.tvPhone)).check(matches(withText(getStringFormat(NUMBER, 0))));
         onView(withId(R.id.tvFacility)).check(matches(withText(getStringFormat(FACILITY, 0))));
+    }
+
+    @Test
+    public void testMailDialog() {
+        chairs.postValue(getConferenceChairs(3));
+        getRecyclerViewItem(R.id.conference_chairs_recycler, 0).perform(click());
+        onView(withId(R.id.tvEmail)).perform(click());
+    }
+
+    @Test
+    public void testDialDialog() {
+        chairs.postValue(getConferenceChairs(3));
+        getRecyclerViewItem(R.id.conference_chairs_recycler, 0).perform(click());
+        onView(withId(R.id.tvPhone)).perform(click());
+        pressBack();
     }
 
     @Test

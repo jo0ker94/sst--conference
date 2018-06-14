@@ -8,6 +8,7 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.uiautomator.UiDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -27,13 +28,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 
 public class BaseTest extends MockObject {
@@ -71,6 +71,16 @@ public class BaseTest extends MockObject {
     protected void clearDatabaseAndPrefs() {
         EasyPrefs.clearAll(getApp());
         LocalDatabase.getDatabase(getApp()).clearAllTables();
+    }
+
+    protected void pressBack() {
+        try {
+            onView(withId(android.R.id.home)).perform(click());
+        } catch (Exception e) {
+            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+            device.pressBack();
+        }
+        sleep(1000);
     }
 
     public class ToastMatcher extends TypeSafeMatcher<Root> {

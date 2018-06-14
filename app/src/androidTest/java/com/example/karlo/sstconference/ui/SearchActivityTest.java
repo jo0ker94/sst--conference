@@ -1,10 +1,14 @@
 package com.example.karlo.sstconference.ui;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
 
 import com.example.karlo.sstconference.BaseTest;
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.modules.search.SearchActivity;
@@ -87,6 +91,17 @@ public class SearchActivityTest extends BaseTest {
     }
 
     @Test
+    public void testNoResult() {
+        topics.postValue(getTopics(5));
+        onView(withContentDescription(R.string.search)).perform(click());
+
+        onView(allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(replaceText("gasgee"), closeSoftKeyboard());
+
+        onView(withId(R.id.no_result)).check(matches(withText(getString(R.string.no_result_found))));
+    }
+
+    @Test
     public void testClickOnItem() {
         topics.postValue(getTopics(5));
         onView(withContentDescription(R.string.search)).perform(click());
@@ -101,6 +116,23 @@ public class SearchActivityTest extends BaseTest {
                 .check(matches(withText(getStringFormat(TITLE, 0))));
         onView(allOf(withId(R.id.topic_lecturers), isDescendantOfA(withId(R.id.topic_container))))
                 .check(matches(withText(containsString(getStringFormat(NAME, 0)))));
+    }
+
+    @Test
+    public void testProgramLink() {
+        Intent intent = new Intent(mRule.getActivity(), SearchActivity.class);
+        intent.putExtra(Constants.INTENT_FROM_PROGRAM, true);
+        mRule.getActivity().startActivity(intent);
+
+        topics.postValue(getTopics(5));
+
+        sleep(1000);
+
+        onView(allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(replaceText("0"), closeSoftKeyboard());
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
+
+        pressBack();
     }
 
     @Test
