@@ -47,7 +47,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/algorithm_gray</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:theme">@style/EditTextTheme</item>
@@ -73,13 +73,8 @@
         <item name="android:background">@drawable/clickable_blue_button_round_corners</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:stateListAnimator">@null</item>
-    </style>
-
-    <style name="LoginButton" parent="ClickableBlueButton">
-        <item name="android:layout_margin">16dp</item>
-        <item name="android:padding">0dp</item>
     </style>
 
     <style name="SideBySideButtonBlue" parent="ClickableBlueButton">
@@ -106,7 +101,7 @@
 
     <style name="ToolbarMenuStyle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
@@ -136,12 +131,12 @@
     </style>
 
     <style name="NumberPickerStyle" parent="AppTheme">
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
         <item name="colorControlNormal">@color/button_blue</item>
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="colorPrimary">@color/material_blue</item>
         <item name="colorAccent">@color/material_blue</item>
     </style>
@@ -154,7 +149,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">28dp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

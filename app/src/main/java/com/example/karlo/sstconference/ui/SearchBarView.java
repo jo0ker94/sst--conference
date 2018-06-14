@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -19,9 +17,6 @@ import android.widget.TextView;
 
 import com.example.karlo.sstconference.Animations;
 import com.example.karlo.sstconference.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Karlo on 21.12.2017..
@@ -34,7 +29,6 @@ public class SearchBarView extends LinearLayout {
     private ImageView mSearchIconImage;
     private ImageView mSearchClearIcon;
     private ImageView mSearchBackIcon;
-    private boolean mIsButton;
     private boolean mInSearchMode = false;
 
     private TextChangedListener mTextChangeListener;
@@ -180,24 +174,6 @@ public class SearchBarView extends LinearLayout {
         mSearchEditText.setOnEditorActionListener(listener);
     }
 
-    public List<String>  filterArrayByText(List<String> items, String text) {
-        String[] filterWords = text.toUpperCase().split(" ");
-        List<String> filteredResults = new ArrayList<>();
-
-        //for(String item : items) {
-        //    if (!item.isDivider()) {
-        //        String[] itemWords = item.getMedicationFromItem().getName().toUpperCase().split(" ");
-        //        for(String filterWord : filterWords) {
-        //            if (Stream.of(itemWords).anyMatch(word -> word.startsWith(filterWord))) {
-        //                filteredMedications.add(item.getMedicationFromItem());
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
-        return filteredResults;
-    }
-
     private void hideKeyboard(View view) {
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -244,34 +220,6 @@ public class SearchBarView extends LinearLayout {
         mFocusChangedListener = focusChangedListener;
     }
 
-    /**
-     * If true, SearchBarView acts as a button. When the view is clicked, it will fire the
-     * OnClickListener. Touch events will not be propagated to its children (ie, EditText).
-     * @param isButton
-     */
-    public void setToButtonMode(boolean isButton) {
-        mIsButton = isButton;
-    }
-
-    GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            return super.onSingleTapConfirmed(e);
-        }
-    };
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mIsButton) {
-            mInSearchMode = true;
-            gestureListener.onSingleTapConfirmed(ev);
-            return true;
-
-        } else {
-            return false;
-        }
-    }
-
     public void resetSearchBar() {
         mInSearchMode = false;
         clearSearchBox();
@@ -280,20 +228,7 @@ public class SearchBarView extends LinearLayout {
         hideKeyboard(mSearchEditText);
     }
 
-    //@Override
-    //public boolean requestFocus() {
-    //    return mSearchEditText.requestFocus();
-    //}
-
     public void setEnabled(boolean enabled) {
         mSearchEditText.setEnabled(enabled);
-    }
-
-    public void setSearchMode(boolean searchMode) {
-        mInSearchMode = searchMode;
-    }
-
-    public boolean getSearchMode() {
-        return mInSearchMode;
     }
 }

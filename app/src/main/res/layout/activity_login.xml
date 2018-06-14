@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -96,6 +96,7 @@
                 android:id="@+id/skip_login_button"
                 android:layout_weight="1"
                 style="@style/SideBySideButtonOrange"
+                android:layout_width="0dp"
                 android:text="@string/skip_login"
                 android:layout_marginStart="5dp"/>
 
@@ -114,6 +115,7 @@
                 android:id="@+id/login_button"
                 android:layout_weight="1"
                 style="@style/SideBySideButtonWhite"
+                android:layout_width="0dp"
                 android:text="@string/login"
                 android:layout_marginStart="5dp"/>
 

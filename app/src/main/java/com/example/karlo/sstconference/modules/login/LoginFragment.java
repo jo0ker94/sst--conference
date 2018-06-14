@@ -104,7 +104,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     }
 
     private void showForgotPasswordDialog() {
-        View view = getLayoutInflater().inflate(R.layout.forgot_password_layout, null);
+        View view = View.inflate(getActivity(), R.layout.forgot_password_layout, null);
         TextInputLayout textInputLayout = view.findViewById(R.id.forgot_password_email);
         new AlertDialog.Builder(getActivity())
                 .setView(view)

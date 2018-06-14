@@ -11,7 +11,6 @@
         />
     <ImageView
         android:layout_alignParentBottom="true"
-        android:id="@+id/underline_image"
         android:layout_alignStart="@+id/tab_image"
         android:layout_alignEnd="@+id/tab_image"
         android:layout_centerHorizontal="true"

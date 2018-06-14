@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -87,7 +88,7 @@ public class SubscribedActivityTest extends BaseTest {
         getRecyclerViewItem(R.id.searchListView, 1).perform(swipeLeft());
         sleep(500);
         onView(withText(getString(R.string.deleted_successfully))).check(matches(isDisplayed()));
-        onView(withText(getString(R.string.undo).toUpperCase())).perform(click());
+        onView(withText(getString(R.string.undo).toUpperCase(Locale.getDefault()))).perform(click());
         sleep(300);
         onView(withText(getString(R.string.event_restored))).check(matches(isDisplayed()));
 

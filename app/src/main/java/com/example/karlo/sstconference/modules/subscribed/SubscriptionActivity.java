@@ -29,6 +29,7 @@ import com.example.karlo.sstconference.utility.AlarmUtility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -210,7 +211,7 @@ public class SubscriptionActivity extends AppCompatActivity
     private void filterTopics(String text) {
         mFilteredTopics.clear();
         for (Topic topic : mTopics) {
-            if (topic.getTitle().toLowerCase().contains(text.toLowerCase())) {
+            if (topic.getTitle().toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
                 mFilteredTopics.add(topic);
             }
         }
@@ -247,7 +248,7 @@ public class SubscriptionActivity extends AppCompatActivity
 
         Snackbar snackbar = Snackbar
                 .make(mRecyclerView, R.string.deleted_successfully, Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.undo).toUpperCase(), view -> {
+                .setAction(getString(R.string.undo).toUpperCase(Locale.getDefault()), view -> {
                     revert[0] = true;
                     Snackbar.make(mRecyclerView, R.string.event_restored, Snackbar.LENGTH_SHORT)
                             .show();

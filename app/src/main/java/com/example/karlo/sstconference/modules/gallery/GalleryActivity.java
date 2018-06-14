@@ -40,6 +40,7 @@ import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -184,7 +185,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
             return true;
         } else {
             Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                    .setAction(getString(R.string.login).toUpperCase(Locale.getDefault()), view -> {
                         EasyPrefs.putGuestMode(this, false);
                         startActivity(new Intent(GalleryActivity.this, LoginActivity.class));
                     })

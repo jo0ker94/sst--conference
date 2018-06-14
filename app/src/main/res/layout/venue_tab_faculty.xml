@@ -13,7 +13,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/tab_image"
         android:layout_alignEnd="@+id/tab_image"
-        android:id="@+id/underline_image"
         android:layout_centerHorizontal="true"
         android:src="@drawable/venue_tab_faculty_underline"
         android:layout_width="wrap_content"

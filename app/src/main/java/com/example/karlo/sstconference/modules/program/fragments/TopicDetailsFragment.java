@@ -2,6 +2,7 @@ package com.example.karlo.sstconference.modules.program.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -42,6 +43,7 @@ import net.globulus.easyprefs.EasyPrefs;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -162,7 +164,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
             return true;
         } else {
             Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                    .setAction(getString(R.string.login).toUpperCase(Locale.getDefault()), view -> {
                         EasyPrefs.putGuestMode(mActivity, false);
                         startActivity(new Intent(mActivity, LoginActivity.class));
                     })
@@ -259,7 +261,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
             mAdapter = new CommentsAdapter(mActivity, mComments, listener);
             mLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
+            }
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();

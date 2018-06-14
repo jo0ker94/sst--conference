@@ -1,8 +1,11 @@
 package com.example.karlo.sstconference.listeners;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class RecyclerViewScrollListener extends RecyclerView.OnScrollListener implements View.OnScrollChangeListener {
 
     private OnRecyclerViewScrollListener mListener;

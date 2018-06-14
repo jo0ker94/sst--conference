@@ -25,6 +25,7 @@ import com.example.karlo.sstconference.ui.SearchBarView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -195,7 +196,7 @@ public class SearchActivity extends AppCompatActivity
     private void filterTopics(String text) {
         mFilteredTopics.clear();
         for (Topic topic : mTopics) {
-            if (topic.getTitle().toLowerCase().contains(text.toLowerCase())) {
+            if (topic.getTitle().toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
                 mFilteredTopics.add(topic);
             }
         }

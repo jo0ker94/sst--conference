@@ -128,7 +128,7 @@ public class ChairsActivity extends AppCompatActivity
     }
 
     private void showChairDetails(ConferenceChair chair) {
-        View view = getLayoutInflater().inflate(R.layout.conference_chair_details, null);
+        View view = View.inflate(this, R.layout.conference_chair_details, null);
         ImageView chairImage = view.findViewById(R.id.chairImageView);
         TextView chairTitle = view.findViewById(R.id.tvTitle);
         TextView chairName = view.findViewById(R.id.tvName);

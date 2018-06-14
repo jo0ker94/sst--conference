@@ -3,6 +3,7 @@ package com.example.karlo.sstconference.modules.venue.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,7 @@ public class VenueFragment extends BaseMapFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_venue_layout, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
         mActivity = (VenueActivity) getActivity();
@@ -192,10 +193,10 @@ public class VenueFragment extends BaseMapFragment {
     }
 
     private void addFoodSwitchSection() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_section_layout, null);
+        View view = View.inflate(mActivity, R.layout.empty_section_layout, null);
         HeaderView content = view.findViewById(R.id.header_view);
         content.setTitle(getString(R.string.type_of_places));
-        View foodSection = LayoutInflater.from(getContext()).inflate(R.layout.food_sections_layout, null);
+        View foodSection = View.inflate(mActivity, R.layout.food_sections_layout, null);
 
         FunctionalButton restaurantsSwitch = foodSection.findViewById(R.id.restaurants_switch);
         FunctionalButton cafeSwitch = foodSection.findViewById(R.id.cafe_switch);
@@ -214,10 +215,10 @@ public class VenueFragment extends BaseMapFragment {
     }
 
     private void addSightsSwitchSection() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_section_layout, null);
+        View view = View.inflate(mActivity, R.layout.empty_section_layout, null);
         HeaderView content = view.findViewById(R.id.header_view);
         content.setTitle(getString(R.string.type_of_places));
-        View sightsSection = LayoutInflater.from(getContext()).inflate(R.layout.sights_section_layout, null);
+        View sightsSection = View.inflate(mActivity, R.layout.sights_section_layout, null);
 
         FunctionalButton museumSwitch = sightsSection.findViewById(R.id.museum_switch);
         FunctionalButton librarySwitch = sightsSection.findViewById(R.id.library_switch);
@@ -248,7 +249,7 @@ public class VenueFragment extends BaseMapFragment {
     }
 
     private void addSection(Info model) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.section_layout, null);
+        View view = View.inflate(mActivity, R.layout.section_layout, null);
 
         HeaderView headerView = view.findViewById(R.id.header_view);
         ImageView imageView = headerView.findViewById(R.id.image_view);

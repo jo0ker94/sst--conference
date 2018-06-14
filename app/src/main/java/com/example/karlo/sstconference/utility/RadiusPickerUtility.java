@@ -22,7 +22,7 @@ public class RadiusPickerUtility {
     }
 
     public static void changeRadiusDialog(Activity context, RadiusPickerListener listener) {
-        View view = context.getLayoutInflater().inflate(R.layout.radius_picker_dialog, null);
+        View view = View.inflate(context, R.layout.radius_picker_dialog, null);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.radius_picker);
         NumberPicker unitsPicker = (NumberPicker) view.findViewById(R.id.units_picker);
 

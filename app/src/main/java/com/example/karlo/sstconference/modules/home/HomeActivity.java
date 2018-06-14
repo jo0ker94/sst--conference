@@ -42,6 +42,7 @@ import net.globulus.easyprefs.EasyPrefs;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -322,7 +323,7 @@ public class HomeActivity extends AppCompatActivity
             return true;
         } else {
             Snackbar.make(mLinkToSubscribed, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.login).toUpperCase(), view -> {
+                    .setAction(getString(R.string.login).toUpperCase(Locale.getDefault()),view -> {
                         EasyPrefs.putGuestMode(this, false);
                         logOut();
                     })
