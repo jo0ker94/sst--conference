@@ -44,6 +44,7 @@ android {
     }
     lintOptions {
         abortOnError false
+        disable 'GradleCompatible','InvalidPackage'
     }
 }
 
@@ -116,7 +117,6 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // -- Dagger 2
-
     implementation 'com.google.dagger:dagger:2.13'
     implementation 'com.google.dagger:dagger-android:2.13'
     implementation 'com.google.dagger:dagger-android-support:2.13'
@@ -124,7 +124,6 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
 
     // -- Architecture Components
-
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.persistence.room:runtime:1.1.0"
     implementation 'android.arch.persistence.room:rxjava2:1.1.0'
@@ -132,11 +131,9 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
 
     // -- Stream
-
     implementation 'com.annimon:stream:1.2.0'
 
     // -- Google Maps
-
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 }

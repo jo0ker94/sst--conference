@@ -24,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -33,6 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LoginViewModel extends BaseViewModel {
 
     private static final String TAG = "LoginViewModel";
+    private static final String SIGN_IN_FAILED = "signInResult:failed code=";
     private MutableLiveData<User> mUser;
 
     private FirebaseAuth mAuth;
@@ -79,10 +79,6 @@ public class LoginViewModel extends BaseViewModel {
             checkIfLoggedIn();
         }
         return mUser;
-    }
-
-    public Completable deleteUser(User user) {
-        return Completable.fromAction(() -> mDataSource.deleteUser(user));
     }
 
     public void login(final LoginRequest request) {
@@ -143,7 +139,7 @@ public class LoginViewModel extends BaseViewModel {
                         mStatus.setValue(Status.loading(false));
                     });
         } catch (ApiException e) {
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Log.w(TAG, SIGN_IN_FAILED + e.getStatusCode());
             mStatus.setValue(Status.error(e.getMessage()));
         }
     }
