@@ -1,6 +1,8 @@
 package com.example.karlo.sstconference.ui;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -15,6 +17,8 @@ import com.example.karlo.sstconference.modules.home.HomeViewModel;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.modules.login.LoginViewModel;
 
+import net.globulus.easyprefs.EasyPrefs;
+
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +30,7 @@ import javax.inject.Inject;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -33,6 +38,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
 public class LoginActivityTest extends BaseTest {
@@ -119,6 +125,26 @@ public class LoginActivityTest extends BaseTest {
     }
 
     @Test
+    public void testForgotPasswordDialog() {
+        userData.postValue(null);
+
+        sleep(1000);
+
+        onView(withId(R.id.forgot_password)).perform(click());
+
+        onView(withText(R.string.forgot_password_message)).check(matches(isDisplayed()));
+        onView(withId(R.id.forgot_password_email_et)).perform(replaceText(MAIL));
+        onView(withText(getString(R.string.submit))).perform(click());
+
+        status.postValue(Status.error(R.string.password_reset_instructions));
+
+        sleep(500);
+
+        onView(withText(getString(R.string.password_reset_instructions))).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testGuestModeLink() {
         userData.postValue(null);
 
@@ -162,6 +188,33 @@ public class LoginActivityTest extends BaseTest {
     }
 
     @Test
+    public void testSwipe() {
+        userData.postValue(null);
+        onView(withId(R.id.create_account)).perform(click());
+        onView(withId(R.id.login_text)).perform(click());
+        onView(withId(R.id.fragment_login)).perform(swipeLeft());
+        Espresso.pressBack();
+    }
+
+    @Test
+    public void testUserAlreadyInGuestMode() {
+        EasyPrefs.putGuestMode(mRule.getActivity(), true);
+        mRule.getActivity().startActivity(new Intent(mRule.getActivity(), LoginActivity.class));
+        userData.postValue(null);
+
+        onView(withId(R.id.program_link)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.drawer))
+                .check(matches(isClosed(Gravity.LEFT)))
+                .perform(DrawerActions.open());
+
+        onView(withId(R.id.navigation_view))
+                .perform(NavigationViewActions.navigateTo(R.id.login));
+
+        onView(withId(R.id.login_button)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testErrorMessage() {
         userData.postValue(null);
         status.postValue(Status.error(TEST_MESSAGE));
@@ -172,6 +225,28 @@ public class LoginActivityTest extends BaseTest {
                 .check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testErrorMessageRes() {
+        userData.postValue(null);
+        status.postValue(Status.error(R.string.app_name));
+
+        sleep(500);
+
+        onView(withText(getString(R.string.app_name))).inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testProgressBar() {
+        userData.postValue(null);
+        status.postValue(Status.loading(true));
+        sleep(500);
+        onView(withId(R.id.progress_bar)).check(matches(isDisplayed()));
+
+        status.postValue(Status.loading(false));
+        sleep(500);
+        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())));
+    }
     private void clickOnLoginButton() {
         onView(withId(R.id.login_button)).perform(click());
     }

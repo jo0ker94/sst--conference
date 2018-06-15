@@ -48,7 +48,8 @@ public class VenueActivityTest extends BaseTest {
     @Rule
     public final ActivityTestRule<VenueActivity> mRule = new ActivityTestRule<>(VenueActivity.class, false, false);
 
-    @Rule public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     private MutableLiveData<Venue> venue = new MutableLiveData<>();
     private MutableLiveData<MarkersGroup> markers = new MutableLiveData<>();

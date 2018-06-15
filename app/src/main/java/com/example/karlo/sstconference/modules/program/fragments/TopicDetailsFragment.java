@@ -2,9 +2,7 @@ package com.example.karlo.sstconference.modules.program.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
@@ -25,8 +23,6 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.CommentsAdapter;
 import com.example.karlo.sstconference.commons.Constants;
-import com.example.karlo.sstconference.listeners.OnRecyclerViewScrollListener;
-import com.example.karlo.sstconference.listeners.RecyclerViewScrollListener;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
@@ -35,7 +31,6 @@ import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.receivers.EventAlarmReceiver;
 import com.example.karlo.sstconference.utility.AlarmUtility;
-import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.DateUtility;
 
 import net.globulus.easyprefs.EasyPrefs;
@@ -51,8 +46,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class TopicDetailsFragment extends BaseProgramFragment
-        implements CommentsAdapter.OnItemClickListener,
-        OnRecyclerViewScrollListener {
+        implements CommentsAdapter.OnItemClickListener {
 
     @BindView(R.id.topic_title)
     TextView mTitle;
@@ -76,10 +70,6 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private Track mTrack;
 
     private CommentsAdapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
-
-    private Parcelable mListState;
-    private int position = 0;
 
     private CheckBox mSubscribedCheckBox;
 
@@ -156,7 +146,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
             mLecturers.setText(getTimeString());
             mViewModel.fetchComments(mTopic.getId());
         }
-        mCommentContainer.setVisibility(AppConfig.USER_LOGGED_IN ? View.VISIBLE : View.GONE);
+        mCommentContainer.setVisibility(EasyPrefs.getGuestMode(mActivity) ? View.GONE : View.VISIBLE);
     }
 
     private boolean userLoggedIn() {
@@ -259,11 +249,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
         mNoComments.setVisibility(View.GONE);
         if (mAdapter == null) {
             mAdapter = new CommentsAdapter(mActivity, mComments, listener);
-            mLayoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
-            }
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -301,82 +288,5 @@ public class TopicDetailsFragment extends BaseProgramFragment
                     .setNegativeButton(R.string.no, null)
                     .show();
         }
-    }
-
-    private void scrollMode() {
-        if (mCommentContainer.getAlpha() == 1f) {
-            mCommentContainer.animate()
-                    .translationYBy(200f)
-                    .setDuration(200)
-                    .alpha(0f)
-                    .start();
-            mCommentContainer.setVisibility(View.GONE);
-            //mTopicContainer.setVisibility(View.GONE);
-            if (mListState != null) {
-                mLayoutManager.onRestoreInstanceState(mListState);
-            }
-        }
-    }
-
-    private void exitScrollMode() {
-        if (mCommentContainer.getAlpha() == 0f) {
-            mCommentContainer.setVisibility(View.VISIBLE);
-            mCommentContainer.animate()
-                    .translationYBy(-200f)
-                    .setDuration(200)
-                    .alpha(1f)
-                    .start();
-            //mTopicContainer.setVisibility(View.VISIBLE);
-            mRecyclerView.scrollToPosition(position);
-        }
-    }
-
-    @Override
-    public void stoppedScrolling() {
-        if (!mRecyclerView.canScrollVertically(-1)) {
-            position = 0;
-        } else {
-            position = mLayoutManager.findLastCompletelyVisibleItemPosition();
-        }
-        mListState = mLayoutManager.onSaveInstanceState();
-        exitScrollMode();
-    }
-
-    @Override
-    public void scrolling() {
-        scrollMode();
-    }
-
-    @Override
-    public void scrollSettling() {
-
-    }
-
-    @Override
-    public void scrolledRight() {
-
-    }
-
-    @Override
-    public void scrolledLeft() {
-
-    }
-
-    @Override
-    public void noHorizontalScroll() {
-
-    }
-
-    @Override
-    public void scrolledDown() {
-    }
-
-    @Override
-    public void scrolledUp() {
-    }
-
-    @Override
-    public void noVerticalScroll() {
-
     }
 }

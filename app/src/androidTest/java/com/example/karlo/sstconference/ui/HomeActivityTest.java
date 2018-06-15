@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.uiautomator.UiDevice;
 import android.view.Gravity;
 
@@ -76,9 +77,11 @@ public class HomeActivityTest extends BaseTest {
     @Inject
     VenueViewModel venueViewModel;
 
-
     @Rule
     public final ActivityTestRule<HomeActivity> mRule = new ActivityTestRule<>(HomeActivity.class, false, false);
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
     private MutableLiveData<User> loginUserData = new MutableLiveData<>();
     private MutableLiveData<User> userData = new MutableLiveData<>();

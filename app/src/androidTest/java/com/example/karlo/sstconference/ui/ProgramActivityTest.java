@@ -16,11 +16,13 @@ import com.example.karlo.sstconference.models.program.Topic;
 import com.example.karlo.sstconference.models.program.Track;
 import com.example.karlo.sstconference.modules.program.ProgramActivity;
 import com.example.karlo.sstconference.modules.program.ProgramViewModel;
+import com.example.karlo.sstconference.modules.search.SearchViewModel;
 import com.example.karlo.sstconference.utility.DateUtility;
 
 import net.globulus.easyprefs.EasyPrefs;
 
 import org.hamcrest.Matchers;
+import org.hamcrest.core.AllOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +39,7 @@ import io.reactivex.Completable;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.pressKey;
@@ -59,12 +62,16 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.when;
 
 public class ProgramActivityTest extends BaseTest {
 
     @Inject
     ProgramViewModel viewModel;
+
+    @Inject
+    SearchViewModel searchViewModel;
 
     @Rule
     public final ActivityTestRule<ProgramActivity> mRule = new ActivityTestRule<>(ProgramActivity.class, false, false);
@@ -80,6 +87,8 @@ public class ProgramActivityTest extends BaseTest {
         getApp().getComponent().inject(this);
         when(viewModel.getTracks()).thenReturn(tracks);
         when(viewModel.getTopics()).thenReturn(topics);
+        when(searchViewModel.getTopics()).thenReturn(topics);
+        when(searchViewModel.getStatus()).thenReturn(status);
         when(viewModel.getComments()).thenReturn(comments);
         when(viewModel.getUser()).thenReturn(user);
         when(viewModel.getStatus()).thenReturn(status);
@@ -291,6 +300,33 @@ public class ProgramActivityTest extends BaseTest {
     }
 
     @Test
+    public void testSearchLink() {
+        launchProgramActivity();
+        tracks.postValue(getTracks(3));
+        topics.postValue(getTopics(5));
+        comments.postValue(getComments(5));
+
+        sleep(1000);
+
+        onView(withText(getStringFormat(TITLE, 0))).check(matches(isDisplayed()));
+
+        onView(withContentDescription(R.string.search)).perform(click());
+
+        onView(AllOf.allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(replaceText("0"), pressImeActionButton());
+        checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
+
+        onView(AllOf.allOf(withId(R.id.search_back_icon), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(click());
+        pressBack();
+
+        onView(withText(getStringFormat(TITLE, 0))).check(matches(isDisplayed()));
+        onView(withText(getStringFormat(TITLE, 0))).perform(click());
+        pressBack();
+        pressBack();
+    }
+
+    @Test
     public void testTrackAsTopic() {
         launchProgramActivity();
         Topic topic = getTopic();
@@ -353,9 +389,9 @@ public class ProgramActivityTest extends BaseTest {
 
         sleep(500);
 
-        status.postValue(Status.message("Subscribed!"));
+        status.postValue(Status.message(getString(R.string.subscribed)));
         sleep(500);
-        onView(withText("Subscribed!")).inRoot(new ToastMatcher())
+        onView(withText(getString(R.string.subscribed))).inRoot(new ToastMatcher())
                 .check(matches(isDisplayed()));
     }
 
@@ -364,15 +400,18 @@ public class ProgramActivityTest extends BaseTest {
         launchTopicDetails();
         comments.postValue(getComments(6));
         user.postValue(getUser());
-        when(viewModel.addComment(getComment())).thenReturn(Completable.complete());
+        when(viewModel.addComment(notNull())).thenReturn(Completable.complete());
 
         onView(withId(R.id.recycler_view)).perform(swipeUp());
         onView(withId(R.id.recycler_view)).perform(swipeDown());
 
-        //onView(withId(R.id.et_comment)).perform(typeTextIntoFocusedView(TEST_MESSAGE), pressImeActionButton());
-        //onView(withId(R.id.recycler_view)).perform(swipeDown());
+        onView(withId(R.id.et_comment)).perform(click());
+        onView(withId(R.id.et_comment)).perform(typeTextIntoFocusedView(TEST_MESSAGE), pressImeActionButton());
+        onView(withId(R.id.recycler_view)).perform(swipeUp());
 
-        sleep(1000);
+        getRecyclerViewItem(R.id.recycler_view, 6).check(matches(hasDescendant(withText(TEST_MESSAGE))));
+        getRecyclerViewItem(R.id.recycler_view, 6).check(matches(hasDescendant(withText(DISPLAY_NAME))));
+        getRecyclerViewItem(R.id.recycler_view, 6).check(matches(hasDescendant(withText(getString(R.string.just_posted)))));
     }
 
     @Test

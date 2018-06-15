@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -111,6 +112,21 @@ public class SubscribedActivityTest extends BaseTest {
                 .perform(replaceText("0"), closeSoftKeyboard());
         checkIfRecyclerViewItemHasText(R.id.searchListView, 0, getStringFormat(TITLE, 0));
         pressBack();
+        pressBack();
+    }
+
+    @Test
+    public void testSearchingAndClearing() {
+        onView(withContentDescription(R.string.search)).perform(click());
+
+        onView(AllOf.allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(replaceText("abc"), pressImeActionButton());
+        onView(AllOf.allOf(withId(R.id.search_clear_image), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(click());
+        onView(AllOf.allOf(withId(R.id.search_edit_text), isDescendantOfA(withId(R.id.search_bar))))
+                .check(matches(withText("")));
+        onView(AllOf.allOf(withId(R.id.search_back_icon), isDescendantOfA(withId(R.id.search_bar))))
+                .perform(click());
         pressBack();
     }
 

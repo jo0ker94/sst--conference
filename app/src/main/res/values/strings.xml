@@ -121,6 +121,7 @@
     <string name="church">Church</string>
     <string name="library">Library</string>
     <string name="zoo">Zoo</string>
+    <string name="subscribed">Subscribed!</string>
 
     <array name="conference_dates">
         <item>18 October 2017</item>
