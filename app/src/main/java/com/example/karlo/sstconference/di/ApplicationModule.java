@@ -1,5 +1,6 @@
 package com.example.karlo.sstconference.di;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.example.karlo.sstconference.App;
@@ -53,6 +54,12 @@ public class ApplicationModule {
 
     public ApplicationModule(App application) {
         this.application = application;
+    }
+
+    @Provides
+    @Singleton
+    public Application provideApplication() {
+        return application;
     }
 
     @Provides

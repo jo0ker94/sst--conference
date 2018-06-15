@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -43,11 +45,12 @@ public class GalleryViewModel extends AndroidViewModel {
 
     private GalleryDataSource mDataSource;
 
-    public GalleryViewModel(@NonNull Application application) {
+    @Inject
+    public GalleryViewModel(@NonNull Application application,
+                            GalleryDataSource dataSource,
+                            FirebaseStorage storage,
+                            FirebaseDatabase firebaseDatabase) {
         super(application);
-    }
-
-    public void setDataSource(GalleryDataSource dataSource, FirebaseStorage storage, FirebaseDatabase firebaseDatabase) {
         this.mDataSource = dataSource;
         this.mStorageReference = storage.getReference();
         this.mFirebaseDatabase = firebaseDatabase;

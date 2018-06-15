@@ -2,7 +2,6 @@ package com.example.karlo.sstconference.modules.gallery;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,16 +24,14 @@ import android.widget.Toast;
 
 import com.example.karlo.sstconference.App;
 import com.example.karlo.sstconference.R;
+import com.example.karlo.sstconference.base.BaseView;
 import com.example.karlo.sstconference.commons.Constants;
-import com.example.karlo.sstconference.database.gallery.LocalGalleryDataSource;
 import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
 import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.NetworkUtility;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 
 import net.globulus.easyprefs.EasyPrefs;
 
@@ -49,7 +46,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class GalleryActivity extends AppCompatActivity implements GalleryFeedAdapter.OnItemClickListener {
+public class GalleryActivity extends AppCompatActivity
+        implements BaseView,
+        GalleryFeedAdapter.OnItemClickListener {
 
     @BindView(R.id.imageListView)
     RecyclerView mRecyclerView;
@@ -63,13 +62,8 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     TextView mEmptyData;
 
     @Inject
-    LocalGalleryDataSource mDataSource;
-    @Inject
-    FirebaseStorage mFirebaseStorage;
-    @Inject
-    FirebaseDatabase mFirebaseDatabase;
+    GalleryViewModel mViewModel;
 
-    private GalleryViewModel mViewModel;
     private GalleryFeedAdapter mAdapter;
     private ProgressDialog mProgressDialog;
 
@@ -86,14 +80,11 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
         mUnbinder = ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
         setUpToolbar();
-
-        mViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
-        mViewModel.setDataSource(mDataSource, mFirebaseStorage, mFirebaseDatabase);
         mProgressDialog = new ProgressDialog(this);
         mProgressBar.setVisibility(View.VISIBLE);
         mEmptyData.setVisibility(View.GONE);
         setUpObservers();
-        }
+    }
 
     private void setUpObservers() {
         mViewModel.getImages().observe(this, images -> {
@@ -112,15 +103,16 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
 
         mViewModel.getStatus().observe(this, status -> {
             switch (status.getResponse()) {
-                case MESSAGE:
-                    Toast.makeText(this, status.getMessage(), Toast.LENGTH_SHORT).show();
-                    mProgressDialog.dismiss();
-                    break;
                 case PROGRESS:
                     mProgressDialog.setMessage(String.format(getString(R.string.upload_process), status.getInteger()));
                     break;
+                case MESSAGE:
                 case ERROR:
-                    Toast.makeText(this, status.getMessage(), Toast.LENGTH_SHORT).show();
+                    showError(new Throwable(status.getMessage()));
+                    mProgressDialog.dismiss();
+                    break;
+                case LOADING:
+                    loadingData(status.getState());
                     break;
             }
         });
@@ -181,7 +173,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
     }
 
     private boolean userLoggedIn() {
-        if (AppConfig.USER_LOGGED_IN) {
+        if (!EasyPrefs.getGuestMode(this)) {
             return true;
         } else {
             Snackbar.make(mRecyclerView, R.string.only_for_logged_in, Snackbar.LENGTH_LONG)
@@ -290,5 +282,15 @@ public class GalleryActivity extends AppCompatActivity implements GalleryFeedAda
             mRecyclerView.setVisibility(View.VISIBLE);
             mViewPager.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void loadingData(boolean loading) {
+        mProgressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showError(Throwable error) {
+        Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }
