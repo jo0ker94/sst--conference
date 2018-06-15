@@ -1,6 +1,7 @@
 package com.example.karlo.sstconference.ui;
 
 import android.Manifest;
+import android.app.Instrumentation;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,8 @@ public class GalleryActivityTest extends BaseTest {
 
     @After
     public void clearData() {
+        //Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        //mRule.getActivity().sendBroadcast(it);
         clearDatabaseAndPrefs();
     }
 
@@ -104,7 +107,6 @@ public class GalleryActivityTest extends BaseTest {
 
         onView(allOf(withId(R.id.imageCard), isCompletelyDisplayed())).perform(click());
         onView(allOf(withId(R.id.shareButton), isCompletelyDisplayed())).check(matches(isDisplayed()));
-        onView(allOf(withId(R.id.shareButton), isCompletelyDisplayed())).perform(click());
         Espresso.pressBack();
     }
 
@@ -140,18 +142,25 @@ public class GalleryActivityTest extends BaseTest {
     }
 
     @Test
-    public void testMenuItems() {
+    public void testUploadMenuItem() {
         images.postValue(null);
         sleep(500);
 
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         onView(withId(R.id.imageUpload)).perform(click());
+        sleep(500);
+        device.pressBack();
+    }
+
+    @Test
+    public void testCameraMenuItems() {
+        images.postValue(null);
+        sleep(500);
+
+        //onView(withId(R.id.takeImage)).perform(click());
         sleep(500);
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        device.pressBack();
-
-        onView(withId(R.id.takeImage)).perform(click());
-        sleep(500);
         device.pressBack();
     }
 
@@ -174,5 +183,10 @@ public class GalleryActivityTest extends BaseTest {
         status.postValue(Status.loading(false));
         sleep(500);
         onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void testLoadingProgress() {
+        status.postValue(Status.progress(55));
     }
 }

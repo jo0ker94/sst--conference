@@ -68,6 +68,7 @@ public class CommitteeActivityTest extends BaseTest {
     @Test
     public void testOrganizingCommittee() {
         organizingCommittee.postValue(getCommitteeMembers(ORGANIZING,6));
+        sleep(1000);
 
         getCardViewAtPosition(0).check(matches(hasDescendant(withText(getStringFormat(NAME, 0)))));
         getCardViewAtPosition(1).check(matches(hasDescendant(withText(getStringFormat(NAME, 1)))));

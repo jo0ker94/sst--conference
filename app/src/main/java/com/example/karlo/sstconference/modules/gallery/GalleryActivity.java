@@ -30,7 +30,6 @@ import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.modules.login.LoginActivity;
 import com.example.karlo.sstconference.pager.CardFragmentPagerAdapter;
 import com.example.karlo.sstconference.pager.ShadowTransformer;
-import com.example.karlo.sstconference.utility.AppConfig;
 import com.example.karlo.sstconference.utility.NetworkUtility;
 
 import net.globulus.easyprefs.EasyPrefs;

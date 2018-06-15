@@ -1,10 +1,13 @@
 package com.example.karlo.sstconference.viewmodel;
 
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 
 import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
 import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.modules.gallery.GalleryViewModel;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,6 +21,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GalleryViewModelTest extends BaseViewModelTest {
+
+    @Mock
+    private Application application;
+
+    @Mock
+    private FirebaseDatabase firebaseDatabase;
+
+    @Mock
+    private FirebaseStorage firebaseStorage;
 
     @Mock
     private GalleryDataSource dataSource;
