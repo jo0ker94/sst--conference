@@ -1,7 +1,9 @@
 package com.example.karlo.sstconference.modules.program.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +27,8 @@ import android.widget.Toast;
 import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.adapters.CommentsAdapter;
 import com.example.karlo.sstconference.commons.Constants;
+import com.example.karlo.sstconference.listeners.OnRecyclerViewScrollListener;
+import com.example.karlo.sstconference.listeners.RecyclerViewScrollListener;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
@@ -47,7 +52,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class TopicDetailsFragment extends BaseProgramFragment
-        implements CommentsAdapter.OnItemClickListener {
+        implements CommentsAdapter.OnItemClickListener,
+        OnRecyclerViewScrollListener {
 
     @BindView(R.id.topic_title)
     TextView mTitle;
@@ -131,6 +137,10 @@ public class TopicDetailsFragment extends BaseProgramFragment
                             showComments(this);
                         }));
             }
+            if (getView() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
             return false;
         });
         mFab.setOnClickListener(view -> enterCommentMode());
@@ -139,6 +149,10 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private void enterCommentMode() {
         mFab.setVisibility(View.GONE);
         mCommentContainer.setVisibility(View.VISIBLE);
+        if(mCommentEditText.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
     }
 
     private void exitCommentMode() {
@@ -266,6 +280,9 @@ public class TopicDetailsFragment extends BaseProgramFragment
             mAdapter = new CommentsAdapter(mActivity, mComments, listener);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mRecyclerView.addOnScrollListener(new RecyclerViewScrollListener(this));
+            }
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataSetChanged();
@@ -279,7 +296,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), mComments.get(position).getUserId(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), mComments.get(position).getAuthor(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -303,5 +320,16 @@ public class TopicDetailsFragment extends BaseProgramFragment
                     .setNegativeButton(R.string.no, null)
                     .show();
         }
+    }
+
+    @Override
+    public void stoppedScrolling() {
+        mFab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void scrolling() {
+        exitCommentMode();
+        mFab.setVisibility(View.GONE);
     }
 }

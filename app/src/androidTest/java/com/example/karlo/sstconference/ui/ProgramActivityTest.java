@@ -405,6 +405,10 @@ public class ProgramActivityTest extends BaseTest {
         onView(withId(R.id.recycler_view)).perform(swipeUp());
         onView(withId(R.id.recycler_view)).perform(swipeDown());
 
+        sleep(500);
+
+        onView(withId(R.id.fab)).perform(click());
+        sleep(500);
         onView(withId(R.id.et_comment)).perform(click());
         onView(withId(R.id.et_comment)).perform(typeTextIntoFocusedView(TEST_MESSAGE), pressImeActionButton());
         onView(withId(R.id.recycler_view)).perform(swipeUp());
