@@ -3,6 +3,7 @@ package com.example.karlo.sstconference.viewmodel;
 import android.arch.lifecycle.Observer;
 import android.net.Uri;
 
+import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
@@ -157,7 +158,6 @@ public class ProgramViewModelTest extends BaseViewModelTest {
 
     @Test
     public void testDeleteTopicSubscription() {
-        User user = getUser();
         List<Topic> topics = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
             topics.add(new Topic(i,
@@ -166,6 +166,141 @@ public class ProgramViewModelTest extends BaseViewModelTest {
                     getListOfPeople(),
                     i));
         }
+        setUpTopicDetails(topics);
+
+        viewModel.deleteTopicSubscription(topics.get(1));
+
+        sleep(1000);
+
+        assertEquals(viewModel.getStatus().getValue().getMessage(), "Unsubscribed!");
+    }
+
+    @Test
+    public void testDeleteTopicSubscriptionError() {
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            topics.add(new Topic(i,
+                    PARENT_ID,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople(),
+                    i));
+        }
+        setUpTopicDetails(topics);
+
+        viewModel.deleteTopicSubscription(topics.get(2));
+
+        sleep(1000);
+
+        assertEquals(viewModel.getStatus().getValue().getResponse(), Status.Response.ERROR);
+    }
+
+    @Test
+    public void testTopicSubscription() {
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            topics.add(new Topic(i,
+                    PARENT_ID,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople(),
+                    i));
+        }
+        setUpTopicDetails(topics);
+
+        viewModel.subscribeToTopic(topics.get(2));
+
+        sleep(1000);
+
+        assertEquals(viewModel.getStatus().getValue().getMessage(), "Subscribed!");
+    }
+
+    @Test
+    public void testTopicSubscriptionError() {
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            topics.add(new Topic(i,
+                    PARENT_ID,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople(),
+                    i));
+        }
+        setUpTopicDetails(topics);
+
+        viewModel.subscribeToTopic(topics.get(1));
+
+        sleep(1000);
+
+        assertEquals(viewModel.getStatus().getValue().getResponse(), Status.Response.ERROR);
+    }
+
+    @Test
+    public void testAddComment() {
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            comments.add(new Comment(i,
+                    getStringFormat(TEXT, i),
+                    getStringFormat(USER_ID, i),
+                    PARENT_ID,
+                    getStringFormat(AUTHOR, i),
+                    getStringFormat(TIMESTAMP, i)));
+        }
+        setUpGetComments(comments);
+        Comment commentToAdd = getComment(21);
+        comments.add(commentToAdd);
+
+        when(dataSource.updateComments(comments)).thenReturn(Completable.complete());
+        viewModel.addComment(commentToAdd)
+        .subscribe(() -> verify(dataSource).insertOrUpdateComment(commentToAdd));
+    }
+
+    @Test
+    public void testDeleteComment() {
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            comments.add(new Comment(i,
+                    getStringFormat(TEXT, i),
+                    getStringFormat(USER_ID, i),
+                    PARENT_ID,
+                    getStringFormat(AUTHOR, i),
+                    getStringFormat(TIMESTAMP, i)));
+        }
+        setUpGetComments(comments);
+        Comment commentToDelete = comments.get(5);
+        comments.remove(commentToDelete);
+
+        when(dataSource.updateComments(comments)).thenReturn(Completable.complete());
+        viewModel.deleteComment(commentToDelete)
+                .subscribe(() -> verify(dataSource).deleteComment(commentToDelete));
+    }
+
+    @Test
+    public void testGetComments() {
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            comments.add(new Comment(i,
+                    getStringFormat(TEXT, i),
+                    getStringFormat(USER_ID, i),
+                    PARENT_ID,
+                    getStringFormat(AUTHOR, i),
+                    getStringFormat(TIMESTAMP, i)));
+        }
+        setUpGetComments(comments);
+    }
+
+    private void setUpGetComments(List<Comment> comments) {
+        Observer observer = mock(Observer.class);
+
+        when(dataSource.getComments(PARENT_ID)).thenReturn(Observable.just(comments));
+
+        viewModel.getComments().observeForever(observer);
+        viewModel.fetchComments(PARENT_ID);
+
+        sleep(500);
+
+        verify(observer).onChanged(comments);
+    }
+
+    private void setUpTopicDetails(List<Topic> topics) {
+        User user = getUser();
 
         Observer observer = mock(Observer.class);
 
@@ -185,32 +320,5 @@ public class ProgramViewModelTest extends BaseViewModelTest {
         sleep(500);
 
         verify(observer).onChanged(topics);
-
-        //viewModel.deleteTopicSubscription(topics.get(1));
-
-    }
-
-    @Test
-    public void testGetComments() {
-        List<Comment> comments = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            comments.add(new Comment(i,
-                    getStringFormat(TEXT, i),
-                    getStringFormat(USER_ID, i),
-                    PARENT_ID,
-                    getStringFormat(AUTHOR, i),
-                    getStringFormat(TIMESTAMP, i)));
-        }
-
-        Observer observer = mock(Observer.class);
-
-        when(dataSource.getComments(PARENT_ID)).thenReturn(Observable.just(comments));
-
-        viewModel.getComments().observeForever(observer);
-        viewModel.fetchComments(PARENT_ID);
-
-        sleep(500);
-
-        verify(observer).onChanged(comments);
     }
 }

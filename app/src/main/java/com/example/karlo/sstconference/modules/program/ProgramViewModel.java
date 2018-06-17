@@ -6,7 +6,6 @@ import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
-import com.example.karlo.sstconference.mock.MockUtility;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Topic;
@@ -203,9 +202,6 @@ public class ProgramViewModel extends BaseViewModel {
     }
 
     public void subscribeToTopic(Topic topic) {
-        if (MockUtility.isRunningTest()) {
-            return;
-        }
         List<Integer> events = mUser.getSubscribedEvents();
         if (!events.contains(topic.getId())) {
             events.add(topic.getId());
@@ -217,7 +213,7 @@ public class ProgramViewModel extends BaseViewModel {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(() -> mStatus.setValue(Status.message("Subscribed!"))));
         } else {
-            mStatus.setValue(Status.message("Already subscribed!"));
+            mStatus.setValue(Status.error("Already subscribed!"));
         }
     }
 

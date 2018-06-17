@@ -8,31 +8,27 @@ import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.LoginRequest;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.modules.login.LoginViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,27 +44,7 @@ public class LoginViewModelTest extends BaseViewModelTest {
     private Task<Void> mockVoidTask;
 
     @Mock
-    private AuthResult mockAuthResult;
-
-    @Mock
-    private DataSnapshot mockDatabaseDataSnapshot;
-
-    @Mock
     private AuthCredential mockCredentials;
-
-    @Mock
-    private FirebaseUser mockUser;
-
-    @Captor
-    private ArgumentCaptor<OnCompleteListener> testOnCompleteListener;
-
-    @Captor
-    private ArgumentCaptor<OnSuccessListener> testOnSuccessListener;
-
-    @Captor
-    private ArgumentCaptor<OnFailureListener> testOnFailureListener;
-
-    private Void mockRes = null;
 
     @Mock
     private UserDataSource userDataSource;
@@ -78,18 +54,13 @@ public class LoginViewModelTest extends BaseViewModelTest {
 
     private User user;
     private Observer observer;
+    private FirebaseUser firebaseUser;
 
     @Before
     public void setup() {
-        when(mockAuthTask.addOnCompleteListener(testOnCompleteListener.capture())).thenReturn(mockAuthTask);
-        when(mockAuthTask.addOnSuccessListener(testOnSuccessListener.capture())).thenReturn(mockAuthTask);
-        when(mockAuthTask.addOnFailureListener(testOnFailureListener.capture())).thenReturn(mockAuthTask);
-
-        when(mockAuth.signInAnonymously()).thenReturn(mockAuthTask);
         when(mockAuth.signInWithEmailAndPassword(MAIL, PASSWORD)).thenReturn(mockAuthTask);
         when(mockAuth.signInWithCredential(mockCredentials)).thenReturn(mockAuthTask);
         when(mockAuth.createUserWithEmailAndPassword(MAIL, PASSWORD)).thenReturn(mockAuthTask);
-        when(mockAuth.sendPasswordResetEmail(MAIL)).thenReturn(mockVoidTask);
     }
 
     @Before
@@ -101,11 +72,10 @@ public class LoginViewModelTest extends BaseViewModelTest {
         when(userDataSource.getUserFromServer(any(String.class))).thenReturn(Observable.just(user));
 
         AuthResult authResult = Mockito.mock(AuthResult.class);
-        FirebaseUser firebaseUser = Mockito.mock(FirebaseUser.class);
+        firebaseUser = Mockito.mock(FirebaseUser.class);
         when(firebaseUser.getDisplayName()).thenReturn(DISPLAY_NAME);
         when(firebaseUser.getEmail()).thenReturn(MAIL);
         when(firebaseUser.getUid()).thenReturn(USER_ID);
-        when(firebaseUser.getDisplayName()).thenReturn(DISPLAY_NAME);
 
         when(mockAuth.getCurrentUser()).thenReturn(firebaseUser);
         when(authResult.getUser()).thenReturn(firebaseUser);
@@ -170,60 +140,43 @@ public class LoginViewModelTest extends BaseViewModelTest {
         sleep(500);
     }
 
-    /*@Mock
-    private UserDataSource userDataSource;
+    @Test
+    public void testGetUserAndSave() {
+        when(userDataSource.getUserFromServer(USER_ID))
+                .thenReturn(Observable.just(user));
 
-    @Mock
-    private FirebaseAuth auth;
+        loginViewModel.getUser().observeForever(observer);
 
-    @InjectMocks
-    private LoginViewModel loginViewModel;
-
-    private User user;
-    private Observer observer;
-
-    @Before
-    public void setUpResponses() {
-        user = getUser();
-        observer = mock(Observer.class);
-        when(userDataSource.getUser()).thenReturn(io.reactivex.Maybe.just(user));
-        when(userDataSource.insertOrUpdateUser(any(User.class))).thenReturn(Completable.complete());
-        when(userDataSource.getUserFromServer(any(String.class))).thenReturn(Observable.just(user));
-
-        AuthResult authResult = Mockito.mock(AuthResult.class);
-        FirebaseUser firebaseUser = Mockito.mock(FirebaseUser.class);
-        when(firebaseUser.getDisplayName()).thenReturn(DISPLAY_NAME);
-        when(firebaseUser.getEmail()).thenReturn(MAIL);
-        when(firebaseUser.getUid()).thenReturn(USER_ID);
-        when(firebaseUser.getDisplayName()).thenReturn(DISPLAY_NAME);
-
-        when(auth.getCurrentUser()).thenReturn(firebaseUser);
-        when(authResult.getUser()).thenReturn(firebaseUser);
-
-        when(auth.signInWithEmailAndPassword(MAIL, PASSWORD)).thenReturn(null);
+        loginViewModel.getUserDataFromServerAndSave(firebaseUser);
+        sleep(500);
+        verify(userDataSource).insertOrUpdateUser(user);
     }
 
     @Test
-    public void testGetUser() {
+    public void testNoUserAndPush() {
+        when(userDataSource.getUserFromServer(USER_ID))
+                .thenReturn(Observable.empty());
+        when(userDataSource.getUser())
+                .thenReturn(Maybe.empty());
+
         loginViewModel.getUser().observeForever(observer);
 
         sleep(500);
 
-        verify(observer).onChanged(user);
+        verify(observer).onChanged(null);
+
+        loginViewModel.getUserDataFromServerAndSave(firebaseUser);
+        sleep(500);
+        verify(userDataSource, never()).insertOrUpdateUser(any(User.class));
     }
 
     @Test
-    public void testLoginUser() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setDisplayName(DISPLAY_NAME);
-        loginRequest.setEmail(MAIL);
-        loginRequest.setPassword(PASSWORD);
-        loginViewModel.getStatus().observeForever(observer);
-        loginViewModel.login(loginRequest);
+    public void testResetPassword() {
+        when(mockAuth.sendPasswordResetEmail(MAIL))
+                .thenReturn(mockVoidTask);
 
+        loginViewModel.resetPassword(MAIL);
         sleep(500);
-
-        assertEquals(loginViewModel.getStatus().getValue().getResponse(), Status.Response.ERROR);
-    }*/
-
+        verify(mockAuth).sendPasswordResetEmail(eq(MAIL));
+    }
 }

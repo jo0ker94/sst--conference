@@ -105,7 +105,7 @@ public class GalleryViewModel extends AndroidViewModel {
         }
     }
 
-    private void saveImageToServer(String name) {
+    public void saveImageToServer(String name) {
         String path = String.format(getApplication().
                         getResources().getString(R.string.image_uri),
                 Constants.FIREBASE_STORAGE_URL,

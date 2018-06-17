@@ -147,7 +147,7 @@ public class LoginViewModel extends BaseViewModel {
         }
     }
 
-    private void getUserDataFromServerAndSave(FirebaseUser firebaseUser) {
+    public void getUserDataFromServerAndSave(FirebaseUser firebaseUser) {
         mCompositeDisposable.add(mDataSource
                 .getUserFromServer(firebaseUser.getUid())
                 .subscribeOn(Schedulers.io())
@@ -159,7 +159,7 @@ public class LoginViewModel extends BaseViewModel {
                                                 getUserDataFromServerAndSave(firebaseUser)))));
     }
 
-    private void saveUserToDatabase(User user) {
+    public void saveUserToDatabase(User user) {
         mCompositeDisposable.add(mDataSource
                 .insertOrUpdateUser(user)
                 .subscribeOn(Schedulers.io())
@@ -167,7 +167,7 @@ public class LoginViewModel extends BaseViewModel {
                 .subscribe(() -> mUser.setValue(user)));
     }
 
-    private Completable pushUserToServer(FirebaseUser firebaseUser, String displayName) {
+    public Completable pushUserToServer(FirebaseUser firebaseUser, String displayName) {
         return mDataSource.insertOrUpdateUser(new User(
                 firebaseUser.getUid(),
                 firebaseUser.getEmail(),
