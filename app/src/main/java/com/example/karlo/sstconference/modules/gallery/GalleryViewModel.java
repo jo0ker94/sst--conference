@@ -13,9 +13,7 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.commons.Constants;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.gallery.GalleryDataSource;
-import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.models.Image;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,7 +37,6 @@ public class GalleryViewModel extends AndroidViewModel {
     private List<Image> mImages = new ArrayList<>();
 
     private StorageReference mStorageReference;
-    private FirebaseDatabase mFirebaseDatabase;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -48,12 +45,10 @@ public class GalleryViewModel extends AndroidViewModel {
     @Inject
     public GalleryViewModel(@NonNull Application application,
                             GalleryDataSource dataSource,
-                            FirebaseStorage storage,
-                            FirebaseDatabase firebaseDatabase) {
+                            FirebaseStorage storage) {
         super(application);
         this.mDataSource = dataSource;
         this.mStorageReference = storage.getReference();
-        this.mFirebaseDatabase = firebaseDatabase;
     }
 
     private void downloadImages() {
@@ -97,8 +92,7 @@ public class GalleryViewModel extends AndroidViewModel {
                 bmp.compress(Bitmap.CompressFormat.JPEG, 30, baos);
             }
             UploadTask uploadTask = ref.putBytes(baos.toByteArray());
-            uploadTask
-                    .addOnSuccessListener(taskSnapshot -> {
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
                         mStatus.setValue(Status.message(getApplication().getResources().getString(R.string.uploaded)));
                         saveImageToServer(name);
                     })
@@ -120,12 +114,11 @@ public class GalleryViewModel extends AndroidViewModel {
 
         Image image = new Image(mImages.size(), path);
 
-        DatabaseHelper.getImagesReference(mFirebaseDatabase)
-                .child(String.valueOf(mImages.size()))
-                .setValue(image);
-
-        mImages.add(image);
-        mImageUrl.setValue(mImages);
+        mCompositeDisposable.add(mDataSource.insertOrUpdateImage(image)
+        .subscribe(() -> {
+            mImages.add(image);
+            mImageUrl.postValue(mImages);
+        }));
     }
 
     @Override

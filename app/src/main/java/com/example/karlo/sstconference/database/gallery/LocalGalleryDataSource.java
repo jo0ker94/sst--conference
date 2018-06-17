@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -42,8 +43,9 @@ public class LocalGalleryDataSource implements GalleryDataSource {
     }
 
     @Override
-    public void insertOrUpdateImage(Image image) {
-        mDao.insertImage(image);
+    public Completable insertOrUpdateImage(Image image) {
+        return mApi.pushImageToServer(String.valueOf(image.getId()), image)
+                .doOnComplete(() -> mDao.insertImage(image));
     }
 
     @Override
