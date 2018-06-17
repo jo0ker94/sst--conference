@@ -56,6 +56,7 @@ public class HomeViewModelTest extends BaseViewModelTest {
         when(userDataSource.deleteUser(any(User.class))).thenReturn(Completable.complete());
 
         homeViewModel.getUser().observeForever(observer);
+        sleep(1000);
         verify(observer).onChanged(user);
         homeViewModel.getStatus().observeForever(observer);
         homeViewModel.signOut();

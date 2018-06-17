@@ -1,6 +1,7 @@
 package com.example.karlo.sstconference.viewmodel;
 
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
 
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.user.UserDataSource;
@@ -161,6 +162,12 @@ public class LoginViewModelTest extends BaseViewModelTest {
         sleep(500);
 
         verify(observer).onChanged(user);
+    }
+
+    @Test
+    public void testSignupWithGoogle() {
+        loginViewModel.signUpWithGoogle(new Intent());
+        sleep(500);
     }
 
     /*@Mock

@@ -3,7 +3,6 @@ package com.example.karlo.sstconference.viewmodel;
 import android.arch.lifecycle.Observer;
 import android.net.Uri;
 
-import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
@@ -63,10 +62,10 @@ public class ProgramViewModelTest extends BaseViewModelTest {
         for (int i = 0; i < 15; i++) {
             users.put(getStringFormat(USER_ID, i),
                     new User(getStringFormat(USER_ID, i),
-                    getStringFormat(MAIL, i),
-                    getStringFormat(DISPLAY_NAME, i),
-                    Uri.parse(getStringFormat(IMAGE.toString(), i)),
-                    getSubscribedEvents()));
+                            getStringFormat(MAIL, i),
+                            getStringFormat(DISPLAY_NAME, i),
+                            Uri.parse(getStringFormat(IMAGE.toString(), i)),
+                            getSubscribedEvents()));
         }
 
         Observer observer = mock(Observer.class);
@@ -126,6 +125,8 @@ public class ProgramViewModelTest extends BaseViewModelTest {
 
         viewModel.fetchTrack(5);
 
+        sleep(1000);
+
         assertEquals(viewModel.getTracks().getValue().get(0), tracks.get(5));
 
     }
@@ -173,6 +174,8 @@ public class ProgramViewModelTest extends BaseViewModelTest {
         when(userDataSource.getUser()).thenReturn(Maybe.just(user));
 
         viewModel.getUser().observeForever(observer);
+
+        sleep(1000);
 
         verify(observer).onChanged(user);
 
