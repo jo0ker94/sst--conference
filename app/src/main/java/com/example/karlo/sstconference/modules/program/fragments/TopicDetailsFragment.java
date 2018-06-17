@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,6 +61,8 @@ public class TopicDetailsFragment extends BaseProgramFragment
     CardView mCommentContainer;
     @BindView(R.id.topic_container)
     CardView mTopicContainer;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
     @BindView(R.id.no_comments)
     TextView mNoComments;
 
@@ -110,6 +113,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
     private void setUpListeners() {
         mCommentEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                exitCommentMode();
                 Comment comment = new Comment(
                         mComments.size(),
                         mCommentEditText.getText().toString(),
@@ -129,6 +133,17 @@ public class TopicDetailsFragment extends BaseProgramFragment
             }
             return false;
         });
+        mFab.setOnClickListener(view -> enterCommentMode());
+    }
+
+    private void enterCommentMode() {
+        mFab.setVisibility(View.GONE);
+        mCommentContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void exitCommentMode() {
+        mFab.setVisibility(View.VISIBLE);
+        mCommentContainer.setVisibility(View.GONE);
     }
 
     private void setUpViews() {
@@ -146,7 +161,7 @@ public class TopicDetailsFragment extends BaseProgramFragment
             mLecturers.setText(getTimeString());
             mViewModel.fetchComments(mTopic.getId());
         }
-        mCommentContainer.setVisibility(EasyPrefs.getGuestMode(mActivity) ? View.GONE : View.VISIBLE);
+        mFab.setVisibility(EasyPrefs.getGuestMode(mActivity) ? View.GONE : View.VISIBLE);
     }
 
     private boolean userLoggedIn() {
