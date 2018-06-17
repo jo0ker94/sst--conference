@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.provider.Settings;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.uiautomator.UiDevice;
@@ -74,6 +75,16 @@ public class GalleryActivityTest extends BaseTest {
         when(viewModel.getStatus()).thenReturn(status);
         mRule.launchActivity(null);
         clearDatabaseAndPrefs();
+    }
+
+    @After
+    public void tearDown() {
+        List<IdlingResource> idlingResourceList = Espresso.getIdlingResources();
+        if (idlingResourceList != null) {
+            for (int i = 0; i < idlingResourceList.size(); i++) {
+                Espresso.unregisterIdlingResources(idlingResourceList.get(i));
+            }
+        }
     }
 
     @After
