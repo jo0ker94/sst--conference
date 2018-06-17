@@ -6,7 +6,6 @@ import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
-import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Topic;
 import com.google.firebase.database.FirebaseDatabase;
@@ -80,15 +79,11 @@ public class SubscriptionViewModel extends BaseViewModel {
             events.remove((Integer) topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference(mFirebaseDatabase)
-                    .child(mUser.getUserId())
-                    .setValue(mUser);
-
-            mCompositeDisposable.add(mUserDataSource
-                    .insertOrUpdateUser(mUser)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> mStatus.setValue(Status.delete(topic.getId()))));
+            mCompositeDisposable.add(
+                    mUserDataSource
+                            .insertOrUpdateUser(mUser)
+                            .subscribe(() ->
+                                    mStatus.postValue(Status.delete(topic.getId()))));
         } else {
             mStatus.setValue(Status.error("Error!"));
         }

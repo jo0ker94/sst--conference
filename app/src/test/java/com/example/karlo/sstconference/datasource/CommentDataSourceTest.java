@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
@@ -69,5 +70,24 @@ public class CommentDataSourceTest extends BaseDataSourceTest {
                         assertEquals(commentList.get(i), apiComments.get(i));
                     }
                 });
+    }
+
+    @Test
+    public void testUpdateComments() {
+        List<Comment> comments = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            comments.add(new Comment(i,
+                    getStringFormat(TEXT, i),
+                    getStringFormat(USER_ID, i),
+                    PARENT_ID,
+                    getStringFormat(AUTHOR, i),
+                    getStringFormat(TIMESTAMP, i)));
+        }
+
+        when(api.updateComments(String.valueOf(12), comments)).thenReturn(Completable.complete());
+
+        dataSource.updateComments(comments);
+        verify(api).updateComments(String.valueOf(12), comments);
     }
 }

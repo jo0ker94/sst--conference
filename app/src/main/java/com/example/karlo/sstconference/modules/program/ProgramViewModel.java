@@ -6,7 +6,6 @@ import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
-import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.mock.MockUtility;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.program.Comment;
@@ -212,15 +211,11 @@ public class ProgramViewModel extends BaseViewModel {
             events.add(topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference(mFirebaseDatabase)
-                    .child(mUser.getUserId())
-                    .setValue(mUser);
-
-            mCompositeDisposable.add(mUserDataSource
-                    .insertOrUpdateUser(mUser)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> mStatus.setValue(Status.message("Subscribed!"))));
+            mCompositeDisposable.add(
+                    mUserDataSource.insertOrUpdateUser(mUser)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> mStatus.setValue(Status.message("Subscribed!"))));
         } else {
             mStatus.setValue(Status.message("Already subscribed!"));
         }
@@ -232,15 +227,11 @@ public class ProgramViewModel extends BaseViewModel {
             events.remove((Integer) topic.getId());
             mUser.setSubscribedEvents(events);
 
-            DatabaseHelper.getUserReference(mFirebaseDatabase)
-                    .child(mUser.getUserId())
-                    .setValue(mUser);
-
-            mCompositeDisposable.add(mUserDataSource
-                    .insertOrUpdateUser(mUser)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> mStatus.setValue(Status.message("Unsubscribed!"))));
+            mCompositeDisposable.add(
+                    mUserDataSource.insertOrUpdateUser(mUser)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> mStatus.setValue(Status.message("Unsubscribed!"))));
         } else {
             mStatus.setValue(Status.error("Error!"));
         }
@@ -249,11 +240,8 @@ public class ProgramViewModel extends BaseViewModel {
     public Completable deleteComment(Comment comment) {
         return Completable.fromAction(() -> {
             mComments.remove(comment);
-            DatabaseHelper.getCommentsReference(mFirebaseDatabase)
-                    .child(String.valueOf(comment.getParentId()))
-                    .setValue(mComments);
-
-            mProgramDataSource.deleteComment(comment);
+            mProgramDataSource.updateComments(mComments)
+                    .subscribe(() -> mProgramDataSource.deleteComment(comment));
         });
     }
 
@@ -262,12 +250,9 @@ public class ProgramViewModel extends BaseViewModel {
             mComments = new ArrayList<>();
         }
         return Completable.fromAction(() -> {
-            DatabaseHelper.getCommentsReference(mFirebaseDatabase)
-                    .child(String.valueOf(comment.getParentId()))
-                    .child(String.valueOf(mComments.size()))
-                    .setValue(comment);
-
-            mProgramDataSource.insertOrUpdateComment(comment);
+            mComments.add(comment);
+            mProgramDataSource.updateComments(mComments)
+                    .subscribe(() -> mProgramDataSource.insertOrUpdateComment(comment));
         });
     }
 }

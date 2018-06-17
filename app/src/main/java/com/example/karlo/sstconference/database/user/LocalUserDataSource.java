@@ -39,7 +39,8 @@ public class LocalUserDataSource implements UserDataSource {
 
     @Override
     public Completable insertOrUpdateUser(User user) {
-        return Completable.fromAction(() -> mUserDao.insertUser(user));
+        return mApi.putUser(user.getUserId(), user)
+                .doOnComplete(() -> mUserDao.insertUser(user));
     }
 
     @Override

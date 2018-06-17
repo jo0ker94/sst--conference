@@ -9,7 +9,6 @@ import com.example.karlo.sstconference.R;
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.user.UserDataSource;
-import com.example.karlo.sstconference.helpers.DatabaseHelper;
 import com.example.karlo.sstconference.models.LoginRequest;
 import com.example.karlo.sstconference.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -24,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -107,9 +107,12 @@ public class LoginViewModel extends BaseViewModel {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            pushUserToServer(firebaseUser, request.getDisplayName());
-                            request.setDisplayName(null);
-                            mStatus.setValue(Status.onSignUp(request));
+                            mCompositeDisposable.add(
+                                    pushUserToServer(firebaseUser, request.getDisplayName())
+                                            .subscribe(() -> {
+                                                request.setDisplayName(null);
+                                                mStatus.postValue(Status.onSignUp(request));
+                                            }));
                         } else {
                             mStatus.setValue(Status.error(task.getException().getMessage()));
                         }
@@ -150,10 +153,10 @@ public class LoginViewModel extends BaseViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::saveUserToDatabase,
-                        throwable -> {
-                            pushUserToServer(firebaseUser, null);
-                            getUserDataFromServerAndSave(firebaseUser);
-                        }));
+                        throwable -> mCompositeDisposable.add(
+                                pushUserToServer(firebaseUser, null)
+                                        .subscribe(() ->
+                                                getUserDataFromServerAndSave(firebaseUser)))));
     }
 
     private void saveUserToDatabase(User user) {
@@ -164,14 +167,12 @@ public class LoginViewModel extends BaseViewModel {
                 .subscribe(() -> mUser.setValue(user)));
     }
 
-    private void pushUserToServer(FirebaseUser firebaseUser, String displayName) {
-        DatabaseHelper.getUserReference(mFirebaseDatabase)
-                .child(firebaseUser.getUid())
-                .setValue(new User(
-                        firebaseUser.getUid(),
-                        firebaseUser.getEmail(),
-                        displayName != null ? displayName : firebaseUser.getDisplayName(),
-                        firebaseUser.getPhotoUrl()));
+    private Completable pushUserToServer(FirebaseUser firebaseUser, String displayName) {
+        return mDataSource.insertOrUpdateUser(new User(
+                firebaseUser.getUid(),
+                firebaseUser.getEmail(),
+                displayName != null ? displayName : firebaseUser.getDisplayName(),
+                firebaseUser.getPhotoUrl()));
     }
 
     public void resetPassword(String email) {

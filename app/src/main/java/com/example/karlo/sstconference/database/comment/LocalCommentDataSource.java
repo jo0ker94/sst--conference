@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -44,6 +45,11 @@ public class LocalCommentDataSource implements CommentDataSource {
     @Override
     public void insertOrUpdateComment(Comment comment) {
         mDao.insertComment(comment);
+    }
+
+    @Override
+    public Completable updateComments(List<Comment> comment) {
+        return mApi.updateComments(String.valueOf(comment.get(0).getParentId()), comment);
     }
 
     @Override

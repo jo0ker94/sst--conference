@@ -73,11 +73,13 @@ public class GalleryActivityTest extends BaseTest {
         getApp().getComponent().inject(this);
         when(viewModel.getImages()).thenReturn(images);
         when(viewModel.getStatus()).thenReturn(status);
-        mRule.launchActivity(null);
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mRule.launchActivity(intent);
         clearDatabaseAndPrefs();
     }
 
-    @After
+    @Before
     public void tearDown() {
         List<IdlingResource> idlingResourceList = Espresso.getIdlingResources();
         if (idlingResourceList != null) {

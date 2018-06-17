@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public class LocalProgramDataSource implements ProgramDataSource {
@@ -64,6 +65,11 @@ public class LocalProgramDataSource implements ProgramDataSource {
     @Override
     public void insertOrUpdateComment(Comment comment) {
         mCommentDataSource.insertOrUpdateComment(comment);
+    }
+
+    @Override
+    public Completable updateComments(List<Comment> comment) {
+        return mCommentDataSource.updateComments(comment);
     }
 
     @Override
