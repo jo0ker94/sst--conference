@@ -264,7 +264,7 @@ public class ProgramActivityTest extends BaseTest {
         getRecyclerViewItem(R.id.recycler_view, 1).check(matches(hasDescendant(withText(getStringFormat(AUTHOR, 1)))));
 
         getRecyclerViewItem(R.id.recycler_view, 1).perform(click());
-        onView(withText(getStringFormat(USER_ID, 1))).inRoot(new ToastMatcher())
+        onView(withText(getStringFormat(AUTHOR, 1))).inRoot(new ToastMatcher())
                 .check(matches(isDisplayed()));
 
         getRecyclerViewItem(R.id.recycler_view, 0).perform(longClick());

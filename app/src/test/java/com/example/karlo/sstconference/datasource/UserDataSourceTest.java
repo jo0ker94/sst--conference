@@ -5,6 +5,7 @@ import com.example.karlo.sstconference.database.user.UserDao;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.servertasks.interfaces.UserApi;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,12 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,14 +35,16 @@ public class UserDataSourceTest extends BaseDataSourceTest {
     @InjectMocks
     private LocalUserDataSource dataSource;
 
-    @Test
-    public void testGetSaveAndDelete() {
-        User user = getUser();
+    private User user;
 
+    @Before
+    public void setupData() {
+        user = getUser();
         when(dao.getUser()).thenReturn(Maybe.just(user));
+    }
 
-        dataSource.deleteUser(user).subscribe(() -> verify(dao).deleteUser(user));
-
+    @Test
+    public void testGet() {
         dataSource.getUser();
         verify(dao).getUser();
 
@@ -90,6 +91,16 @@ public class UserDataSourceTest extends BaseDataSourceTest {
         dataSource.getUserFromServer(USER_ID)
                 .subscribe(responseUser ->
                         assertEquals(responseUser.getDisplayName(), user.getDisplayName()));
+    }
+
+    @Test
+    public void testSave() {
+
+    }
+
+    @Test
+    public void testDelete() {
+        dataSource.deleteUser(user).subscribe(() -> verify(dao).deleteUser(user));
     }
 
     public class UserComparator implements Comparator<User> {

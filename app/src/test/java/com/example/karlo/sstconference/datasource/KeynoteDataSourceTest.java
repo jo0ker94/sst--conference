@@ -31,7 +31,7 @@ public class KeynoteDataSourceTest extends BaseDataSourceTest {
     private LocalKeynoteDataSource dataSource;
 
     @Test
-    public void testGetSaveAndDelete() {
+    public void testGet() {
         List<KeynoteSpeaker> speakers = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -51,12 +51,6 @@ public class KeynoteDataSourceTest extends BaseDataSourceTest {
         when(dao.getKeynoteSpeakers()).thenReturn(Maybe.just(speakers));
         when(api.getKeynoteSpeakers()).thenReturn(Observable.just(apiSpeakers));
 
-        dataSource.insertOrUpdateKeynoteSpeaker(speaker);
-        verify(dao).insertKeynoteSpeaker(speaker);
-
-        dataSource.deleteKeynoteSpeaker(speakers.get(0));
-        verify(dao).deleteKeynoteSpeaker(speakers.get(0));
-
         dataSource.getKeynoteSpeakers();
         verify(dao).getKeynoteSpeakers();
         verify(api).getKeynoteSpeakers();
@@ -71,4 +65,19 @@ public class KeynoteDataSourceTest extends BaseDataSourceTest {
                     }
                 });
     }
+
+    @Test
+    public void testSave() {
+        KeynoteSpeaker speaker = getKeynoteSpeaker(123);
+        dataSource.insertOrUpdateKeynoteSpeaker(speaker);
+        verify(dao).insertKeynoteSpeaker(speaker);
+    }
+
+    @Test
+    public void testDelete() {
+        KeynoteSpeaker speaker = getKeynoteSpeaker(123);
+        dataSource.deleteKeynoteSpeaker(speaker);
+        verify(dao).deleteKeynoteSpeaker(speaker);
+    }
+
 }

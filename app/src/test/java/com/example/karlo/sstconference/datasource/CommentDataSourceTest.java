@@ -32,7 +32,7 @@ public class CommentDataSourceTest extends BaseDataSourceTest {
     private LocalCommentDataSource dataSource;
 
     @Test
-    public void testGetSaveAndDelete() {
+    public void testGet() {
         List<Comment> comments = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -50,12 +50,6 @@ public class CommentDataSourceTest extends BaseDataSourceTest {
 
         when(dao.getComments(PARENT_ID)).thenReturn(Maybe.just(comments));
         when(api.getComments(PARENT_ID)).thenReturn(Observable.just(apiComments));
-
-        dataSource.insertOrUpdateComment(comment);
-        verify(dao).insertComment(comment);
-
-        dataSource.deleteComment(comments.get(0));
-        verify(dao).deleteComment(comments.get(0));
 
         dataSource.getComments(PARENT_ID);
         verify(dao).getComments(PARENT_ID);
@@ -90,4 +84,19 @@ public class CommentDataSourceTest extends BaseDataSourceTest {
         dataSource.updateComments(comments);
         verify(api).updateComments(String.valueOf(12), comments);
     }
+
+    @Test
+    public void testSave() {
+        Comment comment = getComment(123);
+        dataSource.insertOrUpdateComment(comment);
+        verify(dao).insertComment(comment);
+    }
+
+    @Test
+    public void testDelete() {
+        Comment comment = getComment(123);
+        dataSource.deleteComment(comment);
+        verify(dao).deleteComment(comment);
+    }
+
 }

@@ -31,7 +31,7 @@ public class TrackDataSourceTest extends BaseDataSourceTest {
     private LocalTrackDataSource dataSource;
 
     @Test
-    public void testGetSaveAndDelete() {
+    public void testGet() {
         List<Track> tracks = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -50,12 +50,6 @@ public class TrackDataSourceTest extends BaseDataSourceTest {
         when(dao.getTracks()).thenReturn(Maybe.just(tracks));
         when(api.getTracks()).thenReturn(Observable.just(apiTracks));
 
-        dataSource.insertOrUpdateTrack(track);
-        verify(dao).insertTrack(track);
-
-        dataSource.deleteTrack(tracks.get(0));
-        verify(dao).deleteTrack(tracks.get(0));
-
         dataSource.getTracks();
         verify(dao).getTracks();
         verify(api).getTracks();
@@ -69,5 +63,19 @@ public class TrackDataSourceTest extends BaseDataSourceTest {
                         assertEquals(trackList.get(i), apiTracks.get(i));
                     }
                 });
+    }
+
+    @Test
+    public void testSave() {
+        Track track = getTrack(123);
+        dataSource.insertOrUpdateTrack(track);
+        verify(dao).insertTrack(track);
+    }
+
+    @Test
+    public void testDelete() {
+        Track track = getTrack(4);
+        dataSource.deleteTrack(track);
+        verify(dao).deleteTrack(track);
     }
 }

@@ -31,7 +31,7 @@ public class CommitteeDataSourceTest extends BaseDataSourceTest {
     private LocalCommitteeDataSource dataSource;
 
     @Test
-    public void testGetSaveAndDelete() {
+    public void testGet() {
         List<CommitteeMember> committeeMembers = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -145,5 +145,15 @@ public class CommitteeDataSourceTest extends BaseDataSourceTest {
                         assertEquals(members.get(i), apiCommittee.get(i));
                     }
                 });
+    }
+
+    @Test
+    public void testSave() {
+
+    }
+
+    @Test
+    public void testDelete() {
+
     }
 }

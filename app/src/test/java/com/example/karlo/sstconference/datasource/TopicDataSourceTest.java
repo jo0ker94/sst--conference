@@ -49,12 +49,6 @@ public class TopicDataSourceTest extends BaseDataSourceTest {
         when(dao.getTopics()).thenReturn(Maybe.just(topics));
         when(api.getTopics()).thenReturn(Observable.just(apiTopics));
 
-        dataSource.insertOrUpdateTopic(topic);
-        verify(dao).insertTopic(topic);
-
-        dataSource.deleteTopic(topics.get(0));
-        verify(dao).deleteTopic(topics.get(0));
-
         dataSource.getTopics();
         verify(dao).getTopics();
         verify(api).getTopics();
@@ -69,4 +63,24 @@ public class TopicDataSourceTest extends BaseDataSourceTest {
                     }
                 });
     }
+
+    @Test
+    public void testGet() {
+
+    }
+
+    @Test
+    public void testSave() {
+        Topic topic = getTopic(123);
+        dataSource.insertOrUpdateTopic(topic);
+        verify(dao).insertTopic(topic);
+    }
+
+    @Test
+    public void testDelete() {
+        Topic topic = getTopic(123);
+        dataSource.deleteTopic(topic);
+        verify(dao).deleteTopic(topic);
+    }
+
 }

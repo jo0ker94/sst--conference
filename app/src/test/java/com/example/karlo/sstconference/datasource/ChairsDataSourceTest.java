@@ -31,7 +31,7 @@ public class ChairsDataSourceTest extends BaseDataSourceTest {
     private LocalChairsDataSource chairsDataSource;
 
     @Test
-    public void testGetSaveAndDelete() {
+    public void testGet() {
         List<ConferenceChair> conferenceChairs = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
@@ -53,11 +53,9 @@ public class ChairsDataSourceTest extends BaseDataSourceTest {
 
         chairsDataSource.insertConferenceChair(chair);
         verify(dao).insertConferenceChair(chair);
-        //conferenceChairs.add(chair);
 
         chairsDataSource.deleteConferenceChair(conferenceChairs.get(0));
         verify(dao).deleteConferenceChair(conferenceChairs.get(0));
-        //conferenceChairs.remove(conferenceChairs.get(0));
 
         chairsDataSource.getConferenceChairs();
         verify(dao).getConferenceChairs();
@@ -72,5 +70,19 @@ public class ChairsDataSourceTest extends BaseDataSourceTest {
                         assertEquals(chairs.get(i), apiChairs.get(i));
                     }
                 });
+    }
+
+    @Test
+    public void testSave() {
+
+    }
+
+    @Test
+    public void testDelete() {
+
+    }
+
+    private void setupData() {
+
     }
 }
