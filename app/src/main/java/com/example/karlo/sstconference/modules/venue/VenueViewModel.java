@@ -54,13 +54,6 @@ public class VenueViewModel extends BaseViewModel {
         return mGroup;
     }
 
-    public MutableLiveData<List<MarkerOptions>> getMarkers() {
-        if (mMarkers == null) {
-            mMarkers = new MutableLiveData<>();
-        }
-        return mMarkers;
-    }
-
     public MutableLiveData<Venue> getVenueDetails() {
         if (mVenue == null) {
             mVenue = new MutableLiveData<>();

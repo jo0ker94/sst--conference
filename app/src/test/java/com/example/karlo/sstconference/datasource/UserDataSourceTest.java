@@ -16,10 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,8 +42,7 @@ public class UserDataSourceTest extends BaseDataSourceTest {
 
         when(dao.getUser()).thenReturn(Maybe.just(user));
 
-        dataSource.deleteUser(user);
-        verify(dao).deleteUser(user);
+        dataSource.deleteUser(user).subscribe(() -> verify(dao).deleteUser(user));
 
         dataSource.getUser();
         verify(dao).getUser();

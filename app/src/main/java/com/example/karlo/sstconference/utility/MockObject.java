@@ -7,6 +7,10 @@ import com.example.karlo.sstconference.models.Image;
 import com.example.karlo.sstconference.models.User;
 import com.example.karlo.sstconference.models.committee.CommitteeMember;
 import com.example.karlo.sstconference.models.keynote.KeynoteSpeaker;
+import com.example.karlo.sstconference.models.nearbyplaces.Geometry;
+import com.example.karlo.sstconference.models.nearbyplaces.LocationCoordinates;
+import com.example.karlo.sstconference.models.nearbyplaces.NearbyPlaces;
+import com.example.karlo.sstconference.models.nearbyplaces.Result;
 import com.example.karlo.sstconference.models.program.Comment;
 import com.example.karlo.sstconference.models.program.Person;
 import com.example.karlo.sstconference.models.program.Topic;
@@ -287,5 +291,22 @@ public class MockObject {
                     .title(getStringFormat(TITLE, i)));
         }
         return markers;
+    }
+
+    protected NearbyPlaces getNearbyPlaces(String type) {
+        List<Result> results = new ArrayList<>();
+        NearbyPlaces nearbyPlaces = new NearbyPlaces();
+        Result result = new Result();
+        result.setName(type);
+        result.setVicinity("vicinity");
+        Geometry geometry = new Geometry();
+        LocationCoordinates locationCoordinates = new LocationCoordinates();
+        locationCoordinates.setLat(LAT);
+        locationCoordinates.setLng(LNG);
+        geometry.setLocationCoordinates(locationCoordinates);
+        result.setGeometry(geometry);
+        results.add(result);
+        nearbyPlaces.setResults(results);
+        return nearbyPlaces;
     }
 }

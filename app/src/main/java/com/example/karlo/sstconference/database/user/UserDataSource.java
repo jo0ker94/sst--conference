@@ -30,6 +30,6 @@ public interface UserDataSource {
     /**
      * Deletes all users from the data source.
      */
-    void deleteUser(User user);
+    Completable deleteUser(User user);
 
 }

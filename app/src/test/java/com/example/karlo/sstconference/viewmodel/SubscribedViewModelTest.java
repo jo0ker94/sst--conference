@@ -2,6 +2,7 @@ package com.example.karlo.sstconference.viewmodel;
 
 import android.arch.lifecycle.Observer;
 
+import com.example.karlo.sstconference.commons.Status;
 import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
@@ -22,6 +23,7 @@ import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,6 +73,38 @@ public class SubscribedViewModelTest extends BaseViewModelTest {
         sleep(500);
 
         verify(observer).onChanged(subscribed);
+    }
+
+    @Test
+    public void testGetSubscribedTopicsError() {
+        User user = getUser();
+
+        List<Topic> topics = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            topics.add(new Topic(i,
+                    PARENT_ID,
+                    getStringFormat(TITLE, i),
+                    getListOfPeople(),
+                    i));
+        }
+
+        Observer observer = mock(Observer.class);
+        DatabaseReference reference = Mockito.mock(DatabaseReference.class);
+
+        when(userDataSource.getUser()).thenReturn(Maybe.just(user));
+        when(userDataSource.insertOrUpdateUser(user)).thenReturn(Completable.complete());
+        when(dataSource.getTopics()).thenReturn(Observable.just(topics));
+        when(firebaseDatabase.getReference("users")).thenReturn(reference);
+        when(firebaseDatabase.getReference("users").child(USER_ID)).thenReturn(reference);
+
+        viewModel.getSubscribedTopics().observeForever(observer);
+        viewModel.getUserAndFetchEvents();
+
+        sleep(500);
+
+        viewModel.deleteTopicSubscription(topics.get(2));
+
+        assertEquals(viewModel.getStatus().getValue().getMessage(), "Error!");
     }
 
 

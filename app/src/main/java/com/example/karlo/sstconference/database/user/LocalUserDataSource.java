@@ -43,7 +43,7 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
-    public void deleteUser(User user) {
-        mUserDao.deleteUser(user);
+    public Completable deleteUser(User user) {
+        return Completable.fromAction(() -> mUserDao.deleteUser(user));
     }
 }

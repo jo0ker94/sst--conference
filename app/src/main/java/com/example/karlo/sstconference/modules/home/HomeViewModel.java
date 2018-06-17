@@ -5,19 +5,13 @@ import android.arch.lifecycle.MutableLiveData;
 
 import com.example.karlo.sstconference.base.BaseViewModel;
 import com.example.karlo.sstconference.commons.Status;
-import com.example.karlo.sstconference.database.program.ProgramDataSource;
 import com.example.karlo.sstconference.database.user.UserDataSource;
 import com.example.karlo.sstconference.models.User;
-import com.example.karlo.sstconference.models.program.Topic;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.MaybeObserver;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -26,16 +20,15 @@ public class HomeViewModel extends BaseViewModel {
 
     private static final String TAG = "HomeViewModel";
     private MutableLiveData<User> mUserData;
-    private MutableLiveData<List<Topic>> mTopics;
 
     private UserDataSource mDataSource;
-    private ProgramDataSource mProgramDataSource;
+    private FirebaseAuth mFirebaseAuth;
     private User mUser;
 
     @Inject
-    public HomeViewModel(UserDataSource dataSource, ProgramDataSource programDataSource) {
+    public HomeViewModel(UserDataSource dataSource, FirebaseAuth firebaseAuth) {
         this.mDataSource = dataSource;
-        this.mProgramDataSource = programDataSource;
+        this.mFirebaseAuth = firebaseAuth;
     }
 
     public LiveData<User> getUser() {
@@ -44,13 +37,6 @@ public class HomeViewModel extends BaseViewModel {
             fetchUser();
         }
         return mUserData;
-    }
-
-    public MutableLiveData<List<Topic>> getTopics() {
-        if (mTopics == null) {
-            mTopics = new MutableLiveData<>();
-        }
-        return mTopics;
     }
 
     private void fetchUser() {
@@ -81,31 +67,9 @@ public class HomeViewModel extends BaseViewModel {
                 });
     }
 
-    public void fetchSubscribedTopics() {
-        mStatus.setValue(Status.loading(true));
-        mCompositeDisposable.add(mProgramDataSource
-                .getTopics()
-                .flatMap(Observable::fromIterable)
-                .filter(topic -> mUser.getSubscribedEvents().contains(topic.getId()))
-                .distinct(Topic::getId)
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(topics -> {
-                            mTopics.setValue(topics);
-                            mStatus.setValue(Status.loading(false));
-                        }
-                        ,
-                        throwable -> {
-                            mStatus.setValue(Status.error(throwable.getMessage()));
-                            mStatus.setValue(Status.loading(false));
-                        }
-                ));
-    }
-
     public void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        mCompositeDisposable.add( Completable.fromAction(() -> mDataSource.deleteUser(mUser))
+        mFirebaseAuth.signOut();
+        mCompositeDisposable.add(mDataSource.deleteUser(mUser)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> mStatus.setValue(Status.logout())));
