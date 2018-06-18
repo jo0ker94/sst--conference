@@ -1,7 +1,6 @@
 package com.example.karlo.sstconference.commons;
 
 import com.example.karlo.sstconference.models.LoginRequest;
-import com.example.karlo.sstconference.models.User;
 
 public class Status {
 
@@ -10,7 +9,6 @@ public class Status {
     private int mInteger;
     private boolean mState;
     private LoginRequest mLoginRequest;
-    private User mUser;
 
     public Status(Response mResponse, String mMessage) {
         this.mResponse = mResponse;
@@ -25,11 +23,6 @@ public class Status {
     public Status(Response mResponse, LoginRequest loginRequest) {
         this.mResponse = mResponse;
         this.mLoginRequest = loginRequest;
-    }
-
-    public Status(Response mResponse, User user) {
-        this.mResponse = mResponse;
-        this.mUser = user;
     }
 
     public Status(Response mResponse, int progress) {
@@ -79,10 +72,6 @@ public class Status {
 
     public static Status progress(int progress) {
         return new Status(Response.PROGRESS, progress);
-    }
-
-    public static Status login(User user) {
-        return new Status(Response.LOGIN, user);
     }
 
     public static Status logout() {

@@ -32,7 +32,7 @@ public class MockObject {
     protected static String TITLE = "Title";
     protected static String MAIL = "mail@email.com";
     protected static String FACILITY = "Some Facility";
-    protected static String IMAGE = "http://www.picture.com";
+    protected static String IMAGE = "https://cdn0.iconfinder.com/data/icons/PRACTIKA/256/user.png";
     protected static String NUMBER = "0123456789";
     protected static String PASSWORD = "test123";
 
