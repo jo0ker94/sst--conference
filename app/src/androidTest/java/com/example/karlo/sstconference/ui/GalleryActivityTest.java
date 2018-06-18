@@ -91,8 +91,8 @@ public class GalleryActivityTest extends BaseTest {
 
     @After
     public void clearData() {
-        //Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        //mRule.getActivity().sendBroadcast(it);
+        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        mRule.getActivity().sendBroadcast(it);
         clearDatabaseAndPrefs();
     }
 

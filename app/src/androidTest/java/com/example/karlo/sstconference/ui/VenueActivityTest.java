@@ -213,6 +213,8 @@ public class VenueActivityTest extends BaseTest {
         venue.postValue(getVenue());
         onView(withContentDescription(R.string.search)).perform(click());
 
+        sleep(1000);
+
         onView(withText(String.format(getString(R.string.search_radius), 2000))).check(matches(isDisplayed()));
 
         onView(withId(R.id.radius_picker)).perform(setNumberPickerValue(650));
